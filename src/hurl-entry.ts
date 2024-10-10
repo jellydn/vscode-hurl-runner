@@ -17,13 +17,23 @@ interface HttpVerb {
 	method: string;
 }
 
-const HTTP_VERBS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT'];
+const HTTP_VERBS = [
+	"GET",
+	"POST",
+	"PUT",
+	"DELETE",
+	"PATCH",
+	"HEAD",
+	"OPTIONS",
+	"TRACE",
+	"CONNECT",
+];
 
 function findHttpVerbs(content: string): HttpVerb[] {
-	const lines = content.split('\n');
+	const lines = content.split("\n");
 	return lines.reduce((verbs: HttpVerb[], line, index) => {
 		const trimmedLine = line.trim();
-		const verb = HTTP_VERBS.find(verb => trimmedLine.startsWith(verb));
+		const verb = HTTP_VERBS.find((verb) => trimmedLine.startsWith(verb));
 		if (verb) {
 			verbs.push({ lineNumber: index + 1, method: verb });
 		}
@@ -31,7 +41,10 @@ function findHttpVerbs(content: string): HttpVerb[] {
 	}, []);
 }
 
-export function findEntryAtLine(content: string, line: number): HurlEntry | null {
+export function findEntryAtLine(
+	content: string,
+	line: number,
+): HurlEntry | null {
 	const httpVerbs = findHttpVerbs(content);
 
 	if (httpVerbs.length === 0) {
@@ -42,11 +55,16 @@ export function findEntryAtLine(content: string, line: number): HurlEntry | null
 		const currentVerb = httpVerbs[i];
 		const nextVerb = httpVerbs[i + 1];
 
-		if (line >= currentVerb.lineNumber && (!nextVerb || line < nextVerb.lineNumber)) {
+		if (
+			line >= currentVerb.lineNumber &&
+			(!nextVerb || line < nextVerb.lineNumber)
+		) {
 			return {
 				startLine: currentVerb.lineNumber,
-				endLine: nextVerb ? nextVerb.lineNumber - 1 : content.split('\n').length,
-				entryNumber: i + 1
+				endLine: nextVerb
+					? nextVerb.lineNumber - 1
+					: content.split("\n").length,
+				entryNumber: i + 1,
 			};
 		}
 	}

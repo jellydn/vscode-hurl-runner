@@ -19,7 +19,10 @@ export class HurlVariablesProvider {
 		}
 	}
 
-	public setVariablesForFile(filePath: string, variables: Record<string, string>): void {
+	public setVariablesForFile(
+		filePath: string,
+		variables: Record<string, string>,
+	): void {
 		this.variables.set(filePath, new Map(Object.entries(variables)));
 	}
 

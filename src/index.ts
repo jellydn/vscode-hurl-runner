@@ -1,10 +1,10 @@
 import { defineExtension } from "reactive-vscode";
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import { HurlVariablesProvider } from './hurl-variables-provider';
-import { executeHurl, logger, responseLogger } from './utils';
 import { findEntryAtLine } from "./hurl-entry";
+import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
+import { executeHurl, logger, responseLogger } from "./utils";
 
 const { activate, deactivate } = defineExtension(() => {
 	const hurlVariablesProvider = new HurlVariablesProvider();
@@ -16,21 +16,12 @@ const { activate, deactivate } = defineExtension(() => {
 		responseLogger.show();
 	};
 
-	const runHurl = vscode.commands.registerCommand('vscode-hurl-runner.runHurl', async () => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) {
-			vscode.window.showErrorMessage('No active editor');
-			return;
-		}
-
-		const filePath = editor.document.uri.fsPath;
-		const currentLine = editor.selection.active.line + 1; // VSCode lines are 0-indexed, Hurl is 1-indexed
-		const fileContent = editor.document.getText();
-
-		try {
-			const entry = findEntryAtLine(fileContent, currentLine);
-			if (!entry) {
-				vscode.window.showErrorMessage('No Hurl entry found at the current line');
+	const runHurl = vscode.commands.registerCommand(
+		"vscode-hurl-runner.runHurl",
+		async () => {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				vscode.window.showErrorMessage("No active editor");
 				return;
 			}
 
@@ -102,7 +93,7 @@ const { activate, deactivate } = defineExtension(() => {
 			runHurl.dispose();
 			runHurlFile.dispose();
 			manageVariables.dispose();
-		}
+		},
 	};
 });
 
