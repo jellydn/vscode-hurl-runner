@@ -49,13 +49,13 @@
 		"bumpp": "^9.5.1",
 		"esno": "^4.7.0",
 		"reactive-vscode": "^0.2.0",
-		"tsup": "^8.2.4",
-		"typescript": "^5.5.4",
+		"tsup": "^8.3.0",
+		"typescript": "^5.6.3",
 		"vite": "^5.4.1",
-		"vitest": "^2.0.5",
+		"vitest": "^2.1.2",
 		"vscode-ext-gen": "^0.4.1"
 	},
-	"packageManager": "pnpm@9.7.1",
+	"packageManager": "pnpm@9.12.1",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
