@@ -4,7 +4,9 @@
 	"version": "0.0.0",
 	"private": true,
 	"description": "Run Hurl in VSCode",
-	"categories": ["Other"],
+	"categories": [
+		"Other"
+	],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -18,7 +20,11 @@
 	"author": "Dung Huynh Duc <dung@productsway.com>",
 	"publisher": "jellydn",
 	"main": "./dist/index.js",
-	"files": ["LICENSE.md", "dist/*", "res/*"],
+	"files": [
+		"LICENSE.md",
+		"dist/*",
+		"res/*"
+	],
 	"scripts": {
 		"build": "tsup src/index.ts --external vscode",
 		"dev": "nr build --watch",
@@ -33,34 +39,86 @@
 		"vscode:prepublish": "nr build"
 	},
 	"contributes": {
-		"commands": [],
+		"commands": [
+			{
+				"command": "vscode-hurl-runner.runHurl",
+				"title": "Hurl Runner: Run Hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlFile",
+				"title": "Hurl Runner: Run Hurl File"
+			},
+			{
+				"command": "vscode-hurl-runner.manageVariables",
+				"title": "Hurl Runner: Manage Variables"
+			}
+		],
 		"configuration": {
 			"type": "object",
 			"title": "vscode-hurl-runner",
-			"properties": {}
-		}
+			"properties": {
+				"vscode-hurl-runner.hurlPath": {
+					"type": "string",
+					"default": "hurl",
+					"description": "Path to the Hurl executable"
+				},
+				"vscode-hurl-runner.environmentVariables": {
+					"type": "object",
+					"default": {},
+					"description": "Environment variables to be used when running Hurl files",
+					"additionalProperties": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"keybindings": [
+			{
+				"command": "vscode-hurl-runner.runHurl",
+				"key": "ctrl+alt+h",
+				"mac": "cmd+alt+h",
+				"when": "editorTextFocus && editorLangId == hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlFile",
+				"key": "ctrl+alt+f",
+				"mac": "cmd+alt+f",
+				"when": "editorTextFocus && editorLangId == hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.manageVariables",
+				"key": "ctrl+alt+shift+v",
+				"mac": "cmd+alt+shift+v",
+				"when": "editorTextFocus && editorLangId == hurl"
+			}
+		]
 	},
-	"activationEvents": ["onStartupFinished"],
+	"activationEvents": [
+		"onStartupFinished"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
-		"@types/node": "^22.4.1",
-		"@types/vscode": "^1.92.0",
-		"@vscode/vsce": "^3.0.0",
-		"bumpp": "^9.5.1",
-		"esno": "^4.7.0",
-		"reactive-vscode": "^0.2.0",
+		"@types/node": "^22.7.5",
+		"@types/vscode": "^1.91.0",
+		"@vscode/vsce": "^3.1.1",
+		"bumpp": "^9.7.1",
+		"esno": "^4.8.0",
+		"reactive-vscode": "^0.2.5",
 		"tsup": "^8.3.0",
 		"typescript": "^5.6.3",
-		"vite": "^5.4.1",
+		"vite": "^5.4.8",
 		"vitest": "^2.1.2",
-		"vscode-ext-gen": "^0.4.1"
+		"vscode-ext-gen": "^0.4.3"
 	},
 	"packageManager": "pnpm@9.12.1",
 	"engines": {
-		"vscode": "^1.92.0"
+		"vscode": "^1.91.0"
 	},
 	"icon": "res/icon.png",
 	"sponsor": {
 		"url": "https://github.com/sponsors/jellydn"
+	},
+	"dependencies": {
+		"nano-spawn": "^0.1.0"
 	}
 }
