@@ -30,7 +30,11 @@ export class HurlVariablesProvider {
 		return Object.fromEntries(this.inlineVariables.get(filePath) || new Map());
 	}
 
-	public addInlineVariableBy(filePath: string, name: string, value: string): void {
+	public addInlineVariableBy(
+		filePath: string,
+		name: string,
+		value: string,
+	): void {
 		const fileVariables = this.inlineVariables.get(filePath) || new Map();
 		fileVariables.set(name, value);
 		this.inlineVariables.set(filePath, fileVariables);
@@ -43,7 +47,10 @@ export class HurlVariablesProvider {
 		}
 	}
 
-	public setInlineVariablesForFile(filePath: string, variables: Record<string, string>): void {
+	public setInlineVariablesForFile(
+		filePath: string,
+		variables: Record<string, string>,
+	): void {
 		this.inlineVariables.set(filePath, new Map(Object.entries(variables)));
 	}
 

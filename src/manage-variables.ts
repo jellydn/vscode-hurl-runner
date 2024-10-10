@@ -18,19 +18,28 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 	);
 
 	const items = [
-		{ label: 'Create New .env File', description: 'Create a new .env file in the workspace', isCreateNew: true },
-		{ label: 'Use Inline Variables', description: 'Manage inline variables without creating an .env file', isInline: true },
-		...envFiles.map(file => ({
+		{
+			label: "Create New .env File",
+			description: "Create a new .env file in the workspace",
+			isCreateNew: true,
+		},
+		{
+			label: "Use Inline Variables",
+			description: "Manage inline variables without creating an .env file",
+			isInline: true,
+		},
+		...envFiles.map((file) => ({
 			label: path.basename(file.fsPath),
 			description: vscode.workspace.asRelativePath(file.fsPath),
 			fsPath: file.fsPath,
 			isCreateNew: false,
-			isInline: false
-		}))
+			isInline: false,
+		})),
 	];
 
 	const selected = await vscode.window.showQuickPick(items, {
-		placeHolder: 'Select .env file to manage, create a new one, or use inline variables'
+		placeHolder:
+			"Select .env file to manage, create a new one, or use inline variables",
 	});
 
 	if (selected?.isCreateNew) {
@@ -38,7 +47,7 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 	}
 
 	if (selected?.isInline) {
-		return 'inline';
+		return "inline";
 	}
 
 	// @ts-expect-error: fsPath is not defined on the selected object
@@ -70,17 +79,18 @@ async function createNewEnvFile(
 	}
 }
 
-
-export async function manageEnvVariables(hurlVariablesProvider: HurlVariablesProvider, {
-	filePath,
-	envFile,
-	isInline
-}: {
-	filePath: string;
-	envFile?: string;
-	isInline?: boolean;
-}) {
-
+export async function manageEnvVariables(
+	hurlVariablesProvider: HurlVariablesProvider,
+	{
+		filePath,
+		envFile,
+		isInline,
+	}: {
+		filePath: string;
+		envFile?: string;
+		isInline?: boolean;
+	},
+) {
 	if (isInline) {
 		await manageInlineVariables(hurlVariablesProvider, filePath);
 		return;
@@ -89,14 +99,23 @@ export async function manageEnvVariables(hurlVariablesProvider: HurlVariablesPro
 	const variables = envFile ? await loadEnvVariables(envFile) : {};
 	hurlVariablesProvider.setVariablesForFile(filePath, variables);
 
-	const action = await vscode.window.showQuickPick([
-		{ label: 'View Variables', description: 'Show all variables in the file' },
-		{ label: 'Add Variable', description: 'Add a new variable' },
-		{ label: 'Edit Variable', description: 'Modify an existing variable' },
-		{ label: 'Remove Variable', description: 'Delete a variable' },
-		{ label: 'Manage Inline Variables', description: 'Add, edit, or remove inline variables' },
-		{ label: 'Done', description: 'Use the variables in the current file' }
-	], { placeHolder: 'Choose an action' });
+	const action = await vscode.window.showQuickPick(
+		[
+			{
+				label: "View Variables",
+				description: "Show all variables in the file",
+			},
+			{ label: "Add Variable", description: "Add a new variable" },
+			{ label: "Edit Variable", description: "Modify an existing variable" },
+			{ label: "Remove Variable", description: "Delete a variable" },
+			{
+				label: "Manage Inline Variables",
+				description: "Add, edit, or remove inline variables",
+			},
+			{ label: "Done", description: "Use the variables in the current file" },
+		],
+		{ placeHolder: "Choose an action" },
+	);
 
 	switch (action?.label) {
 		case "View Variables":
@@ -111,7 +130,7 @@ export async function manageEnvVariables(hurlVariablesProvider: HurlVariablesPro
 		case "Remove Variable":
 			await removeVariable(hurlVariablesProvider, filePath);
 			break;
-		case 'Manage Inline Variables':
+		case "Manage Inline Variables":
 			await manageInlineVariables(hurlVariablesProvider, filePath);
 			break;
 		default:
@@ -236,31 +255,52 @@ export async function removeVariable(
 	}
 }
 
-async function manageInlineVariables(hurlVariablesProvider: HurlVariablesProvider, filePath: string) {
-	const action = await vscode.window.showQuickPick([
-		{ label: 'View Inline Variables', description: 'Show all inline variables for this file' },
-		{ label: 'Add Inline Variable', description: 'Add a new inline variable' },
-		{ label: 'Edit Inline Variable', description: 'Modify an existing inline variable' },
-		{ label: 'Remove Inline Variable', description: 'Delete an inline variable' },
-	], { placeHolder: 'Choose an action for inline variables' });
+async function manageInlineVariables(
+	hurlVariablesProvider: HurlVariablesProvider,
+	filePath: string,
+) {
+	const action = await vscode.window.showQuickPick(
+		[
+			{
+				label: "View Inline Variables",
+				description: "Show all inline variables for this file",
+			},
+			{
+				label: "Add Inline Variable",
+				description: "Add a new inline variable",
+			},
+			{
+				label: "Edit Inline Variable",
+				description: "Modify an existing inline variable",
+			},
+			{
+				label: "Remove Inline Variable",
+				description: "Delete an inline variable",
+			},
+		],
+		{ placeHolder: "Choose an action for inline variables" },
+	);
 
 	switch (action?.label) {
-		case 'View Inline Variables':
+		case "View Inline Variables":
 			await showInlineVariables(hurlVariablesProvider, filePath);
 			break;
-		case 'Add Inline Variable':
+		case "Add Inline Variable":
 			await addInlineVariable(hurlVariablesProvider, filePath);
 			break;
-		case 'Edit Inline Variable':
+		case "Edit Inline Variable":
 			await editInlineVariable(hurlVariablesProvider, filePath);
 			break;
-		case 'Remove Inline Variable':
+		case "Remove Inline Variable":
 			await removeInlineVariable(hurlVariablesProvider, filePath);
 			break;
 	}
 }
 
-async function showInlineVariables(hurlVariablesProvider: HurlVariablesProvider, filePath: string) {
+async function showInlineVariables(
+	hurlVariablesProvider: HurlVariablesProvider,
+	filePath: string,
+) {
 	const variables = hurlVariablesProvider.getInlineVariablesBy(filePath);
 	logger.info(`Inline variables for ${filePath}:`);
 	for (const [key, value] of Object.entries(variables)) {
@@ -269,40 +309,66 @@ async function showInlineVariables(hurlVariablesProvider: HurlVariablesProvider,
 	logger.show();
 }
 
-async function addInlineVariable(hurlVariablesProvider: HurlVariablesProvider, filePath: string) {
-	const name = await vscode.window.showInputBox({ prompt: 'Enter inline variable name' });
+async function addInlineVariable(
+	hurlVariablesProvider: HurlVariablesProvider,
+	filePath: string,
+) {
+	const name = await vscode.window.showInputBox({
+		prompt: "Enter inline variable name",
+	});
 	if (name) {
-		const value = await vscode.window.showInputBox({ prompt: `Enter value for ${name}` });
+		const value = await vscode.window.showInputBox({
+			prompt: `Enter value for ${name}`,
+		});
 		if (value !== undefined) {
 			hurlVariablesProvider.addInlineVariableBy(filePath, name, value);
-			vscode.window.showInformationMessage(`Inline variable ${name} added successfully`);
+			vscode.window.showInformationMessage(
+				`Inline variable ${name} added successfully`,
+			);
 			await showInlineVariables(hurlVariablesProvider, filePath);
 		}
 	}
 }
 
-async function editInlineVariable(hurlVariablesProvider: HurlVariablesProvider, filePath: string) {
+async function editInlineVariable(
+	hurlVariablesProvider: HurlVariablesProvider,
+	filePath: string,
+) {
 	const variables = hurlVariablesProvider.getInlineVariablesBy(filePath);
 	const variableNames = Object.keys(variables);
-	const name = await vscode.window.showQuickPick(variableNames, { placeHolder: 'Select inline variable to edit' });
+	const name = await vscode.window.showQuickPick(variableNames, {
+		placeHolder: "Select inline variable to edit",
+	});
 	if (name) {
 		const currentValue = variables[name];
-		const newValue = await vscode.window.showInputBox({ prompt: `Enter new value for ${name}`, value: currentValue });
+		const newValue = await vscode.window.showInputBox({
+			prompt: `Enter new value for ${name}`,
+			value: currentValue,
+		});
 		if (newValue !== undefined) {
 			hurlVariablesProvider.addInlineVariableBy(filePath, name, newValue);
-			vscode.window.showInformationMessage(`Inline variable ${name} updated successfully`);
+			vscode.window.showInformationMessage(
+				`Inline variable ${name} updated successfully`,
+			);
 			await showInlineVariables(hurlVariablesProvider, filePath);
 		}
 	}
 }
 
-async function removeInlineVariable(hurlVariablesProvider: HurlVariablesProvider, filePath: string) {
+async function removeInlineVariable(
+	hurlVariablesProvider: HurlVariablesProvider,
+	filePath: string,
+) {
 	const variables = hurlVariablesProvider.getInlineVariablesBy(filePath);
 	const variableNames = Object.keys(variables);
-	const name = await vscode.window.showQuickPick(variableNames, { placeHolder: 'Select inline variable to remove' });
+	const name = await vscode.window.showQuickPick(variableNames, {
+		placeHolder: "Select inline variable to remove",
+	});
 	if (name) {
 		hurlVariablesProvider.removeInlineVariableBy(filePath, name);
-		vscode.window.showInformationMessage(`Inline variable ${name} removed successfully`);
+		vscode.window.showInformationMessage(
+			`Inline variable ${name} removed successfully`,
+		);
 		await showInlineVariables(hurlVariablesProvider, filePath);
 	}
 }
