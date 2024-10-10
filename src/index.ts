@@ -98,13 +98,13 @@ const { activate, deactivate } = defineExtension(() => {
 			if (envFile === "inline") {
 				await manageEnvVariables(hurlVariablesProvider, {
 					filePath,
-					isInline: true
+					isInline: true,
 				});
 			} else if (filePath && envFile) {
 				envFileMapping[filePath] = envFile;
 				await manageEnvVariables(hurlVariablesProvider, {
 					filePath,
-					envFile
+					envFile,
 				});
 			}
 		},
