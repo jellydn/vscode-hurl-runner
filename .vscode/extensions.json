@@ -1,3 +1,6 @@
 {
-	"recommendations": ["amodio.tsl-problem-matcher", "emeraldwalk.runonsave"]
+  "recommendations": [
+    "amodio.tsl-problem-matcher",
+    "emeraldwalk.runonsave"
+  ]
 }
