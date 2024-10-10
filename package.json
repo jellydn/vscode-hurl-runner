@@ -4,9 +4,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"description": "Run Hurl in VSCode",
-	"categories": [
-		"Other"
-	],
+	"categories": ["Other"],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -20,11 +18,7 @@
 	"author": "Dung Huynh Duc <dung@productsway.com>",
 	"publisher": "jellydn",
 	"main": "./dist/index.js",
-	"files": [
-		"LICENSE.md",
-		"dist/*",
-		"res/*"
-	],
+	"files": ["LICENSE.md", "dist/*", "res/*"],
 	"scripts": {
 		"build": "tsup src/index.ts --external vscode",
 		"dev": "nr build --watch",
@@ -46,9 +40,7 @@
 			"properties": {}
 		}
 	},
-	"activationEvents": [
-		"onStartupFinished"
-	],
+	"activationEvents": ["onStartupFinished"],
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@types/node": "^22.4.1",

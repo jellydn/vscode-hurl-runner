@@ -25,8 +25,8 @@
 
 👤 **Dung Huynh Duc <dung@productsway.com>**
 
-* Website: https://productsway.com/
-* Github: [@jellydn](https://github.com/jellydn)
+- Website: https://productsway.com/
+- Github: [@jellydn](https://github.com/jellydn)
 
 ## 🤝 Contributing
 
@@ -40,4 +40,3 @@ Give a ⭐️ if this project helped you!
 
 Copyright © 2024 [Dung Huynh Duc <dung@productsway.com>](https://github.com/jellydn).<br />
 This project is [MIT](https://github.com/jellydn/vscode-hurl-runner/blob/master/LICENSE) licensed.
-
