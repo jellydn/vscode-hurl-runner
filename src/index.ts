@@ -39,7 +39,7 @@ const { activate, deactivate } = defineExtension(() => {
 				}
 
 				const envFile = envFileMapping[filePath];
-				const variables = hurlVariablesProvider.getVariablesBy(filePath);
+				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const output = await executeHurl({
 					filePath,
@@ -70,7 +70,7 @@ const { activate, deactivate } = defineExtension(() => {
 			const filePath = editor.document.uri.fsPath;
 			try {
 				const envFile = envFileMapping[filePath];
-				const variables = hurlVariablesProvider.getVariablesBy(filePath);
+				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const output = await executeHurl({ filePath, envFile, variables });
 
@@ -95,11 +95,17 @@ const { activate, deactivate } = defineExtension(() => {
 			const filePath = editor.document.uri.fsPath;
 
 			const envFile = await chooseEnvFile();
-			if (filePath && envFile) {
+			if (envFile === "inline") {
+				await manageEnvVariables(hurlVariablesProvider, {
+					filePath,
+					isInline: true,
+				});
+			} else if (filePath && envFile) {
 				envFileMapping[filePath] = envFile;
-			}
-			if (envFile) {
-				await manageEnvVariables(hurlVariablesProvider, envFile);
+				await manageEnvVariables(hurlVariablesProvider, {
+					filePath,
+					envFile,
+				});
 			}
 		},
 	);
