@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@antfu/ni':
+        specifier: ^0.23.0
+        version: 0.23.0
       '@biomejs/biome':
         specifier: 1.9.3
         version: 1.9.3
@@ -26,6 +29,9 @@ importers:
       esno:
         specifier: 4.8.0
         version: 4.8.0
+      pnpm:
+        specifier: ^9.12.1
+        version: 9.12.1
       reactive-vscode:
         specifier: 0.2.5
         version: 0.2.5(@types/vscode@1.92.0)
@@ -46,6 +52,10 @@ importers:
         version: 0.4.3
 
 packages:
+
+  '@antfu/ni@0.23.0':
+    resolution: {integrity: sha512-R5/GkA3PfGewAXLzz6lN5XagunF6PKeDtWt8dbZQXvHfebLS0qEczV+Azg/d+tKgSh6kRBpxvu8oSjARdPtw0A==}
+    hasBin: true
 
   '@azure/abort-controller@1.1.0':
     resolution: {integrity: sha512-TrRLIoSQVzfAJX9H1JeFjzAoDGcoK1IYX1UImfceTZpsyYfWr09Ss1aHW1y5TrrR3iq6RZLBwJ3E24uwPhwahw==}
@@ -1472,6 +1482,11 @@ packages:
   pkg-types@1.2.1:
     resolution: {integrity: sha512-sQoqa8alT3nHjGuTjuKgOnvjo4cljkufdtLMnO2LBP/wRwuDlo1tkaEdMxCRhyGRPacv/ztlZgDPm2b7FAmEvw==}
 
+  pnpm@9.12.1:
+    resolution: {integrity: sha512-5aflKkGDoC1ZMQV/eg2/+dXpzjFh4z+miuOSElt5KCqKikcKUd/IoO2GIhRC6y+1cBmwmQ7ST6tRm/DhvFzPxA==}
+    engines: {node: '>=18.12'}
+    hasBin: true
+
   postcss-load-config@6.0.1:
     resolution: {integrity: sha512-oPtTM4oerL+UXmx+93ytZVN82RrlY/wPUV8IeDxFrzIjXOLF1pN+EmKPLbubvKHT2HC20xXsCAH2Z+CKV6Oz/g==}
     engines: {node: '>= 18'}
@@ -1930,6 +1945,8 @@ packages:
     resolution: {integrity: sha512-phENi2PLiHnHb6QBVot+dJnaAZ0xosj7p3fWl+znIjBDlnMI2PsZCJZ306BPTFOaHf5qdDEI8x5qFrSOBN5vrw==}
 
 snapshots:
+
+  '@antfu/ni@0.23.0': {}
 
   '@azure/abort-controller@1.1.0':
     dependencies:
@@ -3290,6 +3307,8 @@ snapshots:
       confbox: 0.1.8
       mlly: 1.7.2
       pathe: 1.1.2
+
+  pnpm@9.12.1: {}
 
   postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1):
     dependencies:
