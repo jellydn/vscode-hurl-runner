@@ -47,7 +47,10 @@ const { activate, deactivate } = defineExtension(() => {
 		resultPanel.reveal(vscode.ViewColumn.Two);
 	};
 
-	const showResultInWebView = (result: { stdout: string; stderr: string }, isError = false) => {
+	const showResultInWebView = (
+		result: { stdout: string; stderr: string },
+		isError = false,
+	) => {
 		responseLogger.clear();
 		responseLogger.info(`Stdout: ${result.stdout}`);
 		responseLogger.info(`Stderr: ${result.stderr}`);
@@ -64,41 +67,50 @@ const { activate, deactivate } = defineExtension(() => {
 			});
 		}
 
-		const title = isError ? 'Hurl Runner: Error' : 'Hurl Runner: Result';
+		const title = isError ? "Hurl Runner: Error" : "Hurl Runner: Result";
 
 		// Parse the output
 		const parsedOutput = parseHurlOutput(result.stderr, result.stdout);
 
 		// Create a formatted HTML output for each entry
-		const htmlOutput = parsedOutput.entries.map((entry, index) => {
-			let bodyType = 'text';
-			let formattedBody = entry.response.body || 'No response body';
-			if (formattedBody.trim().startsWith('{')) {
-				bodyType = 'json';
-				try {
-					formattedBody = JSON.stringify(JSON.parse(formattedBody), null, 2);
-				} catch {
-					// If parsing fails, leave it as is
+		const htmlOutput = parsedOutput.entries
+			.map((entry, index) => {
+				let bodyType = "text";
+				let formattedBody = entry.response.body || "No response body";
+				if (formattedBody.trim().startsWith("{")) {
+					bodyType = "json";
+					try {
+						formattedBody = JSON.stringify(JSON.parse(formattedBody), null, 2);
+					} catch {
+						// If parsing fails, leave it as is
+					}
+				} else if (formattedBody.trim().startsWith("<")) {
+					bodyType = formattedBody.trim().startsWith("<?xml") ? "xml" : "html";
 				}
-			} else if (formattedBody.trim().startsWith('<')) {
-				bodyType = formattedBody.trim().startsWith('<?xml') ? 'xml' : 'html';
-			}
 
-			return `
+				return `
 				<div class="entry">
 					<h3>Request</h3>
 					<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl}</code></pre>
 					<details>
 						<summary>Headers</summary>
-						<pre><code class="language-http">${Object.entries(entry.requestHeaders).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+						<pre><code class="language-http">${Object.entries(
+							entry.requestHeaders,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.curlCommand ? `
+					${
+						entry.curlCommand
+							? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
-					` : ''}
+					`
+							: ""
+					}
 
 					<h3>Response Body</h3>
 					<pre class="response-body"><code class="language-${bodyType}">${formattedBody}</code></pre>
@@ -107,18 +119,29 @@ const { activate, deactivate } = defineExtension(() => {
 						<summary>Response Details</summary>
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
-						<pre><code class="language-http">${Object.entries(entry.response.headers).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+						<pre><code class="language-http">${Object.entries(
+							entry.response.headers,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.timings ? `
+					${
+						entry.timings
+							? `
 					<details>
 						<summary>Timings</summary>
-						<pre><code class="language-yaml">${Object.entries(entry.timings).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+						<pre><code class="language-yaml">${Object.entries(entry.timings)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
-					` : ''}
+					`
+							: ""
+					}
 				</div>
 			`;
-		}).join('<hr>');
+			})
+			.join("<hr>");
 
 		resultPanel.webview.html = `
 			<!DOCTYPE html>
@@ -154,7 +177,7 @@ const { activate, deactivate } = defineExtension(() => {
 		async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
-				showResultInWebView({ stdout: '', stderr: "No active editor" }, true);
+				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
 				return;
 			}
 
@@ -167,7 +190,10 @@ const { activate, deactivate } = defineExtension(() => {
 			try {
 				const entry = findEntryAtLine(fileContent, currentLine);
 				if (!entry) {
-					showResultInWebView({ stdout: '', stderr: "No Hurl entry found at the current line" }, true);
+					showResultInWebView(
+						{ stdout: "", stderr: "No Hurl entry found at the current line" },
+						true,
+					);
 					return;
 				}
 
@@ -184,8 +210,9 @@ const { activate, deactivate } = defineExtension(() => {
 
 				showResultInWebView(result);
 			} catch (error) {
-				const errorMessage = error instanceof Error ? error.message : "Unknown error";
-				showResultInWebView({ stdout: '', stderr: errorMessage }, true);
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
 			}
 		},
 	);
@@ -195,7 +222,7 @@ const { activate, deactivate } = defineExtension(() => {
 		async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
-				showResultInWebView({ stdout: '', stderr: "No active editor" }, true);
+				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
 				return;
 			}
 
@@ -210,8 +237,9 @@ const { activate, deactivate } = defineExtension(() => {
 
 				showResultInWebView(result);
 			} catch (error) {
-				const errorMessage = error instanceof Error ? error.message : "Unknown error";
-				showResultInWebView({ stdout: '', stderr: errorMessage }, true);
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
 			}
 		},
 	);

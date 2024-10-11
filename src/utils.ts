@@ -24,7 +24,7 @@ export async function executeHurl(
 	statusBarMessage.show();
 	const { filePath, envFile, variables, fromEntry, toEntry } = options;
 	// Refer https://hurl.dev/docs/manual.html#verbose
-	const args = [filePath, '--very-verbose'];
+	const args = [filePath, "--very-verbose"];
 
 	for (const [key, value] of Object.entries(variables)) {
 		args.push("--variable", `${key}=${value}`);
@@ -45,23 +45,23 @@ export async function executeHurl(
 	logger.info(`Executing command: hurl ${args.join(" ")}`);
 
 	return new Promise((resolve, reject) => {
-		const hurlProcess = spawn('hurl', args);
-		let stdout = '';
-		let stderr = '';
+		const hurlProcess = spawn("hurl", args);
+		let stdout = "";
+		let stderr = "";
 
-		hurlProcess.stdout.on('data', (data) => {
+		hurlProcess.stdout.on("data", (data) => {
 			const str = data.toString();
 			stdout += str;
 			logger.info(`Hurl stdout: ${str}`);
 		});
 
-		hurlProcess.stderr.on('data', (data) => {
+		hurlProcess.stderr.on("data", (data) => {
 			const str = data.toString();
 			stderr += str;
 			logger.info(`Hurl stderr: ${str}`);
 		});
 
-		hurlProcess.on('close', (code) => {
+		hurlProcess.on("close", (code) => {
 			statusBarMessage.dispose();
 			if (code === 0 || (code === 1 && !stderr.includes("error:"))) {
 				resolve({ stdout, stderr });
@@ -70,7 +70,7 @@ export async function executeHurl(
 			}
 		});
 
-		hurlProcess.on('error', (error) => {
+		hurlProcess.on("error", (error) => {
 			statusBarMessage.dispose();
 			reject(new Error(`Failed to start Hurl process: ${error.message}`));
 		});

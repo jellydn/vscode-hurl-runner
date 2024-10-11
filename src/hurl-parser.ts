@@ -15,12 +15,14 @@ interface ParsedHurlOutput {
 	entries: ParsedEntry[];
 }
 
-function formatTimings(timings: Record<string, string>): Record<string, string> {
+function formatTimings(
+	timings: Record<string, string>,
+): Record<string, string> {
 	const formattedTimings: Record<string, string> = {};
 
 	for (const [key, value] of Object.entries(timings)) {
-		if (key !== 'begin' && key !== 'end') {
-			if (value.endsWith('µs')) {
+		if (key !== "begin" && key !== "end") {
+			if (value.endsWith("µs")) {
 				// Convert microseconds to a more readable format
 				const microseconds = Number.parseInt(value.slice(0, -3));
 				let formattedValue: string;
@@ -45,78 +47,86 @@ function formatTimings(timings: Record<string, string>): Record<string, string> 
 // A line starting with ‘>’ means data sent by Hurl.
 // A line staring with ‘<’ means data received by Hurl.
 // A line starting with ‘*’ means additional info provided by Hurl.
-export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutput {
-	const lines = stderr.split('\n');
+export function parseHurlOutput(
+	stderr: string,
+	stdout: string,
+): ParsedHurlOutput {
+	const lines = stderr.split("\n");
 	const entries: ParsedEntry[] = [];
 	let currentEntry: ParsedEntry | null = null;
 	let isResponseHeader = false;
 	let isTimings = false;
 
 	for (const line of lines) {
-		if (line.startsWith('* Executing entry')) {
+		if (line.startsWith("* Executing entry")) {
 			if (currentEntry) {
 				entries.push(currentEntry);
 			}
 			currentEntry = {
-				requestMethod: '',
-				requestUrl: '',
+				requestMethod: "",
+				requestUrl: "",
 				requestHeaders: {},
 				response: {
-					status: '',
+					status: "",
 					headers: {},
-					body: ''
+					body: "",
 				},
-				timings: {}
+				timings: {},
 			};
 			isResponseHeader = false;
 			isTimings = false;
-		} else if (line.startsWith('* Request:')) {
+		} else if (line.startsWith("* Request:")) {
 			const match = line.match(/\* Request:\s*\* (\w+) (.*)/);
 			if (match && currentEntry) {
 				currentEntry.requestMethod = match[1];
 				currentEntry.requestUrl = match[2];
 			}
-		} else if (line.startsWith('* curl')) {
+		} else if (line.startsWith("* curl")) {
 			if (currentEntry) {
 				currentEntry.curlCommand = line.slice(2).trim();
 			}
-		} else if (line.startsWith('> ')) {
-			if (line.startsWith('> GET ') || line.startsWith('> POST ') || line.startsWith('> PUT ') || line.startsWith('> DELETE ')) {
-				const [method, path] = line.slice(2).split(' ');
+		} else if (line.startsWith("> ")) {
+			if (
+				line.startsWith("> GET ") ||
+				line.startsWith("> POST ") ||
+				line.startsWith("> PUT ") ||
+				line.startsWith("> DELETE ")
+			) {
+				const [method, path] = line.slice(2).split(" ");
 				if (currentEntry) {
 					currentEntry.requestMethod = method;
 					currentEntry.requestUrl = path;
 				}
 			} else {
-				const [key, ...values] = line.slice(2).split(':');
+				const [key, ...values] = line.slice(2).split(":");
 				if (key && values.length && currentEntry) {
-					currentEntry.requestHeaders[key.trim()] = values.join(':').trim();
+					currentEntry.requestHeaders[key.trim()] = values.join(":").trim();
 				}
 			}
-		} else if (line.startsWith('< ')) {
+		} else if (line.startsWith("< ")) {
 			isResponseHeader = true;
-			if (line.startsWith('< HTTP/')) {
+			if (line.startsWith("< HTTP/")) {
 				if (currentEntry) {
 					currentEntry.response.status = line.slice(2);
 				}
 			} else {
-				const [key, ...values] = line.slice(2).split(':');
+				const [key, ...values] = line.slice(2).split(":");
 				if (key && values.length && currentEntry) {
-					currentEntry.response.headers[key.trim()] = values.join(':').trim();
+					currentEntry.response.headers[key.trim()] = values.join(":").trim();
 				}
 			}
-		} else if (line.startsWith('* Timings:')) {
+		} else if (line.startsWith("* Timings:")) {
 			isTimings = true;
-		} else if (isTimings && line.trim() !== '') {
+		} else if (isTimings && line.trim() !== "") {
 			// Remove the '* ' prefix if it exists
-			const cleanedLine = line.startsWith('* ') ? line.slice(2) : line;
-			const [key, value] = cleanedLine.split(':').map(s => s.trim());
-			if (currentEntry && key && value && key !== 'begin' && key !== 'end') {
+			const cleanedLine = line.startsWith("* ") ? line.slice(2) : line;
+			const [key, value] = cleanedLine.split(":").map((s) => s.trim());
+			if (currentEntry && key && value && key !== "begin" && key !== "end") {
 				if (currentEntry.timings) {
 					currentEntry.timings[key] = value;
 				}
 			}
-		} else if (isTimings && line.trim() === '') {
+		} else if (isTimings && line.trim() === "") {
 			isTimings = false;
 			if (currentEntry?.timings) {
 				currentEntry.timings = formatTimings(currentEntry.timings);
