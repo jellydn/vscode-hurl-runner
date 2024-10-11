@@ -38,7 +38,6 @@ export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutpu
 					body: ''
 				}
 			};
-			isRequestHeader = false;
 			isResponseHeader = false;
 		} else if (line.startsWith('* Request:')) {
 			const match = line.match(/\* Request:\s*\* (\w+) (.*)/);
@@ -47,7 +46,6 @@ export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutpu
 				currentEntry.requestUrl = match[2];
 			}
 		} else if (line.startsWith('> ')) {
-			isRequestHeader = true;
 			if (line.startsWith('> GET ') || line.startsWith('> POST ') || line.startsWith('> PUT ') || line.startsWith('> DELETE ')) {
 				const [method, path] = line.slice(2).split(' ');
 				if (currentEntry) {
@@ -61,7 +59,6 @@ export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutpu
 				}
 			}
 		} else if (line.startsWith('< ')) {
-			isRequestHeader = false;
 			isResponseHeader = true;
 			if (line.startsWith('< HTTP/')) {
 				if (currentEntry) {

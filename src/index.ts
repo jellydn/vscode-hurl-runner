@@ -70,7 +70,7 @@ const { activate, deactivate } = defineExtension(() => {
 		const parsedOutput = parseHurlOutput(result.stderr, result.stdout);
 
 		// Create a formatted HTML output for each entry
-		const htmlOutput = parsedOutput.entries.map((entry) => {
+		const htmlOutput = parsedOutput.entries.map((entry, index) => {
 			let bodyType = 'text';
 			let formattedBody = entry.response.body || 'No response body';
 			if (formattedBody.trim().startsWith('{')) {
@@ -85,20 +85,24 @@ const { activate, deactivate } = defineExtension(() => {
 			}
 
 			return `
-				<h3>Request</h3>
-				<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl}</code></pre>
-				<h4>Headers</h4>
-				<pre><code class="language-http">${Object.entries(entry.requestHeaders).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+				<div class="entry">
+					<h3>Request</h3>
+					<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl}</code></pre>
+					<details>
+						<summary>Headers</summary>
+						<pre><code class="language-http">${Object.entries(entry.requestHeaders).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+					</details>
 
-				<h3>Response</h3>
-				<h4>Status</h4>
-				<pre><code class="language-http">${entry.response.status}</code></pre>
+					<h3>Response Body</h3>
+					<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
 
-				<h4>Headers</h4>
-				<pre><code class="language-http">${Object.entries(entry.response.headers).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
-
-				<h4>Body</h4>
-				<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+					<details>
+						<summary>Response Details</summary>
+						<p>Status: ${entry.response.status}</p>
+						<h4>Headers</h4>
+						<pre><code class="language-http">${Object.entries(entry.response.headers).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+					</details>
+				</div>
 			`;
 		}).join('<hr>');
 
@@ -112,13 +116,14 @@ const { activate, deactivate } = defineExtension(() => {
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
 				<style>
 					body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
-					pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; }
+					pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow: auto; }
 					.error { color: #D32F2F; }
-					hr { margin: 20px 0; border: 0; border-top: 1px solid #ddd; }
+					details { margin-bottom: 20px; }
+					summary { cursor: pointer; }
+					hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
 				</style>
 			</head>
 			<body>
-				<h1>${title}</h1>
 				${isError ? `<pre class="error"><code>${result.stderr}</code></pre>` : htmlOutput}
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
