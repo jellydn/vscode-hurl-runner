@@ -2,6 +2,7 @@ import { defineExtension } from "reactive-vscode";
 import * as vscode from "vscode";
 
 import { findEntryAtLine } from "./hurl-entry";
+import { parseHurlOutput } from "./hurl-parser";
 import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
 import { executeHurl, logger, responseLogger } from "./utils";
@@ -46,9 +47,10 @@ const { activate, deactivate } = defineExtension(() => {
 		resultPanel.reveal(vscode.ViewColumn.Two);
 	};
 
-	const showResultInWebView = (output: string, isError = false) => {
+	const showResultInWebView = (result: { stdout: string; stderr: string }, isError = false) => {
 		responseLogger.clear();
-		responseLogger.info(output);
+		responseLogger.info(`Stdout: ${result.stdout}`);
+		responseLogger.info(`Stderr: ${result.stderr}`);
 
 		if (!resultPanel) {
 			resultPanel = vscode.window.createWebviewPanel(
@@ -63,27 +65,42 @@ const { activate, deactivate } = defineExtension(() => {
 		}
 
 		const title = isError ? 'Hurl Runner: Error' : 'Hurl Runner: Result';
-		let formattedOutput = output;
-		let outputType = 'text';
 
-		// Detect output type and format accordingly
-		if (output.trim().startsWith('<')) {
-			outputType = 'html';
-			formattedOutput = output;
-		} else if (!isError) {
-			try {
-				const jsonObj = JSON.parse(output);
-				outputType = 'json';
-				formattedOutput = JSON.stringify(jsonObj, null, 2);
-			} catch {
-				if (output.trim().startsWith('<?xml')) {
-					outputType = 'xml';
-					formattedOutput = output.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		// Parse the output
+		const parsedOutput = parseHurlOutput(result.stderr, result.stdout);
+
+		// Create a formatted HTML output for each entry
+		const htmlOutput = parsedOutput.entries.map((entry) => {
+			let bodyType = 'text';
+			let formattedBody = entry.response.body || 'No response body';
+			if (formattedBody.trim().startsWith('{')) {
+				bodyType = 'json';
+				try {
+					formattedBody = JSON.stringify(JSON.parse(formattedBody), null, 2);
+				} catch {
+					// If parsing fails, leave it as is
 				}
+			} else if (formattedBody.trim().startsWith('<')) {
+				bodyType = formattedBody.trim().startsWith('<?xml') ? 'xml' : 'html';
 			}
-		} else {
-			outputType = 'bash';
-		}
+
+			return `
+				<h3>Request</h3>
+				<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl}</code></pre>
+				<h4>Headers</h4>
+				<pre><code class="language-http">${Object.entries(entry.requestHeaders).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+
+				<h3>Response</h3>
+				<h4>Status</h4>
+				<pre><code class="language-http">${entry.response.status}</code></pre>
+
+				<h4>Headers</h4>
+				<pre><code class="language-http">${Object.entries(entry.response.headers).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+
+				<h4>Body</h4>
+				<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+			`;
+		}).join('<hr>');
 
 		resultPanel.webview.html = `
 			<!DOCTYPE html>
@@ -94,14 +111,15 @@ const { activate, deactivate } = defineExtension(() => {
 				<title>${title}</title>
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
 				<style>
+					body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+					pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; }
 					.error { color: #D32F2F; }
+					hr { margin: 20px 0; border: 0; border-top: 1px solid #ddd; }
 				</style>
 			</head>
 			<body>
-				${outputType === 'html'
-				? formattedOutput
-				: `<pre><code class="language-${outputType}${isError ? ' error' : ''}">${formattedOutput}</code></pre>`
-			}
+				<h1>${title}</h1>
+				${isError ? `<pre class="error"><code>${result.stderr}</code></pre>` : htmlOutput}
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 			</body>
@@ -116,7 +134,7 @@ const { activate, deactivate } = defineExtension(() => {
 		async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
-				showResultInWebView("No active editor", true);
+				showResultInWebView({ stdout: '', stderr: "No active editor" }, true);
 				return;
 			}
 
@@ -129,14 +147,14 @@ const { activate, deactivate } = defineExtension(() => {
 			try {
 				const entry = findEntryAtLine(fileContent, currentLine);
 				if (!entry) {
-					showResultInWebView("No Hurl entry found at the current line", true);
+					showResultInWebView({ stdout: '', stderr: "No Hurl entry found at the current line" }, true);
 					return;
 				}
 
 				const envFile = envFileMapping[filePath];
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
-				const output = await executeHurl({
+				const result = await executeHurl({
 					filePath,
 					envFile,
 					variables,
@@ -144,10 +162,10 @@ const { activate, deactivate } = defineExtension(() => {
 					toEntry: entry.entryNumber,
 				});
 
-				showResultInWebView(output);
+				showResultInWebView(result);
 			} catch (error) {
 				const errorMessage = error instanceof Error ? error.message : "Unknown error";
-				showResultInWebView(errorMessage, true);
+				showResultInWebView({ stdout: '', stderr: errorMessage }, true);
 			}
 		},
 	);
@@ -157,7 +175,7 @@ const { activate, deactivate } = defineExtension(() => {
 		async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
-				showResultInWebView("No active editor", true);
+				showResultInWebView({ stdout: '', stderr: "No active editor" }, true);
 				return;
 			}
 
@@ -168,12 +186,12 @@ const { activate, deactivate } = defineExtension(() => {
 				const envFile = envFileMapping[filePath];
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
-				const output = await executeHurl({ filePath, envFile, variables });
+				const result = await executeHurl({ filePath, envFile, variables });
 
-				showResultInWebView(output);
+				showResultInWebView(result);
 			} catch (error) {
 				const errorMessage = error instanceof Error ? error.message : "Unknown error";
-				showResultInWebView(errorMessage, true);
+				showResultInWebView({ stdout: '', stderr: errorMessage }, true);
 			}
 		},
 	);
