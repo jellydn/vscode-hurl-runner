@@ -7,10 +7,38 @@ interface ParsedEntry {
 		headers: Record<string, string>;
 		body: string;
 	};
+	curlCommand?: string;
+	timings?: Record<string, string>;
 }
 
 interface ParsedHurlOutput {
 	entries: ParsedEntry[];
+}
+
+function formatTimings(timings: Record<string, string>): Record<string, string> {
+	const formattedTimings: Record<string, string> = {};
+
+	for (const [key, value] of Object.entries(timings)) {
+		if (key !== 'begin' && key !== 'end') {
+			if (value.endsWith('µs')) {
+				// Convert microseconds to a more readable format
+				const microseconds = Number.parseInt(value.slice(0, -3));
+				let formattedValue: string;
+				if (microseconds >= 1000000) {
+					formattedValue = `${(microseconds / 1000000).toFixed(2)} s`;
+				} else if (microseconds >= 1000) {
+					formattedValue = `${(microseconds / 1000).toFixed(2)} ms`;
+				} else {
+					formattedValue = `${microseconds} µs`;
+				}
+				formattedTimings[key] = formattedValue;
+			} else {
+				formattedTimings[key] = value;
+			}
+		}
+	}
+
+	return formattedTimings;
 }
 
 // Refer https://hurl.dev/docs/manual.html#verbose
@@ -22,6 +50,7 @@ export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutpu
 	const entries: ParsedEntry[] = [];
 	let currentEntry: ParsedEntry | null = null;
 	let isResponseHeader = false;
+	let isTimings = false;
 
 	for (const line of lines) {
 		if (line.startsWith('* Executing entry')) {
@@ -36,14 +65,20 @@ export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutpu
 					status: '',
 					headers: {},
 					body: ''
-				}
+				},
+				timings: {}
 			};
 			isResponseHeader = false;
+			isTimings = false;
 		} else if (line.startsWith('* Request:')) {
 			const match = line.match(/\* Request:\s*\* (\w+) (.*)/);
 			if (match && currentEntry) {
 				currentEntry.requestMethod = match[1];
 				currentEntry.requestUrl = match[2];
+			}
+		} else if (line.startsWith('* curl')) {
+			if (currentEntry) {
+				currentEntry.curlCommand = line.slice(2).trim();
 			}
 		} else if (line.startsWith('> ')) {
 			if (line.startsWith('> GET ') || line.startsWith('> POST ') || line.startsWith('> PUT ') || line.startsWith('> DELETE ')) {
@@ -70,8 +105,22 @@ export function parseHurlOutput(stderr: string, stdout: string): ParsedHurlOutpu
 					currentEntry.response.headers[key.trim()] = values.join(':').trim();
 				}
 			}
-		} else if (isResponseHeader && !line.startsWith('<')) {
-			isResponseHeader = false;
+		} else if (line.startsWith('* Timings:')) {
+			isTimings = true;
+		} else if (isTimings && line.trim() !== '') {
+			// Remove the '* ' prefix if it exists
+			const cleanedLine = line.startsWith('* ') ? line.slice(2) : line;
+			const [key, value] = cleanedLine.split(':').map(s => s.trim());
+			if (currentEntry && key && value && key !== 'begin' && key !== 'end') {
+				if (currentEntry.timings) {
+					currentEntry.timings[key] = value;
+				}
+			}
+		} else if (isTimings && line.trim() === '') {
+			isTimings = false;
+			if (currentEntry?.timings) {
+				currentEntry.timings = formatTimings(currentEntry.timings);
+			}
 		}
 	}
 

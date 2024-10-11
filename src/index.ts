@@ -93,8 +93,15 @@ const { activate, deactivate } = defineExtension(() => {
 						<pre><code class="language-http">${Object.entries(entry.requestHeaders).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
 					</details>
 
+					${entry.curlCommand ? `
+					<details>
+						<summary>cURL Command</summary>
+						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
+					</details>
+					` : ''}
+
 					<h3>Response Body</h3>
-					<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+					<pre class="response-body"><code class="language-${bodyType}">${formattedBody}</code></pre>
 
 					<details>
 						<summary>Response Details</summary>
@@ -102,6 +109,13 @@ const { activate, deactivate } = defineExtension(() => {
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(entry.response.headers).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
 					</details>
+
+					${entry.timings ? `
+					<details>
+						<summary>Timings</summary>
+						<pre><code class="language-yaml">${Object.entries(entry.timings).map(([key, value]) => `${key}: ${value}`).join('\n')}</code></pre>
+					</details>
+					` : ''}
 				</div>
 			`;
 		}).join('<hr>');
@@ -121,12 +135,13 @@ const { activate, deactivate } = defineExtension(() => {
 					details { margin-bottom: 20px; }
 					summary { cursor: pointer; }
 					hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
+					.response-body { max-height: 100vh; overflow: auto; }
 				</style>
 			</head>
 			<body>
 				${isError ? `<pre class="error"><code>${result.stderr}</code></pre>` : htmlOutput}
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 			</body>
 			</html>
 		`;

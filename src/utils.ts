@@ -24,7 +24,7 @@ export async function executeHurl(
 	statusBarMessage.show();
 	const { filePath, envFile, variables, fromEntry, toEntry } = options;
 	// Refer https://hurl.dev/docs/manual.html#verbose
-	const args = [filePath, '--verbose'];
+	const args = [filePath, '--very-verbose'];
 
 	for (const [key, value] of Object.entries(variables)) {
 		args.push("--variable", `${key}=${value}`);
