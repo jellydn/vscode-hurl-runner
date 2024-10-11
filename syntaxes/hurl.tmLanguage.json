@@ -1,0 +1,435 @@
+{
+	"name": "Hurl",
+	"scopeName": "source.hurl",
+	"fileTypes": [
+		"hurl"
+	],
+	"patterns": [
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#request"
+		},
+		{
+			"include": "#response"
+		},
+		{
+			"include": "#captures"
+		},
+		{
+			"include": "#asserts"
+		},
+		{
+			"include": "#variables"
+		}
+	],
+	"repository": {
+		"comments": {
+			"match": "#.*$",
+			"name": "comment.line.number-sign.hurl"
+		},
+		"request": {
+			"patterns": [
+				{
+					"include": "#http-methods"
+				},
+				{
+					"include": "#url"
+				},
+				{
+					"include": "#headers"
+				},
+				{
+					"include": "#query-params"
+				},
+				{
+					"include": "#form-params"
+				},
+				{
+					"include": "#multipart-form-data"
+				},
+				{
+					"include": "#cookies"
+				},
+				{
+					"include": "#basic-auth"
+				},
+				{
+					"include": "#options"
+				},
+				{
+					"include": "#request-body"
+				}
+			]
+		},
+		"http-methods": {
+			"match": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)\\b",
+			"name": "keyword.other.http-method.hurl"
+		},
+		"url": {
+			"patterns": [
+				{
+					"match": "\\b(https?://[^\\s]+)",
+					"name": "string.unquoted.url.hurl"
+				},
+				{
+					"include": "#variables"
+				}
+			]
+		},
+		"headers": {
+			"match": "^([\\w-]+):\\s*(.*)$",
+			"captures": {
+				"1": {
+					"name": "string.other.header-name.hurl"
+				},
+				"2": {
+					"patterns": [
+						{
+							"include": "#variables"
+						},
+						{
+							"match": ".*",
+							"name": "string.other.header-value.hurl"
+						}
+					]
+				}
+			}
+		},
+		"query-params": {
+			"begin": "^\\[QueryStringParams\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.query-params.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"form-params": {
+			"begin": "^\\[FormParams\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.form-params.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"multipart-form-data": {
+			"begin": "^\\[MultipartFormData\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.multipart-form-data.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(file,([^;]+)(;\\s*([\\w/]+))?|.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						},
+						"3": {
+							"name": "string.unquoted.filename.hurl"
+						},
+						"5": {
+							"name": "string.unquoted.content-type.hurl"
+						}
+					}
+				}
+			]
+		},
+		"cookies": {
+			"begin": "^\\[Cookies\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.cookies.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"basic-auth": {
+			"begin": "^\\[BasicAuth\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.basic-auth.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"options": {
+			"begin": "^\\[Options\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.options.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.parameter.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"request-body": {
+			"patterns": [
+				{
+					"begin": "^(```)(\\w+)?\\s*$",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.raw.begin.hurl"
+						},
+						"2": {
+							"name": "entity.name.type.hurl"
+						}
+					},
+					"end": "^```\\s*$",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.raw.end.hurl"
+						}
+					},
+					"contentName": "meta.embedded.block.hurl",
+					"patterns": [
+						{
+							"include": "#variables"
+						},
+						{
+							"include": "source.json"
+						},
+						{
+							"include": "source.xml"
+						},
+						{
+							"include": "source.graphql"
+						}
+					]
+				},
+				{
+					"begin": "^\\{$",
+					"end": "^\\}$",
+					"patterns": [
+						{
+							"include": "#variables"
+						},
+						{
+							"include": "source.json"
+						}
+					],
+					"name": "meta.embedded.block.json"
+				},
+				{
+					"begin": "^<\\?xml",
+					"end": "^$",
+					"patterns": [
+						{
+							"include": "#variables"
+						},
+						{
+							"include": "text.xml"
+						}
+					],
+					"name": "meta.embedded.block.xml"
+				},
+				{
+					"begin": "^`",
+					"end": "`$",
+					"name": "string.quoted.backtick.hurl",
+					"patterns": [
+						{
+							"include": "#variables"
+						}
+					]
+				},
+				{
+					"begin": "^base64,",
+					"end": ";$",
+					"name": "string.unquoted.base64.hurl"
+				},
+				{
+					"begin": "^hex,",
+					"end": ";$",
+					"name": "string.unquoted.hex.hurl"
+				},
+				{
+					"begin": "^file,",
+					"end": ";$",
+					"name": "string.unquoted.file.hurl"
+				}
+			]
+		},
+		"response": {
+			"patterns": [
+				{
+					"match": "^HTTP\\s+([\\d\\.]+)\\s*$",
+					"name": "constant.numeric.http-status.hurl"
+				},
+				{
+					"include": "#headers"
+				},
+				{
+					"include": "#request-body"
+				}
+			]
+		},
+		"captures": {
+			"begin": "^\\[Captures\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.captures.hurl",
+			"patterns": [
+				{
+					"match": "^(\\w+):\\s*(status|header|url|cookie|body|bytes|xpath|jsonpath|regex|variable|duration|certificate)\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "variable.other.hurl"
+						},
+						"2": {
+							"name": "support.function.capture.hurl"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"asserts": {
+			"begin": "^\\[Asserts\\]",
+			"end": "^(?=\\[|[A-Z])",
+			"name": "meta.asserts.hurl",
+			"patterns": [
+				{
+					"match": "^(status|header|url|cookie|body|bytes|xpath|jsonpath|regex|variable|duration|certificate)\\s*(.*)$",
+					"captures": {
+						"1": {
+							"name": "support.function.assert.hurl"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#variables"
+								},
+								{
+									"match": ".*",
+									"name": "string.unquoted.hurl"
+								}
+							]
+						}
+					}
+				},
+				{
+					"match": "(==|!=|>|>=|<|<=|startsWith|endsWith|contains|includes|matches|exists|isBoolean|isCollection|isEmpty|isFloat|isInteger|isNumber|isString)",
+					"name": "keyword.operator.comparison.hurl"
+				}
+			]
+		},
+		"variables": {
+			"patterns": [
+				{
+					"match": "\\{\\{([^\\}]+)\\}\\}",
+					"name": "variable.other.hurl"
+				},
+				{
+					"match": "\"\\{\\{([^\\}]+)\\}\\}\"",
+					"name": "string.quoted.double.hurl variable.other.hurl"
+				}
+			]
+		}
+	}
+}

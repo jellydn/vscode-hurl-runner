@@ -4,7 +4,9 @@
 	"version": "0.0.0",
 	"private": true,
 	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
-	"categories": ["Other"],
+	"categories": [
+		"Other"
+	],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -18,7 +20,13 @@
 	"author": "Dung Huynh Duc <dung@productsway.com>",
 	"publisher": "jellydn",
 	"main": "./dist/index.js",
-	"files": ["LICENSE.md", "dist/*", "res/*"],
+	"files": [
+		"LICENSE.md",
+		"dist/*",
+		"res/*",
+		"syntaxes/*",
+		"language-configuration.json"
+	],
 	"scripts": {
 		"build": "tsup src/index.ts --external vscode",
 		"dev": "nr build --watch",
@@ -85,9 +93,31 @@
 				"mac": "cmd+alt+shift+v",
 				"when": "editorTextFocus && editorLangId == hurl"
 			}
+		],
+		"languages": [
+			{
+				"id": "hurl",
+				"aliases": [
+					"Hurl",
+					"hurl"
+				],
+				"extensions": [
+					".hurl"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "hurl",
+				"scopeName": "source.hurl",
+				"path": "./syntaxes/hurl.tmLanguage.json"
+			}
 		]
 	},
-	"activationEvents": ["onStartupFinished"],
+	"activationEvents": [
+		"onLanguage:hurl"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@types/node": "22.7.5",
@@ -104,13 +134,11 @@
 	},
 	"packageManager": "pnpm@9.12.1",
 	"engines": {
-		"vscode": "^1.91.0"
+		"vscode": "^1.92.0"
 	},
 	"icon": "res/icon.png",
 	"sponsor": {
 		"url": "https://github.com/sponsors/jellydn"
 	},
-	"dependencies": {
-		"nano-spawn": "0.1.0"
-	}
+	"dependencies": {}
 }
