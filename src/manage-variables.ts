@@ -24,7 +24,7 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 			isCreateNew: true,
 		},
 		{
-			label: "Use Inline Variables",
+			label: "Inline Variables",
 			description: "Manage inline variables without creating an .env file",
 			isInline: true,
 		},
@@ -102,12 +102,12 @@ export async function manageEnvVariables(
 	const action = await vscode.window.showQuickPick(
 		[
 			{
-				label: "View Variables",
+				label: "View",
 				description: "Show all variables in the file",
 			},
-			{ label: "Add Variable", description: "Add a new variable" },
-			{ label: "Edit Variable", description: "Modify an existing variable" },
-			{ label: "Remove Variable", description: "Delete a variable" },
+			{ label: "Add", description: "Add a new variable" },
+			{ label: "Edit", description: "Modify an existing variable" },
+			{ label: "Remove", description: "Delete a variable" },
 			{
 				label: "Manage Inline Variables",
 				description: "Add, edit, or remove inline variables",
@@ -118,16 +118,16 @@ export async function manageEnvVariables(
 	);
 
 	switch (action?.label) {
-		case "View Variables":
+		case "View":
 			await showFileVariables(hurlVariablesProvider, filePath);
 			break;
-		case "Add Variable":
+		case "Add":
 			await addVariable(hurlVariablesProvider, filePath);
 			break;
-		case "Edit Variable":
+		case "Edit":
 			await editVariable(hurlVariablesProvider, filePath);
 			break;
-		case "Remove Variable":
+		case "Remove":
 			await removeVariable(hurlVariablesProvider, filePath);
 			break;
 		case "Manage Inline Variables":
