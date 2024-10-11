@@ -24,7 +24,35 @@
 
 ## Features
 
+- Run Hurl requests directly from VSCode
+- Execute single entries or entire Hurl files
+- Manage environment variables for Hurl requests
+- Support for inline variables
+- View detailed HTTP responses in a formatted webview
+- Syntax highlighting for Hurl files
+- Integration with VSCode's status bar for execution feedback
+
+### Commands
+
+- `Hurl Runner: Run Hurl`: Execute the Hurl entry at the current cursor position
+- `Hurl Runner: Run Hurl File`: Execute the entire Hurl file
+- `Hurl Runner: Manage Variables`: Manage environment and inline variables for Hurl requests
+
+### Keybindings
+
+- `ctrl+alt+h` (Windows/Linux) or `cmd+alt+h` (Mac): Run Hurl entry
+- `ctrl+alt+f` (Windows/Linux) or `cmd+alt+f` (Mac): Run Hurl file
+- `ctrl+alt+shift+v` (Windows/Linux) or `cmd+alt+shift+v` (Mac): Manage variables
+
 ## Demo
+
+TODO: Add demo GIFs showcasing the following features:
+
+- Running a single Hurl entry
+- Running an entire Hurl file
+- Managing environment variables
+- Using inline variables
+- Viewing formatted HTTP responses
 
 ## Author
 
