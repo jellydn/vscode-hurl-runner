@@ -38,9 +38,26 @@
 
 ### Commands
 
-- `Hurl Runner: Run Hurl`: Execute the Hurl entry at the current cursor position
-- `Hurl Runner: Run Hurl File`: Execute the entire Hurl file
-- `Hurl Runner: Manage Variables`: Manage environment and inline variables for Hurl requests
+<!-- commands -->
+
+| Command                              | Title                         |
+| ------------------------------------ | ----------------------------- |
+| `vscode-hurl-runner.runHurl`         | Hurl Runner: Run Hurl         |
+| `vscode-hurl-runner.runHurlFile`     | Hurl Runner: Run Hurl File    |
+| `vscode-hurl-runner.manageVariables` | Hurl Runner: Manage Variables |
+
+<!-- commands -->
+
+### Configs
+
+<!-- configs -->
+
+| Key                                       | Description                                              | Type     | Default  |
+| ----------------------------------------- | -------------------------------------------------------- | -------- | -------- |
+| `vscode-hurl-runner.hurlPath`             | Path to the Hurl executable                              | `string` | `"hurl"` |
+| `vscode-hurl-runner.environmentVariables` | Environment variables to be used when running Hurl files | `object` | `{}`     |
+
+<!-- configs -->
 
 ### Keybindings
 
