@@ -1,9 +1,7 @@
 {
 	"name": "Hurl",
 	"scopeName": "source.hurl",
-	"fileTypes": [
-		"hurl"
-	],
+	"fileTypes": ["hurl"],
 	"patterns": [
 		{
 			"include": "#comments"

@@ -4,9 +4,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
-	"categories": [
-		"Other"
-	],
+	"categories": ["Other"],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -97,13 +95,8 @@
 		"languages": [
 			{
 				"id": "hurl",
-				"aliases": [
-					"Hurl",
-					"hurl"
-				],
-				"extensions": [
-					".hurl"
-				],
+				"aliases": ["Hurl", "hurl"],
+				"extensions": [".hurl"],
 				"configuration": "./language-configuration.json"
 			}
 		],
@@ -115,9 +108,7 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onLanguage:hurl"
-	],
+	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@types/node": "22.7.5",
