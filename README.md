@@ -78,7 +78,24 @@
 
 - And more ...
 
-## Author
+## Related Projects
+
+### For Neovim Users
+
+If you prefer Neovim, check out my companion plugin:
+
+- [hurl.nvim](https://github.com/jellydn/hurl.nvim): A Neovim plugin for running Hurl requests directly within Neovim.
+
+This plugin offers similar functionality to this VSCode extension, tailored for the Neovim environment.
+
+### Other Tools in the Ecosystem
+
+- [pfeiferj/vscode-hurl](https://github.com/pfeiferj/vscode-hurl)
+- [Verseth/vscode-hurl-runner](https://github.com/Verseth/vscode-hurl-runner)
+
+Whether you're using VSCode, Neovim, or the command line, there's a tool to help you work efficiently with Hurl files.
+
+# Author
 
 👤 **Dung Huynh Duc <dung@productsway.com>**
 
@@ -97,3 +114,7 @@ Give a ⭐️ if this project helped you!
 
 Copyright © 2024 [Dung Huynh Duc <dung@productsway.com>](https://github.com/jellydn).<br />
 This project is [MIT](https://github.com/jellydn/vscode-hurl-runner/blob/master/LICENSE) licensed.
+
+[![kofi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/dunghd)
+[![paypal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/dunghd)
+[![buymeacoffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dunghd)
