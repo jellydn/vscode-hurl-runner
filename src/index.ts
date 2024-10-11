@@ -9,11 +9,106 @@ import { executeHurl, logger, responseLogger } from "./utils";
 const { activate, deactivate } = defineExtension(() => {
 	const hurlVariablesProvider = new HurlVariablesProvider();
 	const envFileMapping: Record<string, string> = {};
+	let resultPanel: vscode.WebviewPanel | undefined;
 
-	const showResultOutput = (output: string) => {
+	const showLoadingInWebView = () => {
+		if (!resultPanel) {
+			resultPanel = vscode.window.createWebviewPanel(
+				"hurl-runner",
+				"Hurl Runner",
+				vscode.ViewColumn.Two,
+				{ enableScripts: true },
+			);
+			resultPanel.onDidDispose(() => {
+				resultPanel = undefined;
+			});
+		}
+
+		resultPanel.webview.html = `
+			<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>Hurl Runner: Loading</title>
+				<style>
+					body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+					.loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+					@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+				</style>
+			</head>
+			<body>
+				<div class="loader"></div>
+			</body>
+			</html>
+		`;
+
+		resultPanel.reveal(vscode.ViewColumn.Two);
+	};
+
+	const showResultInWebView = (output: string, isError = false) => {
 		responseLogger.clear();
 		responseLogger.info(output);
-		responseLogger.show();
+
+		if (!resultPanel) {
+			resultPanel = vscode.window.createWebviewPanel(
+				"hurl-runner",
+				"Hurl Runner",
+				vscode.ViewColumn.Two,
+				{ enableScripts: true },
+			);
+			resultPanel.onDidDispose(() => {
+				resultPanel = undefined;
+			});
+		}
+
+		const title = isError ? 'Hurl Runner: Error' : 'Hurl Runner: Result';
+		let formattedOutput = output;
+		let outputType = 'text';
+
+		// Detect output type and format accordingly
+		if (output.trim().startsWith('<')) {
+			outputType = 'html';
+			formattedOutput = output;
+		} else if (!isError) {
+			try {
+				const jsonObj = JSON.parse(output);
+				outputType = 'json';
+				formattedOutput = JSON.stringify(jsonObj, null, 2);
+			} catch {
+				if (output.trim().startsWith('<?xml')) {
+					outputType = 'xml';
+					formattedOutput = output.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+				}
+			}
+		} else {
+			outputType = 'bash';
+		}
+
+		resultPanel.webview.html = `
+			<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>${title}</title>
+				<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+				<style>
+					.error { color: #D32F2F; }
+				</style>
+			</head>
+			<body>
+				${outputType === 'html'
+				? formattedOutput
+				: `<pre><code class="language-${outputType}${isError ? ' error' : ''}">${formattedOutput}</code></pre>`
+			}
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+			</body>
+			</html>
+		`;
+
+		resultPanel.reveal(vscode.ViewColumn.Two);
 	};
 
 	const runHurl = vscode.commands.registerCommand(
@@ -21,20 +116,20 @@ const { activate, deactivate } = defineExtension(() => {
 		async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
-				vscode.window.showErrorMessage("No active editor");
+				showResultInWebView("No active editor", true);
 				return;
 			}
 
+			showLoadingInWebView();
+
 			const filePath = editor.document.uri.fsPath;
-			const currentLine = editor.selection.active.line + 1; // VSCode lines are 0-indexed, Hurl is 1-indexed
+			const currentLine = editor.selection.active.line + 1;
 			const fileContent = editor.document.getText();
 
 			try {
 				const entry = findEntryAtLine(fileContent, currentLine);
 				if (!entry) {
-					vscode.window.showErrorMessage(
-						"No Hurl entry found at the current line",
-					);
+					showResultInWebView("No Hurl entry found at the current line", true);
 					return;
 				}
 
@@ -49,11 +144,10 @@ const { activate, deactivate } = defineExtension(() => {
 					toEntry: entry.entryNumber,
 				});
 
-				showResultOutput(output);
+				showResultInWebView(output);
 			} catch (error) {
-				vscode.window.showErrorMessage(
-					`${error instanceof Error ? error.message : "Unknown error"}`,
-				);
+				const errorMessage = error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView(errorMessage, true);
 			}
 		},
 	);
@@ -63,9 +157,11 @@ const { activate, deactivate } = defineExtension(() => {
 		async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
-				vscode.window.showErrorMessage("No active editor");
+				showResultInWebView("No active editor", true);
 				return;
 			}
+
+			showLoadingInWebView();
 
 			const filePath = editor.document.uri.fsPath;
 			try {
@@ -74,11 +170,10 @@ const { activate, deactivate } = defineExtension(() => {
 
 				const output = await executeHurl({ filePath, envFile, variables });
 
-				showResultOutput(output);
+				showResultInWebView(output);
 			} catch (error) {
-				vscode.window.showErrorMessage(
-					`${error instanceof Error ? error.message : "Unknown error"}`,
-				);
+				const errorMessage = error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView(errorMessage, true);
 			}
 		},
 	);
@@ -117,6 +212,9 @@ const { activate, deactivate } = defineExtension(() => {
 			runHurl.dispose();
 			runHurlFile.dispose();
 			manageVariables.dispose();
+			if (resultPanel) {
+				resultPanel.dispose();
+			}
 		},
 	};
 });

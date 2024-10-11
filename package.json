@@ -1,10 +1,12 @@
 {
 	"name": "vscode-hurl-runner",
-	"displayName": "vscode-hurl-runner",
+	"displayName": "VSCode Hurl Runner",
 	"version": "0.0.0",
 	"private": true,
-	"description": "Run Hurl in VSCode",
-	"categories": ["Other"],
+	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
+	"categories": [
+		"Other"
+	],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -18,7 +20,11 @@
 	"author": "Dung Huynh Duc <dung@productsway.com>",
 	"publisher": "jellydn",
 	"main": "./dist/index.js",
-	"files": ["LICENSE.md", "dist/*", "res/*"],
+	"files": [
+		"LICENSE.md",
+		"dist/*",
+		"res/*"
+	],
 	"scripts": {
 		"build": "tsup src/index.ts --external vscode",
 		"dev": "nr build --watch",
@@ -87,7 +93,9 @@
 			}
 		]
 	},
-	"activationEvents": ["onStartupFinished"],
+	"activationEvents": [
+		"onStartupFinished"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@types/node": "^22.7.5",

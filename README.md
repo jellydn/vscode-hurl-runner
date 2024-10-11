@@ -8,18 +8,22 @@
   <a href="https://github.com/jellydn/vscode-hurl-runner/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
-  <a href="https://github.com/jellydn/vscode-hurl-runner/blob/master/LICENSE" target="_blank">
+  <a href="https://github.com/jellydn/vscode-hurl-runner/blob/main/LICENSE.md" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/github/license/jellydn/vscode-hurl-runner" />
   </a>
 </p>
 
-> Run Hurl in VSCode
+> Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.
 
 ### 🏠 [Homepage](https://github.com/jellydn/vscode-hurl-runner#readme)
 
 ## Prerequisites
 
 - vscode ^1.92.0
+
+## Features
+
+## Demo
 
 ## Author
 

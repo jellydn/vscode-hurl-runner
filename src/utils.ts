@@ -8,46 +8,12 @@ import type { HurlExecutionOptions } from "./hurl-entry";
 export const logger = useLogger(displayName);
 export const responseLogger = useLogger(`${displayName} response`);
 
-// Update the formatOutput function to return a Promise directly
-function formatOutput(output: string): Promise<string> {
-	return new Promise((resolve) => {
-		try {
-			JSON.parse(output);
-			exec(
-				`echo '${output.replace(/'/g, "'\\''")}' | jq .`,
-				(error, stdout, stderr) => {
-					if (error) {
-						logger.error(`Error formatting JSON with jq: ${error.message}`);
-						resolve(output);
-					} else {
-						resolve(stdout || stderr);
-					}
-				},
-			);
-		} catch {
-			exec(
-				`echo '${output.replace(/'/g, "'\\''")}' | prettier --parser html`,
-				(error, stdout, stderr) => {
-					if (error) {
-						logger.error(`Error formatting with prettier: ${error.message}`);
-						resolve(output);
-					} else {
-						resolve(stdout || stderr);
-					}
-				},
-			);
-		}
-	});
-}
-
-// Update the executeHurl function to use async/await
 export async function executeHurl(
 	options: HurlExecutionOptions,
 ): Promise<string> {
 	// Set status bar message
 	const statusBarMessage = vscode.window.createStatusBarItem(
 		vscode.StatusBarAlignment.Left,
-		10000,
 	);
 	statusBarMessage.text = "Running Hurl...";
 	statusBarMessage.show();
@@ -73,7 +39,6 @@ export async function executeHurl(
 	const command = `hurl ${args.join(" ")}`;
 	logger.info(`Executing command: ${command}`);
 
-	// Execute Hurl command
 	const output = await new Promise<string>((resolve, reject) => {
 		exec(command, (error, stdout, stderr) => {
 			if (error) {
@@ -105,6 +70,5 @@ export async function executeHurl(
 		});
 	});
 
-	const formattedOutput = await formatOutput(output);
-	return formattedOutput;
+	return output;
 }
