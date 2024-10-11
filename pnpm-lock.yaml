@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@antfu/ni':
-        specifier: ^0.23.0
+        specifier: 0.23.0
         version: 0.23.0
       '@biomejs/biome':
         specifier: 1.9.3
@@ -30,7 +30,7 @@ importers:
         specifier: 4.8.0
         version: 4.8.0
       pnpm:
-        specifier: ^9.12.1
+        specifier: 9.12.1
         version: 9.12.1
       reactive-vscode:
         specifier: 0.2.5
