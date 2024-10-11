@@ -1,6 +1,10 @@
+<p align="center">
+  <img src="res/icon.png" alt="VSCode Hurl Runner Logo" width="200"/>
+</p>
+
 <h1 align="center">Welcome to vscode-hurl-runner 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.1.2-blue.svg?cacheSeconds=2592000" />
   <img src="https://img.shields.io/badge/vscode-%5E1.92.0-blue.svg" />
   <a href="https://github.com/jellydn/vscode-hurl-runner#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
@@ -46,13 +50,16 @@
 
 ## Demo
 
-TODO: Add demo GIFs showcasing the following features:
-
 - Running a single Hurl entry
+  [![Run an entry](https://i.gyazo.com/4ab37e9a75fc26a84e08e432744b7bca.gif)](https://gyazo.com/4ab37e9a75fc26a84e08e432744b7bca)
+
 - Running an entire Hurl file
-- Managing environment variables
-- Using inline variables
-- Viewing formatted HTTP responses
+  [![Run a file](https://i.gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef.gif)](https://gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef)
+
+- Managing environment variables / using inline variables
+  [![Select .env file before running](https://i.gyazo.com/0981889b1ef672704ec4e9a568a71c04.gif)](https://gyazo.com/0981889b1ef672704ec4e9a568a71c04)
+
+- And more ...
 
 ## Author
 
