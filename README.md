@@ -55,10 +55,11 @@
 
 <!-- configs -->
 
-| Key                                       | Description                                              | Type     | Default  |
-| ----------------------------------------- | -------------------------------------------------------- | -------- | -------- |
-| `vscode-hurl-runner.hurlPath`             | Path to the Hurl executable                              | `string` | `"hurl"` |
-| `vscode-hurl-runner.environmentVariables` | Environment variables to be used when running Hurl files | `object` | `{}`     |
+| Key                                       | Description                                                                                                                                                                         | Type     | Default     |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
+| `vscode-hurl-runner.hurlPath`             | Path to the Hurl executable                                                                                                                                                         | `string` | `"hurl"`    |
+| `vscode-hurl-runner.environmentVariables` | Environment variables to be used when running Hurl files                                                                                                                            | `object` | `{}`        |
+| `vscode-hurl-runner.verboseMode`          | Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data. | `string` | `"verbose"` |
 
 <!-- configs -->
 

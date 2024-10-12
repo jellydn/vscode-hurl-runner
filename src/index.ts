@@ -64,7 +64,7 @@ const { activate, deactivate } = defineExtension(() => {
 	};
 
 	const showResultInWebView = (
-		result: { stdout: string; stderr: string },
+		result: { stdout: string; stderr: string; isVeryVerbose?: boolean },
 		isError = false,
 	) => {
 		responseLogger.clear();
@@ -104,6 +104,19 @@ const { activate, deactivate } = defineExtension(() => {
 					bodyType = formattedBody.trim().startsWith("<?xml") ? "xml" : "html";
 				}
 
+				const timingsHtml = result.isVeryVerbose && entry.timings
+					? `
+					<details>
+						<summary>Timings</summary>
+						<pre><code class="language-yaml">${Object.entries(
+						entry.timings,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
+					</details>
+					`
+					: '';
+
 				return `
 				<div class="entry">
 					<h3>Request</h3>
@@ -111,21 +124,20 @@ const { activate, deactivate } = defineExtension(() => {
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-							entry.requestHeaders,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+					entry.requestHeaders,
+				)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
-					${
-						entry.curlCommand
-							? `
+					${entry.curlCommand
+						? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-							: ""
+						: ""
 					}
 
 					<h3>Response Body</h3>
@@ -136,24 +148,13 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-							entry.response.headers,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+						entry.response.headers,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
-					${
-						entry.timings
-							? `
-					<details>
-						<summary>Timings</summary>
-						<pre><code class="language-yaml">${Object.entries(entry.timings)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
-					</details>
-					`
-							: ""
-					}
+					${timingsHtml}
 				</div>
 			`;
 			})
@@ -162,25 +163,25 @@ const { activate, deactivate } = defineExtension(() => {
 		resultPanel.webview.html = `
 			<!DOCTYPE html>
 			<html lang="en">
-			<head>
-				<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>${title}</title>
-				<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
-				<style>
-					body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
-					pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow: auto; }
-					details { margin-bottom: 20px; }
-					summary { cursor: pointer; }
-					hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
-					.response-body { max-height: 100vh; overflow: auto; }
-				</style>
-			</head>
-			<body>
-				${isError ? `<pre class="language-bash"><code>${result.stderr}</code></pre>` : htmlOutput}
-					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-			</body>
+				<head>
+					<meta charset="UTF-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1.0">
+					<title>${title}</title>
+					<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+					<style>
+						body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+						pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow: auto; }
+						details { margin-bottom: 20px; }
+						summary { cursor: pointer; }
+						hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
+						.response-body { max-height: 100vh; overflow: auto; }
+					</style>
+				</head>
+				<body>
+					${isError ? `<pre class="language-bash"><code>${result.stderr}</code></pre>` : htmlOutput}
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+						<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+				</body>
 			</html>
 		`;
 

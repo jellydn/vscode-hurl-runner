@@ -11,6 +11,7 @@ export const responseLogger = useLogger(`${displayName} Response`);
 interface HurlExecutionResult {
 	stdout: string;
 	stderr: string;
+	isVeryVerbose: boolean;
 }
 
 export async function executeHurl(
@@ -23,8 +24,13 @@ export async function executeHurl(
 	statusBarMessage.text = "Running Hurl...";
 	statusBarMessage.show();
 	const { filePath, envFile, variables, fromEntry, toEntry } = options;
-	// Refer https://hurl.dev/docs/manual.html#verbose
-	const args = [filePath, "--very-verbose"];
+
+	// Get the verbosity configuration
+	const config = vscode.workspace.getConfiguration("vscode-hurl-runner");
+	const verboseMode = config.get<string>("verboseMode", "verbose");
+	const isVeryVerbose = verboseMode === "very-verbose";
+	const verboseFlag = isVeryVerbose ? "--very-verbose" : "--verbose";
+	const args = [filePath, verboseFlag];
 
 	for (const [key, value] of Object.entries(variables)) {
 		args.push("--variable", `${key}=${value}`);
@@ -64,7 +70,7 @@ export async function executeHurl(
 		hurlProcess.on("close", (code) => {
 			statusBarMessage.dispose();
 			if (code === 0 || (code === 1 && !stderr.includes("error:"))) {
-				resolve({ stdout, stderr });
+				resolve({ stdout, stderr, isVeryVerbose });
 			} else {
 				reject(new Error(`Hurl process exited with code ${code}\n${stderr}`));
 			}
