@@ -1,4 +1,4 @@
-import { defineExtension } from "reactive-vscode";
+import { defineExtension, useCommand } from "reactive-vscode";
 import * as vscode from "vscode";
 
 import { findEntryAtLine } from "./hurl-entry";
@@ -74,7 +74,7 @@ const { activate, deactivate } = defineExtension(() => {
 
 		// Create a formatted HTML output for each entry
 		const htmlOutput = parsedOutput.entries
-			.map((entry, index) => {
+			.map((entry) => {
 				let bodyType = "text";
 				let formattedBody = entry.response.body || "No response body";
 				if (formattedBody.trim().startsWith("{")) {
@@ -95,21 +95,20 @@ const { activate, deactivate } = defineExtension(() => {
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-							entry.requestHeaders,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+					entry.requestHeaders,
+				)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
-					${
-						entry.curlCommand
-							? `
+					${entry.curlCommand
+						? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-							: ""
+						: ""
 					}
 
 					<h3>Response Body</h3>
@@ -120,15 +119,14 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-							entry.response.headers,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+						entry.response.headers,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
-					${
-						entry.timings
-							? `
+					${entry.timings
+						? `
 					<details>
 						<summary>Timings</summary>
 						<pre><code class="language-yaml">${Object.entries(entry.timings)
@@ -136,7 +134,7 @@ const { activate, deactivate } = defineExtension(() => {
 							.join("\n")}</code></pre>
 					</details>
 					`
-							: ""
+						: ""
 					}
 				</div>
 			`;
@@ -154,7 +152,6 @@ const { activate, deactivate } = defineExtension(() => {
 				<style>
 					body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
 					pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow: auto; }
-					.error { color: #D32F2F; }
 					details { margin-bottom: 20px; }
 					summary { cursor: pointer; }
 					hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
@@ -162,7 +159,7 @@ const { activate, deactivate } = defineExtension(() => {
 				</style>
 			</head>
 			<body>
-				${isError ? `<pre class="error"><code>${result.stderr}</code></pre>` : htmlOutput}
+				${isError ? `<pre class="language-bash"><code>${result.stderr}</code></pre>` : htmlOutput}
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 			</body>
@@ -172,112 +169,100 @@ const { activate, deactivate } = defineExtension(() => {
 		resultPanel.reveal(vscode.ViewColumn.Two);
 	};
 
-	const runHurl = vscode.commands.registerCommand(
-		"vscode-hurl-runner.runHurl",
-		async () => {
-			const editor = vscode.window.activeTextEditor;
-			if (!editor) {
-				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
+	useCommand("vscode-hurl-runner.runHurl", async () => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
+			return;
+		}
+
+		showLoadingInWebView();
+
+		const filePath = editor.document.uri.fsPath;
+		const currentLine = editor.selection.active.line + 1;
+		const fileContent = editor.document.getText();
+
+		try {
+			const entry = findEntryAtLine(fileContent, currentLine);
+			if (!entry) {
+				showResultInWebView(
+					{ stdout: "", stderr: "No Hurl entry found at the current line" },
+					true,
+				);
 				return;
 			}
 
-			showLoadingInWebView();
+			const envFile = envFileMapping[filePath];
+			const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
-			const filePath = editor.document.uri.fsPath;
-			const currentLine = editor.selection.active.line + 1;
-			const fileContent = editor.document.getText();
+			const result = await executeHurl({
+				filePath,
+				envFile,
+				variables,
+				fromEntry: entry.entryNumber,
+				toEntry: entry.entryNumber,
+			});
 
-			try {
-				const entry = findEntryAtLine(fileContent, currentLine);
-				if (!entry) {
-					showResultInWebView(
-						{ stdout: "", stderr: "No Hurl entry found at the current line" },
-						true,
-					);
-					return;
-				}
+			showResultInWebView(result);
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : "Unknown error";
+			showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+		}
+	});
 
-				const envFile = envFileMapping[filePath];
-				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+	useCommand("vscode-hurl-runner.runHurlFile", async () => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
+			return;
+		}
 
-				const result = await executeHurl({
-					filePath,
-					envFile,
-					variables,
-					fromEntry: entry.entryNumber,
-					toEntry: entry.entryNumber,
-				});
+		showLoadingInWebView();
 
-				showResultInWebView(result);
-			} catch (error) {
-				const errorMessage =
-					error instanceof Error ? error.message : "Unknown error";
-				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
-			}
-		},
-	);
+		const filePath = editor.document.uri.fsPath;
+		try {
+			const envFile = envFileMapping[filePath];
+			const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
-	const runHurlFile = vscode.commands.registerCommand(
-		"vscode-hurl-runner.runHurlFile",
-		async () => {
-			const editor = vscode.window.activeTextEditor;
-			if (!editor) {
-				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
-				return;
-			}
+			const result = await executeHurl({ filePath, envFile, variables });
 
-			showLoadingInWebView();
+			showResultInWebView(result);
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : "Unknown error";
+			showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+		}
+	});
 
-			const filePath = editor.document.uri.fsPath;
-			try {
-				const envFile = envFileMapping[filePath];
-				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+	useCommand("vscode-hurl-runner.manageVariables", async () => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			vscode.window.showErrorMessage("No active editor");
+			return;
+		}
 
-				const result = await executeHurl({ filePath, envFile, variables });
+		const filePath = editor.document.uri.fsPath;
 
-				showResultInWebView(result);
-			} catch (error) {
-				const errorMessage =
-					error instanceof Error ? error.message : "Unknown error";
-				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
-			}
-		},
-	);
-
-	const manageVariables = vscode.commands.registerCommand(
-		"vscode-hurl-runner.manageVariables",
-		async () => {
-			const editor = vscode.window.activeTextEditor;
-			if (!editor) {
-				vscode.window.showErrorMessage("No active editor");
-				return;
-			}
-
-			const filePath = editor.document.uri.fsPath;
-
-			const envFile = await chooseEnvFile();
-			if (envFile === "inline") {
-				await manageEnvVariables(hurlVariablesProvider, {
-					filePath,
-					isInline: true,
-				});
-			} else if (filePath && envFile) {
-				envFileMapping[filePath] = envFile;
-				await manageEnvVariables(hurlVariablesProvider, {
-					filePath,
-					envFile,
-				});
-			}
-		},
-	);
+		const envFile = await chooseEnvFile();
+		if (envFile === "inline") {
+			await manageEnvVariables(hurlVariablesProvider, {
+				filePath,
+				isInline: true,
+			});
+		} else if (filePath && envFile) {
+			envFileMapping[filePath] = envFile;
+			await manageEnvVariables(hurlVariablesProvider, {
+				filePath,
+				envFile,
+			});
+		}
+	});
 
 	logger.info("vscode-hurl-runner is now active!");
 
 	return {
 		dispose: () => {
-			runHurl.dispose();
-			runHurlFile.dispose();
-			manageVariables.dispose();
 			if (resultPanel) {
 				resultPanel.dispose();
 			}
