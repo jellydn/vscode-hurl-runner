@@ -49,10 +49,6 @@
 				"title": "Hurl: Run File"
 			},
 			{
-				"command": "vscode-hurl-runner.manageVariables",
-				"title": "Hurl: Manage Variables"
-			},
-			{
 				"command": "vscode-hurl-runner.runHurlToEnd",
 				"title": "Hurl: Run to End"
 			},
@@ -104,9 +100,15 @@
 				"when": "editorTextFocus && editorLangId == hurl"
 			},
 			{
-				"command": "vscode-hurl-runner.manageVariables",
+				"command": "vscode-hurl-runner.manageInlineVariables",
 				"key": "ctrl+alt+shift+v",
 				"mac": "cmd+alt+shift+v",
+				"when": "editorTextFocus && editorLangId == hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlToEnd",
+				"key": "ctrl+alt+shift+h",
+				"mac": "cmd+alt+shift+h",
 				"when": "editorTextFocus && editorLangId == hurl"
 			}
 		],
