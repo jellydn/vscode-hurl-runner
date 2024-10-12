@@ -4,9 +4,7 @@
 	"version": "0.3.1",
 	"private": true,
 	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
-	"categories": [
-		"Other"
-	],
+	"categories": ["Other"],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -86,10 +84,7 @@
 				},
 				"vscode-hurl-runner.verboseMode": {
 					"type": "string",
-					"enum": [
-						"verbose",
-						"very-verbose"
-					],
+					"enum": ["verbose", "very-verbose"],
 					"default": "verbose",
 					"description": "Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data."
 				}
@@ -118,13 +113,8 @@
 		"languages": [
 			{
 				"id": "hurl",
-				"aliases": [
-					"Hurl",
-					"hurl"
-				],
-				"extensions": [
-					".hurl"
-				],
+				"aliases": ["Hurl", "hurl"],
+				"extensions": [".hurl"],
 				"configuration": "./language-configuration.json"
 			}
 		],
@@ -136,9 +126,7 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onLanguage:hurl"
-	],
+	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
 		"@antfu/ni": "0.23.0",
 		"@biomejs/biome": "1.9.3",
