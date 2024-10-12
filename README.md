@@ -40,11 +40,14 @@
 
 <!-- commands -->
 
-| Command                              | Title                         |
-| ------------------------------------ | ----------------------------- |
-| `vscode-hurl-runner.runHurl`         | Hurl Runner: Run Hurl         |
-| `vscode-hurl-runner.runHurlFile`     | Hurl Runner: Run Hurl File    |
-| `vscode-hurl-runner.manageVariables` | Hurl Runner: Manage Variables |
+| Command                                    | Title                         |
+| ------------------------------------------ | ----------------------------- |
+| `vscode-hurl-runner.runHurl`               | Hurl: Run at entry            |
+| `vscode-hurl-runner.runHurlFile`           | Hurl: Run File                |
+| `vscode-hurl-runner.manageVariables`       | Hurl: Manage Variables        |
+| `vscode-hurl-runner.runHurlToEnd`          | Hurl: Run to End              |
+| `vscode-hurl-runner.manageInlineVariables` | Hurl: Manage Inline Variables |
+| `vscode-hurl-runner.selectEnvFile`         | Hurl: Select Environment File |
 
 <!-- commands -->
 

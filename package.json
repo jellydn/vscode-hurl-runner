@@ -4,7 +4,9 @@
 	"version": "0.2.0",
 	"private": true,
 	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
-	"categories": ["Other"],
+	"categories": [
+		"Other"
+	],
 	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
 	"bugs": {
 		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
@@ -42,15 +44,27 @@
 		"commands": [
 			{
 				"command": "vscode-hurl-runner.runHurl",
-				"title": "Hurl Runner: Run Hurl"
+				"title": "Hurl: Run at entry"
 			},
 			{
 				"command": "vscode-hurl-runner.runHurlFile",
-				"title": "Hurl Runner: Run Hurl File"
+				"title": "Hurl: Run File"
 			},
 			{
 				"command": "vscode-hurl-runner.manageVariables",
-				"title": "Hurl Runner: Manage Variables"
+				"title": "Hurl: Manage Variables"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlToEnd",
+				"title": "Hurl: Run to End"
+			},
+			{
+				"command": "vscode-hurl-runner.manageInlineVariables",
+				"title": "Hurl: Manage Inline Variables"
+			},
+			{
+				"command": "vscode-hurl-runner.selectEnvFile",
+				"title": "Hurl: Select Environment File"
 			}
 		],
 		"configuration": {
@@ -95,8 +109,13 @@
 		"languages": [
 			{
 				"id": "hurl",
-				"aliases": ["Hurl", "hurl"],
-				"extensions": [".hurl"],
+				"aliases": [
+					"Hurl",
+					"hurl"
+				],
+				"extensions": [
+					".hurl"
+				],
 				"configuration": "./language-configuration.json"
 			}
 		],
@@ -108,7 +127,9 @@
 			}
 		]
 	},
-	"activationEvents": ["onLanguage:hurl"],
+	"activationEvents": [
+		"onLanguage:hurl"
+	],
 	"devDependencies": {
 		"@antfu/ni": "0.23.0",
 		"@biomejs/biome": "1.9.3",
