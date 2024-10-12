@@ -8,7 +8,6 @@ import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
 import { executeHurl, logger, responseLogger } from "./utils";
 
-
 const { activate, deactivate } = defineExtension(() => {
 	// Hurl variables provider
 	const hurlVariablesProvider = new HurlVariablesProvider();
@@ -20,7 +19,10 @@ const { activate, deactivate } = defineExtension(() => {
 
 	// Status bar item for showing the current environment file
 	let statusBarItem: vscode.StatusBarItem | undefined = undefined;
-	statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+	statusBarItem = vscode.window.createStatusBarItem(
+		vscode.StatusBarAlignment.Right,
+		100,
+	);
 	statusBarItem.command = "vscode-hurl-runner.selectEnvFile";
 	statusBarItem.text = "$(file) Hurl Env: None";
 	statusBarItem.tooltip = "Select Hurl environment file";
@@ -109,20 +111,21 @@ const { activate, deactivate } = defineExtension(() => {
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-					entry.requestHeaders,
-				)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.requestHeaders,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.curlCommand
-						? `
+					${
+						entry.curlCommand
+							? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-						: ""
+							: ""
 					}
 
 					<h3>Response Body</h3>
@@ -133,14 +136,15 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-						entry.response.headers,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.response.headers,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.timings
-						? `
+					${
+						entry.timings
+							? `
 					<details>
 						<summary>Timings</summary>
 						<pre><code class="language-yaml">${Object.entries(entry.timings)
@@ -148,7 +152,7 @@ const { activate, deactivate } = defineExtension(() => {
 							.join("\n")}</code></pre>
 					</details>
 					`
-						: ""
+							: ""
 					}
 				</div>
 			`;
@@ -293,7 +297,9 @@ const { activate, deactivate } = defineExtension(() => {
 		if (filePath && envFile && envFile !== "inline") {
 			envFileMapping[filePath] = envFile;
 			updateStatusBarText(filePath);
-			vscode.window.showInformationMessage(`Environment file set to: ${envFile}`);
+			vscode.window.showInformationMessage(
+				`Environment file set to: ${envFile}`,
+			);
 		} else if (envFile === "inline") {
 			delete envFileMapping[filePath];
 			updateStatusBarText(filePath);
@@ -303,7 +309,7 @@ const { activate, deactivate } = defineExtension(() => {
 
 	// Update status bar when active editor changes
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
-		if (editor && editor.document.languageId === 'hurl') {
+		if (editor && editor.document.languageId === "hurl") {
 			const filePath = editor.document.uri.fsPath;
 			updateStatusBarText(filePath);
 			statusBarItem.show();
@@ -314,10 +320,12 @@ const { activate, deactivate } = defineExtension(() => {
 
 	function updateStatusBarText(filePath: string) {
 		if (!statusBarItem) {
-			return
+			return;
 		}
 		const envFile = envFileMapping[filePath];
-		const hasCustomVariables = Object.keys(hurlVariablesProvider.getInlineVariablesBy(filePath)).length > 0;
+		const hasCustomVariables =
+			Object.keys(hurlVariablesProvider.getInlineVariablesBy(filePath)).length >
+			0;
 
 		if (envFile && hasCustomVariables) {
 			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(envFile)} + Custom`;
@@ -335,8 +343,8 @@ const { activate, deactivate } = defineExtension(() => {
 	// Add code lens provider for Hurl files for the actions, e.g. run, run to end, manage variables
 	const hurlCodeLensProvider = new HurlCodeLensProvider();
 	const codeLensDisposable = vscode.languages.registerCodeLensProvider(
-		{ language: 'hurl', scheme: 'file' },
-		hurlCodeLensProvider
+		{ language: "hurl", scheme: "file" },
+		hurlCodeLensProvider,
 	);
 
 	return {
