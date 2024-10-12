@@ -205,7 +205,6 @@ async function addVariable(
 			vscode.window.showInformationMessage(
 				`Variable ${name} added successfully`,
 			);
-			await showFileVariables(hurlVariablesProvider, filePath);
 		}
 	}
 }
@@ -231,7 +230,6 @@ async function editVariable(
 			vscode.window.showInformationMessage(
 				`Variable ${name} updated successfully`,
 			);
-			await showFileVariables(hurlVariablesProvider, filePath);
 		}
 	}
 }
@@ -251,7 +249,6 @@ export async function removeVariable(
 		vscode.window.showInformationMessage(
 			`Variable ${name} removed successfully`,
 		);
-		await showFileVariables(hurlVariablesProvider, filePath);
 	}
 }
 

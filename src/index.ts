@@ -298,13 +298,9 @@ const { activate, deactivate } = defineExtension(() => {
 		if (filePath && envFile && envFile !== "inline") {
 			envFileMapping[filePath] = envFile;
 			updateStatusBarText(filePath);
-			vscode.window.showInformationMessage(
-				`Environment file set to: ${envFile}`,
-			);
 		} else if (envFile === "inline") {
 			delete envFileMapping[filePath];
 			updateStatusBarText(filePath);
-			vscode.window.showInformationMessage("Using inline variables");
 		}
 	});
 
