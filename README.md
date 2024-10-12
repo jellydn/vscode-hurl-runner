@@ -72,15 +72,22 @@
 ## Demo
 
 - Running a single Hurl entry
-  [![Run an entry](https://i.gyazo.com/4ab37e9a75fc26a84e08e432744b7bca.gif)](https://gyazo.com/4ab37e9a75fc26a84e08e432744b7bca)
+  [![Run at entry](https://i.gyazo.com/cbad7080f4c93697439d54301faf2da2.gif)](https://gyazo.com/cbad7080f4c93697439d54301faf2da2)
+
+- Running from entry to the end of file
+  [![Run to the end](https://i.gyazo.com/329844ae8a37e6d24a529e9d29edc146.gif)](https://gyazo.com/329844ae8a37e6d24a529e9d29edc146)
 
 - Running an entire Hurl file
   [![Run a file](https://i.gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef.gif)](https://gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef)
 
+- Manage variables
+  [![Manage variable](https://i.gyazo.com/1e8be3690eefef9c408277912561cf6f.gif)](https://gyazo.com/1e8be3690eefef9c408277912561cf6f)
+
+- Select env file
+  [![Select env file](https://i.gyazo.com/83ca9f1514cb3c91a7b6305740c7957f.gif)](https://gyazo.com/83ca9f1514cb3c91a7b6305740c7957f)
+
 - Managing environment variables / using inline variables
   [![Select .env file before running](https://i.gyazo.com/0981889b1ef672704ec4e9a568a71c04.gif)](https://gyazo.com/0981889b1ef672704ec4e9a568a71c04)
-
-- And more ...
 
 ## Related Projects
 
