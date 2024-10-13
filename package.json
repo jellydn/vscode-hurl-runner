@@ -110,6 +110,12 @@
 				"key": "ctrl+alt+shift+h",
 				"mac": "cmd+alt+shift+h",
 				"when": "editorTextFocus && editorLangId == hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.selectEnvFile",
+				"key": "ctrl+alt+e",
+				"mac": "cmd+alt+e",
+				"when": "editorTextFocus && editorLangId == hurl"
 			}
 		],
 		"languages": [

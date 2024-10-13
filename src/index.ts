@@ -295,11 +295,8 @@ const { activate, deactivate } = defineExtension(() => {
 
 		const filePath = editor.document.uri.fsPath;
 		const envFile = await chooseEnvFile();
-		if (filePath && envFile && envFile !== "inline") {
+		if (envFile) {
 			envFileMapping[filePath] = envFile;
-			updateStatusBarText(filePath);
-		} else if (envFile === "inline") {
-			delete envFileMapping[filePath];
 			updateStatusBarText(filePath);
 		}
 	});

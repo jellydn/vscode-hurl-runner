@@ -23,31 +23,20 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 			description: "Create a new .env file in the workspace",
 			isCreateNew: true,
 		},
-		{
-			label: "Inline Variables",
-			description: "Manage inline variables without creating an .env file",
-			isInline: true,
-		},
 		...envFiles.map((file) => ({
 			label: path.basename(file.fsPath),
 			description: vscode.workspace.asRelativePath(file.fsPath),
 			fsPath: file.fsPath,
 			isCreateNew: false,
-			isInline: false,
 		})),
 	];
 
 	const selected = await vscode.window.showQuickPick(items, {
-		placeHolder:
-			"Select .env file to manage, create a new one, or use inline variables",
+		placeHolder: "Select .env file to manage or create a new one",
 	});
 
 	if (selected?.isCreateNew) {
 		return await createNewEnvFile(workspaceFolders[0].uri.fsPath);
-	}
-
-	if (selected?.isInline) {
-		return "inline";
 	}
 
 	// @ts-expect-error: fsPath is not defined on the selected object
