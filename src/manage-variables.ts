@@ -1,7 +1,6 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as vscode from "vscode";
-import { commands } from "vscode";
 
 import type { HurlVariablesProvider } from "./hurl-variables-provider";
 import { logger } from "./utils";
@@ -75,14 +74,16 @@ export async function manageEnvVariables(
 		filePath,
 		envFile,
 		isInline,
+		showVariablesTree,
 	}: {
 		filePath: string;
 		envFile?: string;
 		isInline?: boolean;
+		showVariablesTree?: boolean;
 	},
 ) {
 	if (isInline) {
-		await manageInlineVariables(hurlVariablesProvider, filePath);
+		await manageInlineVariables({ hurlVariablesProvider, filePath });
 		return;
 	}
 
@@ -109,7 +110,9 @@ export async function manageEnvVariables(
 
 	switch (action?.label) {
 		case "View":
-			await showFileVariables(hurlVariablesProvider, filePath);
+			if (!showVariablesTree) {
+				await showFileVariables(hurlVariablesProvider, filePath);
+			}
 			break;
 		case "Add":
 			await addVariable(hurlVariablesProvider, filePath);
@@ -121,7 +124,11 @@ export async function manageEnvVariables(
 			await removeVariable(hurlVariablesProvider, filePath);
 			break;
 		case "Manage Inline Variables":
-			await manageInlineVariables(hurlVariablesProvider, filePath);
+			await manageInlineVariables({
+				hurlVariablesProvider,
+				filePath,
+				showVariablesTree,
+			});
 			break;
 		default:
 			return;
@@ -195,7 +202,6 @@ async function addVariable(
 			vscode.window.showInformationMessage(
 				`Variable ${name} added successfully`,
 			);
-			commands.executeCommand("vscode-hurl-runner.refreshVariablesView");
 		}
 	}
 }
@@ -221,7 +227,6 @@ async function editVariable(
 			vscode.window.showInformationMessage(
 				`Variable ${name} updated successfully`,
 			);
-			commands.executeCommand("vscode-hurl-runner.refreshVariablesView");
 		}
 	}
 }
@@ -241,14 +246,18 @@ export async function removeVariable(
 		vscode.window.showInformationMessage(
 			`Variable ${name} removed successfully`,
 		);
-		commands.executeCommand("vscode-hurl-runner.refreshVariablesView");
 	}
 }
 
-async function manageInlineVariables(
-	hurlVariablesProvider: HurlVariablesProvider,
-	filePath: string,
-) {
+async function manageInlineVariables({
+	hurlVariablesProvider,
+	filePath,
+	showVariablesTree,
+}: {
+	hurlVariablesProvider: HurlVariablesProvider;
+	filePath: string;
+	showVariablesTree?: boolean;
+}) {
 	const action = await vscode.window.showQuickPick(
 		[
 			{
@@ -273,7 +282,9 @@ async function manageInlineVariables(
 
 	switch (action?.label) {
 		case "View Inline Variables":
-			await showInlineVariables(hurlVariablesProvider, filePath);
+			if (!showVariablesTree) {
+				await showInlineVariables(hurlVariablesProvider, filePath);
+			}
 			break;
 		case "Add Inline Variable":
 			await addInlineVariable(hurlVariablesProvider, filePath);
@@ -315,8 +326,6 @@ async function addInlineVariable(
 			vscode.window.showInformationMessage(
 				`Inline variable ${name} added successfully`,
 			);
-			await showInlineVariables(hurlVariablesProvider, filePath);
-			commands.executeCommand("vscode-hurl-runner.refreshVariablesView");
 		}
 	}
 }
@@ -341,8 +350,6 @@ async function editInlineVariable(
 			vscode.window.showInformationMessage(
 				`Inline variable ${name} updated successfully`,
 			);
-			await showInlineVariables(hurlVariablesProvider, filePath);
-			commands.executeCommand("vscode-hurl-runner.refreshVariablesView");
 		}
 	}
 }
@@ -361,7 +368,5 @@ async function removeInlineVariable(
 		vscode.window.showInformationMessage(
 			`Inline variable ${name} removed successfully`,
 		);
-		await showInlineVariables(hurlVariablesProvider, filePath);
-		commands.executeCommand("vscode-hurl-runner.refreshVariablesView");
 	}
 }

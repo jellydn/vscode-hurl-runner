@@ -24,8 +24,10 @@ export class HurlVariablesTreeProvider
 
 	constructor(private hurlVariablesProvider: HurlVariablesProvider) {}
 
-	refresh(): void {
-		this._onDidChangeTreeData.fire(undefined);
+	refresh(filePath?: string): void {
+		if (filePath) {
+			this._onDidChangeTreeData.fire(undefined);
+		}
 	}
 
 	getTreeItem(element: VariableItem): vscode.TreeItem {

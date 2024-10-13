@@ -45,7 +45,6 @@
 | `vscode-hurl-runner.runHurlToEnd`          | Hurl Runner: Run to End              |
 | `vscode-hurl-runner.manageInlineVariables` | Hurl Runner: Manage Inline Variables |
 | `vscode-hurl-runner.selectEnvFile`         | Hurl Runner: Select Environment File |
-| `vscode-hurl-runner.refreshVariablesView`  | Refresh Hurl Variables View          |
 
 <!-- commands -->
 

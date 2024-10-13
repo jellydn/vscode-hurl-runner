@@ -59,10 +59,6 @@
 			{
 				"command": "vscode-hurl-runner.selectEnvFile",
 				"title": "Hurl Runner: Select Environment File"
-			},
-			{
-				"command": "vscode-hurl-runner.refreshVariablesView",
-				"title": "Refresh Hurl Variables View"
 			}
 		],
 		"viewsContainers": {
