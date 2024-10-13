@@ -42,23 +42,23 @@
 		"commands": [
 			{
 				"command": "vscode-hurl-runner.runHurl",
-				"title": "Hurl: Run at entry"
+				"title": "Hurl Runner: Run at entry"
 			},
 			{
 				"command": "vscode-hurl-runner.runHurlFile",
-				"title": "Hurl: Run File"
+				"title": "Hurl Runner: Run File"
 			},
 			{
 				"command": "vscode-hurl-runner.runHurlToEnd",
-				"title": "Hurl: Run to End"
+				"title": "Hurl Runner: Run to End"
 			},
 			{
 				"command": "vscode-hurl-runner.manageInlineVariables",
-				"title": "Hurl: Manage Inline Variables"
+				"title": "Hurl Runner: Manage Inline Variables"
 			},
 			{
 				"command": "vscode-hurl-runner.selectEnvFile",
-				"title": "Hurl: Select Environment File"
+				"title": "Hurl Runner: Select Environment File"
 			}
 		],
 		"configuration": {
@@ -69,14 +69,6 @@
 					"type": "string",
 					"default": "hurl",
 					"description": "Path to the Hurl executable"
-				},
-				"vscode-hurl-runner.environmentVariables": {
-					"type": "object",
-					"default": {},
-					"description": "Environment variables to be used when running Hurl files",
-					"additionalProperties": {
-						"type": "string"
-					}
 				},
 				"vscode-hurl-runner.verboseMode": {
 					"type": "string",

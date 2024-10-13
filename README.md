@@ -40,13 +40,13 @@
 
 <!-- commands -->
 
-| Command                                    | Title                         |
-| ------------------------------------------ | ----------------------------- |
-| `vscode-hurl-runner.runHurl`               | Hurl: Run at entry            |
-| `vscode-hurl-runner.runHurlFile`           | Hurl: Run File                |
-| `vscode-hurl-runner.runHurlToEnd`          | Hurl: Run to End              |
-| `vscode-hurl-runner.manageInlineVariables` | Hurl: Manage Inline Variables |
-| `vscode-hurl-runner.selectEnvFile`         | Hurl: Select Environment File |
+| Command                                    | Title                                |
+| ------------------------------------------ | ------------------------------------ |
+| `vscode-hurl-runner.runHurl`               | Hurl Runner: Run at entry            |
+| `vscode-hurl-runner.runHurlFile`           | Hurl Runner: Run File                |
+| `vscode-hurl-runner.runHurlToEnd`          | Hurl Runner: Run to End              |
+| `vscode-hurl-runner.manageInlineVariables` | Hurl Runner: Manage Inline Variables |
+| `vscode-hurl-runner.selectEnvFile`         | Hurl Runner: Select Environment File |
 
 <!-- commands -->
 
@@ -54,11 +54,10 @@
 
 <!-- configs -->
 
-| Key                                       | Description                                                                                                                                                                         | Type     | Default     |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `vscode-hurl-runner.hurlPath`             | Path to the Hurl executable                                                                                                                                                         | `string` | `"hurl"`    |
-| `vscode-hurl-runner.environmentVariables` | Environment variables to be used when running Hurl files                                                                                                                            | `object` | `{}`        |
-| `vscode-hurl-runner.verboseMode`          | Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data. | `string` | `"verbose"` |
+| Key                              | Description                                                                                                                                                                         | Type     | Default     |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
+| `vscode-hurl-runner.hurlPath`    | Path to the Hurl executable                                                                                                                                                         | `string` | `"hurl"`    |
+| `vscode-hurl-runner.verboseMode` | Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data. | `string` | `"verbose"` |
 
 <!-- configs -->
 
@@ -68,22 +67,32 @@
 - `ctrl+alt+f` (Windows/Linux) or `cmd+alt+f` (Mac): Run Hurl file
 - `ctrl+alt+shift+v` (Windows/Linux) or `cmd+alt+shift+v` (Mac): Manage variables
 
-## Demo
+### Demo
 
-- Running a single Hurl entry
-  [![Run at entry](https://i.gyazo.com/cbad7080f4c93697439d54301faf2da2.gif)](https://gyazo.com/cbad7080f4c93697439d54301faf2da2)
+#### Running a Single Hurl Entry
 
-- Running from entry to the end of file
-  [![Run to the end](https://i.gyazo.com/329844ae8a37e6d24a529e9d29edc146.gif)](https://gyazo.com/329844ae8a37e6d24a529e9d29edc146)
+[![Run at entry](https://i.gyazo.com/cbad7080f4c93697439d54301faf2da2.gif)](https://gyazo.com/cbad7080f4c93697439d54301faf2da2)
+_Demonstrates running a single Hurl entry directly from VSCode._
 
-- Running an entire Hurl file
-  [![Run a file](https://i.gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef.gif)](https://gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef)
+#### Running from Entry to the End of File
 
-- Manage variables
-  [![Manage variable](https://i.gyazo.com/1e8be3690eefef9c408277912561cf6f.gif)](https://gyazo.com/1e8be3690eefef9c408277912561cf6f)
+[![Run to the end](https://i.gyazo.com/329844ae8a37e6d24a529e9d29edc146.gif)](https://gyazo.com/329844ae8a37e6d24a529e9d29edc146)
+_Shows how to run Hurl requests from a specific entry to the end of the file._
 
-- Select env file
-  [![Select env file](https://i.gyazo.com/83ca9f1514cb3c91a7b6305740c7957f.gif)](https://gyazo.com/83ca9f1514cb3c91a7b6305740c7957f)
+#### Running an Entire Hurl File
+
+[![Run a file](https://i.gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef.gif)](https://gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef)
+_Illustrates running an entire Hurl file in one go._
+
+#### Managing Variables
+
+[![Manage variable](https://i.gyazo.com/1e8be3690eefef9c408277912561cf6f.gif)](https://gyazo.com/1e8be3690eefef9c408277912561cf6f)
+_Demonstrates how to manage inline variables for Hurl requests._
+
+#### Selecting Environment File
+
+[![Select env file](https://i.gyazo.com/83ca9f1514cb3c91a7b6305740c7957f.gif)](https://gyazo.com/83ca9f1514cb3c91a7b6305740c7957f)
+_Shows the process of selecting an environment file for Hurl requests._
 
 ## Related Projects
 
