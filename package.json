@@ -1,7 +1,7 @@
 {
 	"name": "vscode-hurl-runner",
 	"displayName": "VSCode Hurl Runner",
-	"version": "0.3.4",
+	"version": "0.3.5",
 	"private": true,
 	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
 	"categories": ["Other"],
