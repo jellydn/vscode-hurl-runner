@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as vscode from "vscode";
+import { commands } from 'vscode';
 
 import type { HurlVariablesProvider } from "./hurl-variables-provider";
 import { logger } from "./utils";
@@ -194,6 +195,7 @@ async function addVariable(
 			vscode.window.showInformationMessage(
 				`Variable ${name} added successfully`,
 			);
+			commands.executeCommand('vscode-hurl-runner.refreshVariablesView');
 		}
 	}
 }
@@ -219,6 +221,7 @@ async function editVariable(
 			vscode.window.showInformationMessage(
 				`Variable ${name} updated successfully`,
 			);
+			commands.executeCommand('vscode-hurl-runner.refreshVariablesView');
 		}
 	}
 }
@@ -238,6 +241,7 @@ export async function removeVariable(
 		vscode.window.showInformationMessage(
 			`Variable ${name} removed successfully`,
 		);
+		commands.executeCommand('vscode-hurl-runner.refreshVariablesView');
 	}
 }
 
@@ -312,6 +316,7 @@ async function addInlineVariable(
 				`Inline variable ${name} added successfully`,
 			);
 			await showInlineVariables(hurlVariablesProvider, filePath);
+			commands.executeCommand('vscode-hurl-runner.refreshVariablesView');
 		}
 	}
 }
@@ -337,6 +342,7 @@ async function editInlineVariable(
 				`Inline variable ${name} updated successfully`,
 			);
 			await showInlineVariables(hurlVariablesProvider, filePath);
+			commands.executeCommand('vscode-hurl-runner.refreshVariablesView');
 		}
 	}
 }
@@ -356,5 +362,6 @@ async function removeInlineVariable(
 			`Inline variable ${name} removed successfully`,
 		);
 		await showInlineVariables(hurlVariablesProvider, filePath);
+		commands.executeCommand('vscode-hurl-runner.refreshVariablesView');
 	}
 }
