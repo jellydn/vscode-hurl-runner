@@ -5,9 +5,9 @@ import { HurlCodeLensProvider } from "./hurl-code-lens-provider";
 import { findEntryAtLine } from "./hurl-entry";
 import { parseHurlOutput } from "./hurl-parser";
 import { HurlVariablesProvider } from "./hurl-variables-provider";
+import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
 import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
 import { executeHurl, logger, responseLogger } from "./utils";
-import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
 
 const { activate, deactivate } = defineExtension(() => {
 	// Hurl variables provider
@@ -124,20 +124,21 @@ const { activate, deactivate } = defineExtension(() => {
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-					entry.requestHeaders,
-				)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.requestHeaders,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.curlCommand
-						? `
+					${
+						entry.curlCommand
+							? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-						: ""
+							: ""
 					}
 
 					<h3>Response Body</h3>
@@ -148,10 +149,10 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-						entry.response.headers,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.response.headers,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
 					${timingsHtml}
@@ -342,9 +343,11 @@ const { activate, deactivate } = defineExtension(() => {
 	);
 
 	// Show the variables tree view
-	const hurlVariablesTreeProvider = new HurlVariablesTreeProvider(hurlVariablesProvider);
-	const treeView = vscode.window.createTreeView('hurlVariables', {
-		treeDataProvider: hurlVariablesTreeProvider
+	const hurlVariablesTreeProvider = new HurlVariablesTreeProvider(
+		hurlVariablesProvider,
+	);
+	const treeView = vscode.window.createTreeView("hurlVariables", {
+		treeDataProvider: hurlVariablesTreeProvider,
 	});
 
 	function refreshVariablesTreeView() {
