@@ -85,9 +85,6 @@
 - Select env file
   [![Select env file](https://i.gyazo.com/83ca9f1514cb3c91a7b6305740c7957f.gif)](https://gyazo.com/83ca9f1514cb3c91a7b6305740c7957f)
 
-- Managing environment variables / using inline variables
-  [![Select .env file before running](https://i.gyazo.com/0981889b1ef672704ec4e9a568a71c04.gif)](https://gyazo.com/0981889b1ef672704ec4e9a568a71c04)
-
 ## Related Projects
 
 ### For Neovim Users
