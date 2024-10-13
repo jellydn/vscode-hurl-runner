@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="res/icon.png" alt="VSCode Hurl Runner Logo" width="200"/>
-</p>
-
 <h1 align="center">Welcome to vscode-hurl-runner 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.1.2-blue.svg?cacheSeconds=2592000" />
@@ -18,6 +14,8 @@
 </p>
 
 > Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.
+
+[![IT Man - Streamline API Development with VSCode Hurl Runner: A Complete Guide](https://i.ytimg.com/vi/fbDu7fusFsw/hqdefault.jpg)](https://www.youtube.com/watch?v=fbDu7fusFsw)
 
 ### 🏠 [Homepage](https://github.com/jellydn/vscode-hurl-runner#readme)
 
