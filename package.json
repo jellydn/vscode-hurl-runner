@@ -70,7 +70,7 @@
 				{
 					"id": "hurl-runner",
 					"title": "Hurl Runner",
-					"icon": "res/icon.svg"
+					"icon": "res/sidebar-icon.svg"
 				}
 			]
 		},
