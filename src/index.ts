@@ -357,6 +357,7 @@ const { activate, deactivate } = defineExtension(() => {
 		if (envFile) {
 			envFileMapping[filePath] = envFile;
 			updateStatusBarText(filePath);
+			hurlVariablesTreeProvider.setEnvFile(envFile);
 		}
 	});
 

@@ -90,13 +90,15 @@ export async function manageEnvVariables(
 	const variables = envFile ? await loadEnvVariables(envFile) : {};
 	hurlVariablesProvider.setVariablesForFile(filePath, variables);
 
+	// Open the variables tree view
+	await vscode.commands.executeCommand("workbench.view.extension.hurl-runner");
+
 	const action = await vscode.window.showQuickPick(
 		[
 			{
-				label: "View",
-				description: "Show all variables in the file",
+				label: "Add",
+				description: "Add a new variable",
 			},
-			{ label: "Add", description: "Add a new variable" },
 			{ label: "Edit", description: "Modify an existing variable" },
 			{ label: "Remove", description: "Delete a variable" },
 			{
@@ -109,11 +111,6 @@ export async function manageEnvVariables(
 	);
 
 	switch (action?.label) {
-		case "View":
-			if (!showVariablesTree) {
-				await showFileVariables(hurlVariablesProvider, filePath);
-			}
-			break;
 		case "Add":
 			await addVariable(hurlVariablesProvider, filePath);
 			break;
@@ -258,12 +255,11 @@ async function manageInlineVariables({
 	filePath: string;
 	showVariablesTree?: boolean;
 }) {
+	// Open the variables tree view
+	await vscode.commands.executeCommand("workbench.view.extension.hurl-runner");
+
 	const action = await vscode.window.showQuickPick(
 		[
-			{
-				label: "View Inline Variables",
-				description: "Show all inline variables for this file",
-			},
 			{
 				label: "Add Inline Variable",
 				description: "Add a new inline variable",
@@ -281,11 +277,6 @@ async function manageInlineVariables({
 	);
 
 	switch (action?.label) {
-		case "View Inline Variables":
-			if (!showVariablesTree) {
-				await showInlineVariables(hurlVariablesProvider, filePath);
-			}
-			break;
 		case "Add Inline Variable":
 			await addInlineVariable(hurlVariablesProvider, filePath);
 			break;
