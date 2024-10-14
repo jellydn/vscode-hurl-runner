@@ -59,6 +59,10 @@
 			{
 				"command": "vscode-hurl-runner.selectEnvFile",
 				"title": "Hurl Runner: Select Environment File"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlSelection",
+				"title": "Hurl Runner: Run Selected Text"
 			}
 		],
 		"viewsContainers": {
@@ -125,6 +129,12 @@
 				"key": "ctrl+alt+e",
 				"mac": "cmd+alt+e",
 				"when": "editorTextFocus && editorLangId == hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlSelection",
+				"key": "ctrl+alt+h",
+				"mac": "cmd+alt+h",
+				"when": "editorTextFocus && editorLangId == hurl && editorHasSelection"
 			}
 		],
 		"languages": [

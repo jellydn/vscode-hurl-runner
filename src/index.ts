@@ -7,7 +7,12 @@ import { parseHurlOutput } from "./hurl-parser";
 import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
 import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
-import { executeHurl, logger, responseLogger } from "./utils";
+import {
+	executeHurl,
+	executeHurlWithContent,
+	logger,
+	responseLogger,
+} from "./utils";
 
 const { activate, deactivate } = defineExtension(() => {
 	// Hurl variables provider
@@ -263,6 +268,42 @@ const { activate, deactivate } = defineExtension(() => {
 				variables,
 				fromEntry: entry.entryNumber,
 				// We don't specify toEntry, so it will run to the end
+			});
+
+			showResultInWebView(result);
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : "Unknown error";
+			showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+		}
+	});
+
+	useCommand("vscode-hurl-runner.runHurlSelection", async () => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			vscode.window.showErrorMessage("No active editor");
+			return;
+		}
+
+		const selection = editor.selection;
+		const selectedText = editor.document.getText(selection);
+
+		if (!selectedText) {
+			vscode.window.showErrorMessage("No text selected");
+			return;
+		}
+
+		showLoadingInWebView();
+
+		const filePath = editor.document.uri.fsPath;
+		const envFile = envFileMapping[filePath];
+		const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+
+		try {
+			const result = await executeHurlWithContent({
+				content: selectedText,
+				envFile,
+				variables,
 			});
 
 			showResultInWebView(result);
