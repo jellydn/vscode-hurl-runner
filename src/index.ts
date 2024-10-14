@@ -322,10 +322,6 @@ const { activate, deactivate } = defineExtension(() => {
 		treeDataProvider: hurlVariablesTreeProvider,
 	});
 
-	function refreshVariablesTreeView(filePath?: string) {
-		hurlVariablesTreeProvider.refresh(filePath);
-	}
-
 	// Modify the manageInlineVariables command
 	useCommand("vscode-hurl-runner.manageInlineVariables", async () => {
 		const editor = vscode.window.activeTextEditor;
@@ -342,7 +338,7 @@ const { activate, deactivate } = defineExtension(() => {
 		});
 
 		// Refresh the tree view after managing variables
-		refreshVariablesTreeView(filePath);
+		hurlVariablesTreeProvider.refresh();
 	});
 
 	useCommand("vscode-hurl-runner.selectEnvFile", async () => {
@@ -404,7 +400,7 @@ const { activate, deactivate } = defineExtension(() => {
 	// Refresh the variables tree view when the active editor changes
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
 		if (editor && editor.document.languageId === "hurl") {
-			refreshVariablesTreeView(editor.document.uri.fsPath);
+			hurlVariablesTreeProvider.refresh();
 		}
 	});
 
