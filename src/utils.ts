@@ -49,7 +49,6 @@ export async function executeHurl(
 	}
 
 	logger.info(`Executing command: hurl ${args.join(" ")}`);
-
 	return new Promise((resolve, reject) => {
 		const hurlProcess = spawn("hurl", args);
 		let stdout = "";
@@ -58,13 +57,11 @@ export async function executeHurl(
 		hurlProcess.stdout.on("data", (data) => {
 			const str = data.toString();
 			stdout += str;
-			logger.info(`Hurl stdout: ${str}`);
 		});
 
 		hurlProcess.stderr.on("data", (data) => {
 			const str = data.toString();
 			stderr += str;
-			logger.info(`Hurl stderr: ${str}`);
 		});
 
 		hurlProcess.on("close", (code) => {
