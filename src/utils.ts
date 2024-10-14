@@ -6,6 +6,7 @@ import * as vscode from "vscode";
 
 import { displayName } from "./generated/meta";
 import type { HurlExecutionOptions } from "./hurl-entry";
+import { config } from "./config";
 
 export const logger = useLogger(displayName);
 export const responseLogger = useLogger(`${displayName} Response`);
@@ -28,8 +29,7 @@ export async function executeHurl(
 	const { filePath, envFile, variables, fromEntry, toEntry } = options;
 
 	// Get the verbosity configuration
-	const config = vscode.workspace.getConfiguration("vscode-hurl-runner");
-	const verboseMode = config.get<string>("verboseMode", "verbose");
+	const verboseMode = config.verboseMode;
 	const isVeryVerbose = verboseMode === "very-verbose";
 	const verboseFlag = isVeryVerbose ? "--very-verbose" : "--verbose";
 	const args = [filePath, verboseFlag];
@@ -101,8 +101,7 @@ export async function executeHurlWithContent(
 	const { content, envFile, variables } = options;
 
 	// Get the verbosity configuration
-	const config = vscode.workspace.getConfiguration("vscode-hurl-runner");
-	const verboseMode = config.get<string>("verboseMode", "verbose");
+	const verboseMode = config.verboseMode;
 	const isVeryVerbose = verboseMode === "very-verbose";
 	const verboseFlag = isVeryVerbose ? "--very-verbose" : "--verbose";
 
