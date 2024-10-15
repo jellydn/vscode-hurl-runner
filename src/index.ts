@@ -13,6 +13,7 @@ import {
 	logger,
 	responseLogger,
 } from "./utils";
+import { commands } from "./generated/meta";
 
 interface LastCommandInfo {
 	command: (entryNumber?: number) => Promise<void>;
@@ -138,21 +139,20 @@ const { activate, deactivate } = defineExtension(() => {
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-							entry.requestHeaders,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+					entry.requestHeaders,
+				)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
-					${
-						entry.curlCommand
-							? `
+					${entry.curlCommand
+						? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-							: ""
+						: ""
 					}
 
 					<h3>Response Body</h3>
@@ -163,10 +163,10 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-							entry.response.headers,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+						entry.response.headers,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
 					${timingsHtml}
@@ -204,7 +204,7 @@ const { activate, deactivate } = defineExtension(() => {
 	};
 
 	// Run hurl at the current line
-	useCommand("vscode-hurl-runner.runHurl", async (lineNumber?: number) => {
+	useCommand(commands.runHurl, async (lineNumber?: number) => {
 		const runHurlCommand = async (entryNumber?: number) => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
@@ -259,7 +259,7 @@ const { activate, deactivate } = defineExtension(() => {
 	});
 
 	// Run hurl command to end
-	useCommand("vscode-hurl-runner.runHurlToEnd", async (lineNumber?: number) => {
+	useCommand(commands.runHurlToEnd, async (lineNumber?: number) => {
 		const runHurlToEndCommand = async (entryNumber?: number) => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
@@ -313,7 +313,7 @@ const { activate, deactivate } = defineExtension(() => {
 	});
 
 	// Run hurl command from selection
-	useCommand("vscode-hurl-runner.runHurlSelection", async () => {
+	useCommand(commands.runHurlSelection, async () => {
 		const runHurlSelectionCommand = async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
@@ -359,7 +359,7 @@ const { activate, deactivate } = defineExtension(() => {
 	});
 
 	// Rerun the last command
-	useCommand("vscode-hurl-runner.rerunLastCommand", async () => {
+	useCommand(commands.rerunLastCommand, async () => {
 		if (lastCommandInfo) {
 			const editor = vscode.window.activeTextEditor;
 			if (editor && editor.document.uri.fsPath === lastCommandInfo.filePath) {
@@ -385,7 +385,7 @@ const { activate, deactivate } = defineExtension(() => {
 	});
 
 	// Manage inline variables command
-	useCommand("vscode-hurl-runner.manageInlineVariables", async () => {
+	useCommand(commands.manageInlineVariables, async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
 			vscode.window.showErrorMessage("No active editor");
@@ -404,7 +404,7 @@ const { activate, deactivate } = defineExtension(() => {
 	});
 
 	// Select env file command
-	useCommand("vscode-hurl-runner.selectEnvFile", async () => {
+	useCommand(commands.selectEnvFile, async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
 			vscode.window.showErrorMessage("No active editor");
@@ -451,24 +451,9 @@ const { activate, deactivate } = defineExtension(() => {
 		}
 	}
 
-	logger.info("vscode-hurl-runner is now active!");
-
-	// Add code lens provider for Hurl files for the actions, e.g. run, run to end, manage variables
-	const hurlCodeLensProvider = new HurlCodeLensProvider();
-	const codeLensDisposable = vscode.languages.registerCodeLensProvider(
-		{ language: "hurl", scheme: "file" },
-		hurlCodeLensProvider,
-	);
-
-	// Refresh the variables tree view when the active editor changes
-	vscode.window.onDidChangeActiveTextEditor((editor) => {
-		if (editor && editor.document.languageId === "hurl") {
-			hurlVariablesTreeProvider.refresh();
-		}
-	});
 
 	// Run whole file
-	useCommand("vscode-hurl-runner.runHurlFile", async () => {
+	useCommand(commands.runHurlFile, async () => {
 		const runHurlFileCommand = async () => {
 			const editor = vscode.window.activeTextEditor;
 			if (!editor) {
@@ -506,6 +491,22 @@ const { activate, deactivate } = defineExtension(() => {
 			}
 		};
 		await runHurlFileCommand();
+	});
+
+	logger.info("vscode-hurl-runner is now active!");
+
+	// Add code lens provider for Hurl files for the actions, e.g. run, run to end, manage variables
+	const hurlCodeLensProvider = new HurlCodeLensProvider();
+	const codeLensDisposable = vscode.languages.registerCodeLensProvider(
+		{ language: "hurl", scheme: "file" },
+		hurlCodeLensProvider,
+	);
+
+	// Refresh the variables tree view when the active editor changes
+	vscode.window.onDidChangeActiveTextEditor((editor) => {
+		if (editor && editor.document.languageId === "hurl") {
+			hurlVariablesTreeProvider.refresh();
+		}
 	});
 
 	return {
