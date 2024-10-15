@@ -2,6 +2,7 @@ import { defineExtension, useCommand } from "reactive-vscode";
 import * as vscode from "vscode";
 import { findEntryAtLine } from "./hurl-entry";
 
+import { commands } from "./generated/meta";
 import { HurlCodeLensProvider } from "./hurl-code-lens-provider";
 import { parseHurlOutput } from "./hurl-parser";
 import { HurlVariablesProvider } from "./hurl-variables-provider";
@@ -13,7 +14,6 @@ import {
 	logger,
 	responseLogger,
 } from "./utils";
-import { commands } from "./generated/meta";
 
 interface LastCommandInfo {
 	command: (entryNumber?: number) => Promise<void>;
@@ -139,20 +139,21 @@ const { activate, deactivate } = defineExtension(() => {
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-					entry.requestHeaders,
-				)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.requestHeaders,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.curlCommand
-						? `
+					${
+						entry.curlCommand
+							? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-						: ""
+							: ""
 					}
 
 					<h3>Response Body</h3>
@@ -163,10 +164,10 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-						entry.response.headers,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.response.headers,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
 					${timingsHtml}
@@ -450,7 +451,6 @@ const { activate, deactivate } = defineExtension(() => {
 			statusBarItem.text = "$(file) Hurl Env: None";
 		}
 	}
-
 
 	// Run whole file
 	useCommand(commands.runHurlFile, async () => {
