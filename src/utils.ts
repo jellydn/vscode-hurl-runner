@@ -6,7 +6,6 @@ import * as vscode from "vscode";
 
 import { config } from "./config";
 import { displayName } from "./generated/meta";
-import type { HurlExecutionOptions } from "./hurl-entry";
 
 export const logger = useLogger(displayName);
 export const responseLogger = useLogger(`${displayName} Response`);
@@ -15,6 +14,14 @@ interface HurlExecutionResult {
 	stdout: string;
 	stderr: string;
 	isVeryVerbose: boolean;
+}
+
+export interface HurlExecutionOptions {
+	filePath: string;
+	envFile?: string;
+	variables: Record<string, string>;
+	fromEntry?: number;
+	toEntry?: number;
 }
 
 export async function executeHurl(
@@ -45,7 +52,6 @@ export async function executeHurl(
 	if (fromEntry) {
 		args.push("--from-entry", fromEntry.toString());
 	}
-
 	if (toEntry) {
 		args.push("--to-entry", toEntry.toString());
 	}

@@ -1,8 +1,8 @@
 import { defineExtension, useCommand } from "reactive-vscode";
 import * as vscode from "vscode";
+import { findEntryAtLine } from "./hurl-entry";
 
 import { HurlCodeLensProvider } from "./hurl-code-lens-provider";
-import { findEntryAtLine } from "./hurl-entry";
 import { parseHurlOutput } from "./hurl-parser";
 import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
@@ -13,6 +13,12 @@ import {
 	logger,
 	responseLogger,
 } from "./utils";
+
+interface LastCommandInfo {
+	command: (entryNumber?: number) => Promise<void>;
+	filePath: string;
+	entryNumber?: number;
+}
 
 const { activate, deactivate } = defineExtension(() => {
 	// Hurl variables provider
@@ -33,6 +39,9 @@ const { activate, deactivate } = defineExtension(() => {
 	statusBarItem.text = "$(file) Hurl Env: None";
 	statusBarItem.tooltip = "Select Hurl environment file";
 	statusBarItem.show();
+
+	// Store the last command info
+	let lastCommandInfo: LastCommandInfo | undefined;
 
 	const showLoadingInWebView = () => {
 		if (!resultPanel) {
@@ -194,123 +203,176 @@ const { activate, deactivate } = defineExtension(() => {
 		resultPanel.reveal(vscode.ViewColumn.Two);
 	};
 
+	// Run hurl at the current line
 	useCommand("vscode-hurl-runner.runHurl", async (lineNumber?: number) => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) {
-			showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
-			return;
-		}
-
-		showLoadingInWebView();
-
-		const filePath = editor.document.uri.fsPath;
-		const currentLine = lineNumber || editor.selection.active.line + 1;
-		const fileContent = editor.document.getText();
-
-		try {
-			const entry = findEntryAtLine(fileContent, currentLine);
-			if (!entry) {
-				showResultInWebView(
-					{ stdout: "", stderr: "No Hurl entry found at the current line" },
-					true,
-				);
+		const runHurlCommand = async (entryNumber?: number) => {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
 				return;
 			}
 
-			const envFile = envFileMapping[filePath];
-			const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+			showLoadingInWebView();
 
-			const result = await executeHurl({
-				filePath,
-				envFile,
-				variables,
-				fromEntry: entry.entryNumber,
-				toEntry: entry.entryNumber,
-			});
+			const filePath = editor.document.uri.fsPath;
+			const currentLine = lineNumber || editor.selection.active.line + 1;
+			const fileContent = editor.document.getText();
 
-			showResultInWebView(result);
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Unknown error";
-			showResultInWebView({ stdout: "", stderr: errorMessage }, true);
-		}
+			try {
+				const entry = entryNumber
+					? { entryNumber }
+					: findEntryAtLine(fileContent, currentLine);
+				if (!entry) {
+					showResultInWebView(
+						{ stdout: "", stderr: "No Hurl entry found at the current line" },
+						true,
+					);
+					return;
+				}
+
+				// Store the last command info
+				lastCommandInfo = {
+					command: runHurlCommand,
+					filePath,
+					entryNumber: entry.entryNumber,
+				};
+
+				const envFile = envFileMapping[filePath];
+				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+
+				const result = await executeHurl({
+					filePath,
+					envFile,
+					variables,
+					fromEntry: entry.entryNumber,
+					toEntry: entry.entryNumber,
+				});
+
+				showResultInWebView(result);
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+			}
+		};
+		await runHurlCommand();
 	});
 
+	// Run hurl command to end
 	useCommand("vscode-hurl-runner.runHurlToEnd", async (lineNumber?: number) => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) {
-			showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
-			return;
-		}
-
-		showLoadingInWebView();
-
-		const filePath = editor.document.uri.fsPath;
-		const currentLine = lineNumber || editor.selection.active.line + 1;
-		const fileContent = editor.document.getText();
-
-		try {
-			const entry = findEntryAtLine(fileContent, currentLine);
-			if (!entry) {
-				showResultInWebView(
-					{ stdout: "", stderr: "No Hurl entry found at the current line" },
-					true,
-				);
+		const runHurlToEndCommand = async (entryNumber?: number) => {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
 				return;
 			}
 
+			showLoadingInWebView();
+
+			const filePath = editor.document.uri.fsPath;
+			const currentLine = lineNumber || editor.selection.active.line + 1;
+			const fileContent = editor.document.getText();
+
+			try {
+				const entry = entryNumber
+					? { entryNumber }
+					: findEntryAtLine(fileContent, currentLine);
+				if (!entry) {
+					showResultInWebView(
+						{ stdout: "", stderr: "No Hurl entry found at the current line" },
+						true,
+					);
+					return;
+				}
+
+				// Store the last command info
+				lastCommandInfo = {
+					command: runHurlToEndCommand,
+					filePath,
+					entryNumber: entry.entryNumber,
+				};
+
+				const envFile = envFileMapping[filePath];
+				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+
+				const result = await executeHurl({
+					filePath,
+					envFile,
+					variables,
+					fromEntry: entry.entryNumber,
+				});
+
+				showResultInWebView(result);
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+			}
+		};
+		await runHurlToEndCommand();
+	});
+
+	// Run hurl command from selection
+	useCommand("vscode-hurl-runner.runHurlSelection", async () => {
+		const runHurlSelectionCommand = async () => {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				vscode.window.showErrorMessage("No active editor");
+				return;
+			}
+
+			const selection = editor.selection;
+			const selectedText = editor.document.getText(selection);
+
+			if (!selectedText) {
+				vscode.window.showErrorMessage("No text selected");
+				return;
+			}
+
+			showLoadingInWebView();
+
+			const filePath = editor.document.uri.fsPath;
 			const envFile = envFileMapping[filePath];
 			const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
-			const result = await executeHurl({
+			// Store the last command info (without entry number for selections)
+			lastCommandInfo = {
+				command: runHurlSelectionCommand,
 				filePath,
-				envFile,
-				variables,
-				fromEntry: entry.entryNumber,
-				// We don't specify toEntry, so it will run to the end
-			});
+			};
 
-			showResultInWebView(result);
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Unknown error";
-			showResultInWebView({ stdout: "", stderr: errorMessage }, true);
-		}
+			try {
+				const result = await executeHurlWithContent({
+					content: selectedText,
+					envFile,
+					variables,
+				});
+
+				showResultInWebView(result);
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+			}
+		};
+		await runHurlSelectionCommand();
 	});
 
-	useCommand("vscode-hurl-runner.runHurlSelection", async () => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) {
-			vscode.window.showErrorMessage("No active editor");
-			return;
-		}
-
-		const selection = editor.selection;
-		const selectedText = editor.document.getText(selection);
-
-		if (!selectedText) {
-			vscode.window.showErrorMessage("No text selected");
-			return;
-		}
-
-		showLoadingInWebView();
-
-		const filePath = editor.document.uri.fsPath;
-		const envFile = envFileMapping[filePath];
-		const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
-
-		try {
-			const result = await executeHurlWithContent({
-				content: selectedText,
-				envFile,
-				variables,
-			});
-
-			showResultInWebView(result);
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : "Unknown error";
-			showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+	// Rerun the last command
+	useCommand("vscode-hurl-runner.rerunLastCommand", async () => {
+		if (lastCommandInfo) {
+			const editor = vscode.window.activeTextEditor;
+			if (editor && editor.document.uri.fsPath === lastCommandInfo.filePath) {
+				await lastCommandInfo.command(lastCommandInfo.entryNumber);
+			} else {
+				vscode.window.showInformationMessage(
+					"Last command was run on a different file. Please switch to that file and try again.",
+				);
+			}
+		} else {
+			vscode.window.showInformationMessage(
+				"No previous Hurl command to rerun.",
+			);
 		}
 	});
 
@@ -322,7 +384,7 @@ const { activate, deactivate } = defineExtension(() => {
 		treeDataProvider: hurlVariablesTreeProvider,
 	});
 
-	// Modify the manageInlineVariables command
+	// Manage inline variables command
 	useCommand("vscode-hurl-runner.manageInlineVariables", async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
@@ -341,6 +403,7 @@ const { activate, deactivate } = defineExtension(() => {
 		hurlVariablesTreeProvider.refresh();
 	});
 
+	// Select env file command
 	useCommand("vscode-hurl-runner.selectEnvFile", async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
@@ -402,6 +465,47 @@ const { activate, deactivate } = defineExtension(() => {
 		if (editor && editor.document.languageId === "hurl") {
 			hurlVariablesTreeProvider.refresh();
 		}
+	});
+
+	// Run whole file
+	useCommand("vscode-hurl-runner.runHurlFile", async () => {
+		const runHurlFileCommand = async () => {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
+				return;
+			}
+
+			showLoadingInWebView();
+
+			const filePath = editor.document.uri.fsPath;
+
+			try {
+				// Store the last command info
+				lastCommandInfo = {
+					command: runHurlFileCommand,
+					filePath,
+				};
+
+				const envFile = envFileMapping[filePath];
+				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+
+				const result = await executeHurl({
+					filePath,
+					envFile,
+					variables,
+					fromEntry: 1,
+					// We don't specify fromEntry or toEntry, so it will run all entries
+				});
+
+				showResultInWebView(result);
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+			}
+		};
+		await runHurlFileCommand();
 	});
 
 	return {

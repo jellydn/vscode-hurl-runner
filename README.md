@@ -46,6 +46,7 @@
 | `vscode-hurl-runner.manageInlineVariables` | Hurl Runner: Manage Inline Variables |
 | `vscode-hurl-runner.selectEnvFile`         | Hurl Runner: Select Environment File |
 | `vscode-hurl-runner.runHurlSelection`      | Hurl Runner: Run Selected Text       |
+| `vscode-hurl-runner.rerunLastCommand`      | Hurl Runner: Rerun Last Command      |
 
 <!-- commands -->
 

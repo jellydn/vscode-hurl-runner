@@ -63,6 +63,10 @@
 			{
 				"command": "vscode-hurl-runner.runHurlSelection",
 				"title": "Hurl Runner: Run Selected Text"
+			},
+			{
+				"command": "vscode-hurl-runner.rerunLastCommand",
+				"title": "Hurl Runner: Rerun Last Command"
 			}
 		],
 		"viewsContainers": {
@@ -135,6 +139,12 @@
 				"key": "ctrl+alt+h",
 				"mac": "cmd+alt+h",
 				"when": "editorTextFocus && editorLangId == hurl && editorHasSelection"
+			},
+			{
+				"command": "vscode-hurl-runner.rerunLastCommand",
+				"key": "ctrl+alt+shift+r",
+				"mac": "cmd+alt+shift+r",
+				"when": "editorTextFocus && editorLangId == hurl"
 			}
 		],
 		"languages": [
@@ -158,7 +168,7 @@
 		"@antfu/ni": "0.23.0",
 		"@biomejs/biome": "1.9.3",
 		"@types/node": "22.7.5",
-		"@types/vscode": "1.94.0",
+		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "3.1.1",
 		"bumpp": "9.7.1",
 		"esno": "4.8.0",
@@ -172,7 +182,7 @@
 	},
 	"packageManager": "pnpm@9.12.1",
 	"engines": {
-		"vscode": "^1.92.0"
+		"vscode": "^1.93.0"
 	},
 	"icon": "res/icon.png",
 	"sponsor": {
