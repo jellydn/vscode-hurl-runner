@@ -38,15 +38,16 @@
 
 <!-- commands -->
 
-| Command                                    | Title                                |
-| ------------------------------------------ | ------------------------------------ |
-| `vscode-hurl-runner.runHurl`               | Hurl Runner: Run at entry            |
-| `vscode-hurl-runner.runHurlFile`           | Hurl Runner: Run File                |
-| `vscode-hurl-runner.runHurlToEnd`          | Hurl Runner: Run to End              |
-| `vscode-hurl-runner.manageInlineVariables` | Hurl Runner: Manage Inline Variables |
-| `vscode-hurl-runner.selectEnvFile`         | Hurl Runner: Select Environment File |
-| `vscode-hurl-runner.runHurlSelection`      | Hurl Runner: Run Selected Text       |
-| `vscode-hurl-runner.rerunLastCommand`      | Hurl Runner: Rerun Last Command      |
+| Command                                    | Title                                  |
+| ------------------------------------------ | -------------------------------------- |
+| `vscode-hurl-runner.runHurl`               | Hurl Runner: Run at entry              |
+| `vscode-hurl-runner.runHurlFile`           | Hurl Runner: Run File                  |
+| `vscode-hurl-runner.runHurlToEnd`          | Hurl Runner: Run to End                |
+| `vscode-hurl-runner.manageInlineVariables` | Hurl Runner: Manage Inline Variables   |
+| `vscode-hurl-runner.selectEnvFile`         | Hurl Runner: Select Environment File   |
+| `vscode-hurl-runner.runHurlSelection`      | Hurl Runner: Run Selected Text         |
+| `vscode-hurl-runner.rerunLastCommand`      | Hurl Runner: Rerun Last Command        |
+| `vscode-hurl-runner.runHurlFromBegin`      | Hurl Runner: Run from Begin to Current |
 
 <!-- commands -->
 

@@ -509,6 +509,59 @@ const { activate, deactivate } = defineExtension(() => {
 		}
 	});
 
+	// Run hurl from begin to current entry
+	useCommand(commands.runHurlFromBegin, async () => {
+		const runHurlFromBeginCommand = async () => {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				showResultInWebView({ stdout: "", stderr: "No active editor" }, true);
+				return;
+			}
+
+			showLoadingInWebView();
+
+			const filePath = editor.document.uri.fsPath;
+			const currentLine = editor.selection.active.line + 1;
+			const fileContent = editor.document.getText();
+
+			try {
+				const currentEntry = findEntryAtLine(fileContent, currentLine);
+				if (!currentEntry) {
+					showResultInWebView(
+						{ stdout: "", stderr: "No Hurl entry found at the current line" },
+						true,
+					);
+					return;
+				}
+
+				// Store the last command info
+				lastCommandInfo = {
+					command: runHurlFromBeginCommand,
+					filePath,
+					entryNumber: currentEntry.entryNumber,
+				};
+
+				const envFile = envFileMapping[filePath];
+				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
+
+				const result = await executeHurl({
+					filePath,
+					envFile,
+					variables,
+					fromEntry: 1,
+					toEntry: currentEntry.entryNumber,
+				});
+
+				showResultInWebView(result);
+			} catch (error) {
+				const errorMessage =
+					error instanceof Error ? error.message : "Unknown error";
+				showResultInWebView({ stdout: "", stderr: errorMessage }, true);
+			}
+		};
+		await runHurlFromBeginCommand();
+	});
+
 	return {
 		dispose: () => {
 			if (resultPanel) {

@@ -67,6 +67,10 @@
 			{
 				"command": "vscode-hurl-runner.rerunLastCommand",
 				"title": "Hurl Runner: Rerun Last Command"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlFromBegin",
+				"title": "Hurl Runner: Run from Begin to Current"
 			}
 		],
 		"viewsContainers": {
@@ -144,6 +148,12 @@
 				"command": "vscode-hurl-runner.rerunLastCommand",
 				"key": "ctrl+alt+shift+r",
 				"mac": "cmd+alt+shift+r",
+				"when": "editorTextFocus && editorLangId == hurl"
+			},
+			{
+				"command": "vscode-hurl-runner.runHurlFromBegin",
+				"key": "ctrl+alt+shift+b",
+				"mac": "cmd+alt+shift+b",
 				"when": "editorTextFocus && editorLangId == hurl"
 			}
 		],
