@@ -18,8 +18,8 @@ importers:
         specifier: 22.7.5
         version: 22.7.5
       '@types/vscode':
-        specifier: 1.93.0
-        version: 1.93.0
+        specifier: 1.94.0
+        version: 1.94.0
       '@vscode/vsce':
         specifier: 3.1.1
         version: 3.1.1
@@ -34,7 +34,7 @@ importers:
         version: 9.12.1
       reactive-vscode:
         specifier: 0.2.5
-        version: 0.2.5(@types/vscode@1.93.0)
+        version: 0.2.5(@types/vscode@1.94.0)
       tsup:
         specifier: 8.3.0
         version: 8.3.0(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.6.3)
@@ -48,8 +48,8 @@ importers:
         specifier: 2.1.3
         version: 2.1.3(@types/node@22.7.5)
       vscode-ext-gen:
-        specifier: 0.4.3
-        version: 0.4.3
+        specifier: 0.4.4
+        version: 0.4.4
 
 packages:
 
@@ -571,8 +571,8 @@ packages:
   '@types/node@22.7.5':
     resolution: {integrity: sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==}
 
-  '@types/vscode@1.93.0':
-    resolution: {integrity: sha512-kUK6jAHSR5zY8ps42xuW89NLcBpw1kOabah7yv38J8MyiYuOHxLQBi0e7zeXbQgVefDy/mZZetqEFC+Fl5eIEQ==}
+  '@types/vscode@1.94.0':
+    resolution: {integrity: sha512-UyQOIUT0pb14XSqJskYnRwD2aG0QrPVefIfrW1djR+/J4KeFQ0i1+hjZoaAmeNf3Z2jleK+R2hv+EboG/m8ruw==}
 
   '@vitest/expect@2.1.3':
     resolution: {integrity: sha512-SNBoPubeCJhZ48agjXruCI57DvxcsivVDdWz+SSsmjTT4QN/DfHk3zB/xKsJqMs26bLZ/pNRLnCf0j679i0uWQ==}
@@ -1904,8 +1904,8 @@ packages:
       jsdom:
         optional: true
 
-  vscode-ext-gen@0.4.3:
-    resolution: {integrity: sha512-lUP0GePRNXdEiFVAB4nIiM+MIb9jgRnjIhkgD9erKdHIx5QliuEGZoiVCId5skaZMNzcwV1NFthjQD5icJj7Iw==}
+  vscode-ext-gen@0.4.4:
+    resolution: {integrity: sha512-ZFwVtqNwmUDcsHCRLEasEZIV8U3RTTE0MutwgoVVnhyXB6RbmJvBT7LF8B5dc9DmidWrNNunlBrz2VQrLap6+A==}
     hasBin: true
 
   webidl-conversions@4.0.2:
@@ -2339,7 +2339,7 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/vscode@1.93.0': {}
+  '@types/vscode@1.94.0': {}
 
   '@vitest/expect@2.1.3':
     dependencies:
@@ -3420,10 +3420,10 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.5(@types/vscode@1.93.0):
+  reactive-vscode@0.2.5(@types/vscode@1.94.0):
     dependencies:
       '@reactive-vscode/reactivity': 0.2.5
-      '@types/vscode': 1.93.0
+      '@types/vscode': 1.94.0
 
   read@1.0.7:
     dependencies:
@@ -3779,7 +3779,7 @@ snapshots:
       - supports-color
       - terser
 
-  vscode-ext-gen@0.4.3:
+  vscode-ext-gen@0.4.4:
     dependencies:
       cac: 6.7.14
       scule: 1.3.0
