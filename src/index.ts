@@ -9,6 +9,7 @@ import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
 import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
 import {
+	type LastResponseInfo,
 	executeHurl,
 	executeHurlWithContent,
 	logger,
@@ -43,6 +44,9 @@ const { activate, deactivate } = defineExtension(() => {
 
 	// Store the last command info
 	let lastCommandInfo: LastCommandInfo | undefined;
+
+	// Store the last response info
+	let lastResponseInfo: LastResponseInfo | undefined;
 
 	const showLoadingInWebView = () => {
 		if (!resultPanel) {
@@ -135,7 +139,9 @@ const { activate, deactivate } = defineExtension(() => {
 				return `
 				<div class="entry">
 					<h3>Request</h3>
-					<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl}</code></pre>
+					<pre><code class="language-http">${entry.requestMethod} ${
+						entry.requestUrl
+					}</code></pre>
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
@@ -176,6 +182,13 @@ const { activate, deactivate } = defineExtension(() => {
 			})
 			.join("<hr>");
 
+		// Store the last response info
+		lastResponseInfo = {
+			result,
+			isError,
+			parsedOutput,
+		};
+
 		resultPanel.webview.html = `
 			<!DOCTYPE html>
 			<html lang="en">
@@ -194,7 +207,11 @@ const { activate, deactivate } = defineExtension(() => {
 					</style>
 				</head>
 				<body>
-					${isError ? `<pre class="language-bash"><code>${result.stderr}</code></pre>` : htmlOutput}
+					${
+						isError
+							? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
+							: htmlOutput
+					}
 						<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
 						<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 				</body>
@@ -442,9 +459,13 @@ const { activate, deactivate } = defineExtension(() => {
 			0;
 
 		if (envFile && hasCustomVariables) {
-			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(envFile)} + Custom`;
+			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
+				envFile,
+			)} + Custom`;
 		} else if (envFile) {
-			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(envFile)}`;
+			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
+				envFile,
+			)}`;
 		} else if (hasCustomVariables) {
 			statusBarItem.text = "$(file) Hurl Env: Custom";
 		} else {
@@ -560,6 +581,17 @@ const { activate, deactivate } = defineExtension(() => {
 			}
 		};
 		await runHurlFromBeginCommand();
+	});
+
+	// View last response command
+	useCommand(commands.viewLastResponse, async () => {
+		if (lastResponseInfo) {
+			showResultInWebView(lastResponseInfo.result, lastResponseInfo.isError);
+		} else {
+			vscode.window.showInformationMessage(
+				"No previous Hurl response to view.",
+			);
+		}
 	});
 
 	return {

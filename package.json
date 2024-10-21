@@ -1,201 +1,223 @@
 {
-	"name": "vscode-hurl-runner",
-	"displayName": "VSCode Hurl Runner",
-	"version": "0.9.1",
-	"private": true,
-	"description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
-	"categories": ["Other"],
-	"homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
-	"bugs": {
-		"url": "https://github.com/jellydn/vscode-hurl-runner/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/jellydn/vscode-hurl-runner"
-	},
-	"funding": "https://github.com/sponsors/jellydn",
-	"license": "MIT",
-	"author": "Dung Huynh Duc <dung@productsway.com>",
-	"publisher": "jellydn",
-	"main": "./dist/index.js",
-	"files": [
-		"LICENSE.md",
-		"dist/*",
-		"res/*",
-		"syntaxes/*",
-		"language-configuration.json"
-	],
-	"scripts": {
-		"build": "tsup src/index.ts --external vscode",
-		"dev": "nr build --watch",
-		"lint": "biome lint .",
-		"pack": "vsce package --no-dependencies",
-		"prepare": "nr update",
-		"publish": "vsce publish --no-dependencies",
-		"release": "bumpp && nr publish",
-		"test": "vitest",
-		"typecheck": "tsc --noEmit",
-		"update": "vscode-ext-gen --output src/generated/meta.ts",
-		"vscode:prepublish": "nr build"
-	},
-	"contributes": {
-		"commands": [
-			{
-				"command": "vscode-hurl-runner.runHurl",
-				"title": "Hurl Runner: Run at entry"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlFile",
-				"title": "Hurl Runner: Run File"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlToEnd",
-				"title": "Hurl Runner: Run to End"
-			},
-			{
-				"command": "vscode-hurl-runner.manageInlineVariables",
-				"title": "Hurl Runner: Manage Inline Variables"
-			},
-			{
-				"command": "vscode-hurl-runner.selectEnvFile",
-				"title": "Hurl Runner: Select Environment File"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlSelection",
-				"title": "Hurl Runner: Run Selected Text"
-			},
-			{
-				"command": "vscode-hurl-runner.rerunLastCommand",
-				"title": "Hurl Runner: Rerun Last Command"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlFromBegin",
-				"title": "Hurl Runner: Run from Begin to Current"
-			}
-		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "hurl-runner",
-					"title": "Hurl Runner",
-					"icon": "res/sidebar-icon.svg"
-				}
-			]
-		},
-		"views": {
-			"hurl-runner": [
-				{
-					"id": "hurlVariables",
-					"name": "Hurl Variables"
-				}
-			]
-		},
-		"configuration": {
-			"type": "object",
-			"title": "vscode-hurl-runner",
-			"properties": {
-				"vscode-hurl-runner.hurlPath": {
-					"type": "string",
-					"default": "hurl",
-					"description": "Path to the Hurl executable"
-				},
-				"vscode-hurl-runner.verboseMode": {
-					"type": "string",
-					"enum": ["verbose", "very-verbose"],
-					"default": "verbose",
-					"description": "Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data."
-				}
-			}
-		},
-		"keybindings": [
-			{
-				"command": "vscode-hurl-runner.runHurl",
-				"key": "ctrl+alt+h",
-				"mac": "cmd+alt+h",
-				"when": "editorTextFocus && editorLangId == hurl"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlFile",
-				"key": "ctrl+alt+f",
-				"mac": "cmd+alt+f",
-				"when": "editorTextFocus && editorLangId == hurl"
-			},
-			{
-				"command": "vscode-hurl-runner.manageInlineVariables",
-				"key": "ctrl+alt+shift+v",
-				"mac": "cmd+alt+shift+v",
-				"when": "editorTextFocus && editorLangId == hurl"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlToEnd",
-				"key": "ctrl+alt+shift+h",
-				"mac": "cmd+alt+shift+h",
-				"when": "editorTextFocus && editorLangId == hurl"
-			},
-			{
-				"command": "vscode-hurl-runner.selectEnvFile",
-				"key": "ctrl+alt+e",
-				"mac": "cmd+alt+e",
-				"when": "editorTextFocus && editorLangId == hurl"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlSelection",
-				"key": "ctrl+alt+h",
-				"mac": "cmd+alt+h",
-				"when": "editorTextFocus && editorLangId == hurl && editorHasSelection"
-			},
-			{
-				"command": "vscode-hurl-runner.rerunLastCommand",
-				"key": "ctrl+alt+shift+r",
-				"mac": "cmd+alt+shift+r",
-				"when": "editorTextFocus && editorLangId == hurl"
-			},
-			{
-				"command": "vscode-hurl-runner.runHurlFromBegin",
-				"key": "ctrl+alt+shift+b",
-				"mac": "cmd+alt+shift+b",
-				"when": "editorTextFocus && editorLangId == hurl"
-			}
-		],
-		"languages": [
-			{
-				"id": "hurl",
-				"aliases": ["Hurl", "hurl"],
-				"extensions": [".hurl"],
-				"configuration": "./language-configuration.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "hurl",
-				"scopeName": "source.hurl",
-				"path": "./syntaxes/hurl.tmLanguage.json"
-			}
-		]
-	},
-	"activationEvents": ["onLanguage:hurl"],
-	"devDependencies": {
-		"@antfu/ni": "0.23.0",
-		"@biomejs/biome": "1.9.4",
-		"@types/node": "22.7.7",
-		"@types/vscode": "1.94.0",
-		"@vscode/vsce": "3.2.0",
-		"bumpp": "9.7.1",
-		"esno": "4.8.0",
-		"pnpm": "9.12.2",
-		"reactive-vscode": "0.2.5",
-		"tsup": "8.3.0",
-		"typescript": "5.6.3",
-		"vite": "5.4.9",
-		"vitest": "2.1.3",
-		"vscode-ext-gen": "0.4.4"
-	},
-	"packageManager": "pnpm@9.12.2",
-	"engines": {
-		"vscode": "^1.93.0"
-	},
-	"icon": "res/icon.png",
-	"sponsor": {
-		"url": "https://github.com/sponsors/jellydn"
-	}
+  "name": "vscode-hurl-runner",
+  "displayName": "VSCode Hurl Runner",
+  "version": "0.9.1",
+  "private": true,
+  "description": "Streamline API development in VSCode. Run Hurl requests, manage variables, and view responses directly in your editor.",
+  "categories": [
+    "Other"
+  ],
+  "homepage": "https://github.com/jellydn/vscode-hurl-runner#readme",
+  "bugs": {
+    "url": "https://github.com/jellydn/vscode-hurl-runner/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jellydn/vscode-hurl-runner"
+  },
+  "funding": "https://github.com/sponsors/jellydn",
+  "license": "MIT",
+  "author": "Dung Huynh Duc <dung@productsway.com>",
+  "publisher": "jellydn",
+  "main": "./dist/index.js",
+  "files": [
+    "LICENSE.md",
+    "dist/*",
+    "res/*",
+    "syntaxes/*",
+    "language-configuration.json"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --external vscode",
+    "dev": "nr build --watch",
+    "lint": "biome lint .",
+    "pack": "vsce package --no-dependencies",
+    "prepare": "nr update",
+    "publish": "vsce publish --no-dependencies",
+    "release": "bumpp && nr publish",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "update": "vscode-ext-gen --output src/generated/meta.ts",
+    "vscode:prepublish": "nr build"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-hurl-runner.runHurl",
+        "title": "Hurl Runner: Run at entry"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlFile",
+        "title": "Hurl Runner: Run File"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlToEnd",
+        "title": "Hurl Runner: Run to End"
+      },
+      {
+        "command": "vscode-hurl-runner.manageInlineVariables",
+        "title": "Hurl Runner: Manage Inline Variables"
+      },
+      {
+        "command": "vscode-hurl-runner.selectEnvFile",
+        "title": "Hurl Runner: Select Environment File"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlSelection",
+        "title": "Hurl Runner: Run Selected Text"
+      },
+      {
+        "command": "vscode-hurl-runner.rerunLastCommand",
+        "title": "Hurl Runner: Rerun Last Command"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlFromBegin",
+        "title": "Hurl Runner: Run from Begin to Current"
+      },
+      {
+        "command": "vscode-hurl-runner.viewLastResponse",
+        "title": "Hurl Runner: View Last Response"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "hurl-runner",
+          "title": "Hurl Runner",
+          "icon": "res/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "hurl-runner": [
+        {
+          "id": "hurlVariables",
+          "name": "Hurl Variables"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "vscode-hurl-runner",
+      "properties": {
+        "vscode-hurl-runner.hurlPath": {
+          "type": "string",
+          "default": "hurl",
+          "description": "Path to the Hurl executable"
+        },
+        "vscode-hurl-runner.verboseMode": {
+          "type": "string",
+          "enum": [
+            "verbose",
+            "very-verbose"
+          ],
+          "default": "verbose",
+          "description": "Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data."
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "vscode-hurl-runner.runHurl",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlFile",
+        "key": "ctrl+alt+f",
+        "mac": "cmd+alt+f",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.manageInlineVariables",
+        "key": "ctrl+alt+shift+v",
+        "mac": "cmd+alt+shift+v",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlToEnd",
+        "key": "ctrl+alt+shift+h",
+        "mac": "cmd+alt+shift+h",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.selectEnvFile",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlSelection",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h",
+        "when": "editorTextFocus && editorLangId == hurl && editorHasSelection"
+      },
+      {
+        "command": "vscode-hurl-runner.rerunLastCommand",
+        "key": "ctrl+alt+shift+r",
+        "mac": "cmd+alt+shift+r",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.runHurlFromBegin",
+        "key": "ctrl+alt+shift+b",
+        "mac": "cmd+alt+shift+b",
+        "when": "editorTextFocus && editorLangId == hurl"
+      },
+      {
+        "command": "vscode-hurl-runner.viewLastResponse",
+        "key": "ctrl+alt+v",
+        "mac": "cmd+alt+v",
+        "when": "editorTextFocus && editorLangId == hurl"
+      }
+    ],
+    "languages": [
+      {
+        "id": "hurl",
+        "aliases": [
+          "Hurl",
+          "hurl"
+        ],
+        "extensions": [
+          ".hurl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "hurl",
+        "scopeName": "source.hurl",
+        "path": "./syntaxes/hurl.tmLanguage.json"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onLanguage:hurl"
+  ],
+  "devDependencies": {
+    "@antfu/ni": "0.23.0",
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "22.7.7",
+    "@types/vscode": "1.93.0",
+    "@vscode/vsce": "3.2.0",
+    "bumpp": "9.7.1",
+    "esno": "4.8.0",
+    "pnpm": "9.12.2",
+    "reactive-vscode": "0.2.5",
+    "tsup": "8.3.0",
+    "typescript": "5.6.3",
+    "vite": "5.4.9",
+    "vitest": "2.1.3",
+    "vscode-ext-gen": "0.4.4"
+  },
+  "packageManager": "pnpm@9.12.2",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "icon": "res/icon.png",
+  "sponsor": {
+    "url": "https://github.com/sponsors/jellydn"
+  }
 }

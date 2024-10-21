@@ -6,6 +6,7 @@ import * as vscode from "vscode";
 
 import { config } from "./config";
 import { displayName } from "./generated/meta";
+import type { ParsedHurlOutput } from "./hurl-parser";
 
 export const logger = useLogger(displayName);
 export const responseLogger = useLogger(`${displayName} Response`);
@@ -163,4 +164,14 @@ export async function executeHurlWithContent(
 			reject(new Error(`Failed to start Hurl process: ${error.message}`));
 		});
 	});
+}
+
+export interface LastResponseInfo {
+	result: {
+		stdout: string;
+		stderr: string;
+		isVeryVerbose?: boolean;
+	};
+	isError: boolean;
+	parsedOutput: ParsedHurlOutput;
 }

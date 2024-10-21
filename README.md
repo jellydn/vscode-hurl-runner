@@ -48,6 +48,7 @@
 | `vscode-hurl-runner.runHurlSelection`      | Hurl Runner: Run Selected Text         |
 | `vscode-hurl-runner.rerunLastCommand`      | Hurl Runner: Rerun Last Command        |
 | `vscode-hurl-runner.runHurlFromBegin`      | Hurl Runner: Run from Begin to Current |
+| `vscode-hurl-runner.viewLastResponse`      | Hurl Runner: View Last Response        |
 
 <!-- commands -->
 
