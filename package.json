@@ -187,8 +187,8 @@
 	"devDependencies": {
 		"@antfu/ni": "0.23.0",
 		"@biomejs/biome": "1.9.4",
-		"@types/node": "22.7.7",
-		"@types/vscode": "1.93.0",
+		"@types/node": "22.7.8",
+		"@types/vscode": "1.94.0",
 		"@vscode/vsce": "3.2.0",
 		"bumpp": "9.7.1",
 		"esno": "4.8.0",
