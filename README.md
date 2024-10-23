@@ -26,13 +26,23 @@
 
 ## Features
 
-- Run Hurl requests directly from VSCode
-- Execute single entries or entire Hurl files
-- Manage environment variables for Hurl requests
-- Support for inline variables
-- View detailed HTTP responses in a formatted webview
-- Syntax highlighting for Hurl files
-- Integration with VSCode's status bar for execution feedback
+- 🚀 Run Hurl requests directly from VSCode
+  - ▶️ Execute single entries
+  - ⏭️ Run from a specific entry to the end of the file
+  - 📁 Run entire Hurl files
+  - ✂️ Run selected text
+  - 🔝 Run from the beginning to the current entry
+- 🔧 Variable management
+  - 🌍 Support for environment files
+  - 📝 Inline variable management
+  - 🌐 Global variable support (based on captured variables)
+- 📊 Capture values from responses and use them in subsequent requests
+- 👁️ View detailed HTTP responses in a formatted webview
+- 🎨 Syntax highlighting for Hurl files
+- 📊 Integration with VSCode's status bar for execution feedback
+- 🔍 Code lens support for quick actions
+- 🔁 Rerun last command functionality
+- 📜 View last response without re-running the request
 
 ### Commands
 
