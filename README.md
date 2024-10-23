@@ -71,7 +71,7 @@
 | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
 | `vscode-hurl-runner.hurlPath`                | Path to the Hurl executable                                                                                                                                                         | `string`  | `"hurl"`    |
 | `vscode-hurl-runner.verboseMode`             | Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data. | `string`  | `"verbose"` |
-| `vscode-hurl-runner.captureToGlobalVariable` | When enabled, captured values will be set as global variables.                                                                                                                      | `boolean` | `false`     |
+| `vscode-hurl-runner.captureToGlobalVariable` | When enabled, captured values will be set as global variables.                                                                                                                      | `boolean` | `true`      |
 
 <!-- configs -->
 

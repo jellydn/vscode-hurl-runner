@@ -115,7 +115,7 @@
 				},
 				"vscode-hurl-runner.captureToGlobalVariable": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "When enabled, captured values will be set as global variables."
 				}
 			}
