@@ -9,6 +9,7 @@ interface ParsedEntry {
 	};
 	curlCommand?: string;
 	timings?: Record<string, string>;
+	captures?: Record<string, string>;
 }
 
 export interface ParsedHurlOutput {
@@ -56,6 +57,7 @@ export function parseHurlOutput(
 	let currentEntry: ParsedEntry | null = null;
 	let isResponseHeader = false;
 	let isTimings = false;
+	let isCaptures = false;
 
 	for (const line of lines) {
 		if (line.startsWith("* Executing entry")) {
@@ -72,9 +74,11 @@ export function parseHurlOutput(
 					body: "",
 				},
 				timings: {},
+				captures: {},
 			};
 			isResponseHeader = false;
 			isTimings = false;
+			isCaptures = false;
 		} else if (line.startsWith("* Request:")) {
 			const match = line.match(/\* Request:\s*\* (\w+) (.*)/);
 			if (match && currentEntry) {
@@ -131,6 +135,18 @@ export function parseHurlOutput(
 			if (currentEntry?.timings) {
 				currentEntry.timings = formatTimings(currentEntry.timings);
 			}
+		} else if (line.startsWith("* Captures:")) {
+			isCaptures = true;
+			if (currentEntry && !currentEntry.captures) {
+				currentEntry.captures = {};
+			}
+		} else if (isCaptures && line.trim() !== "") {
+			const [key, value] = line.slice(2).split(":").map((s) => s.trim());
+			if (currentEntry?.captures && key && value) {
+				currentEntry.captures[key] = value;
+			}
+		} else if (isCaptures && line.trim() === "") {
+			isCaptures = false;
 		}
 	}
 

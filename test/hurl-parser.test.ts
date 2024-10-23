@@ -50,11 +50,39 @@ describe("parseHurlOutput", () => {
 				connect: "2.00 ms",
 				total: "10.00 ms",
 			},
+			captures: {},
 		});
 	});
 
 	it("should handle empty input", () => {
 		const result = parseHurlOutput("", "");
 		expect(result.entries).toHaveLength(0);
+	});
+
+	it("should parse captures", () => {
+		const stderr = `
+* ------------------------------------------------------------------------------
+* Executing entry 1
+* Request:
+* GET https://example.com/api
+* Response:
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+* Response body:
+{"id": "12345", "name": "Example"}
+* Captures:
+* id: 12345
+* name: Example
+* ------------------------------------------------------------------------------
+`;
+		const stdout = '{"id": "12345", "name": "Example"}';
+
+		const result = parseHurlOutput(stderr, stdout);
+
+		expect(result.entries).toHaveLength(1);
+		expect(result.entries[0].captures).toEqual({
+			id: '12345',
+			name: 'Example'
+		});
 	});
 });
