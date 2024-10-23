@@ -81,8 +81,8 @@ describe("parseHurlOutput", () => {
 
 		expect(result.entries).toHaveLength(1);
 		expect(result.entries[0].captures).toEqual({
-			id: '12345',
-			name: 'Example'
+			id: "12345",
+			name: "Example",
 		});
 	});
 });

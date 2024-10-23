@@ -141,7 +141,10 @@ export function parseHurlOutput(
 				currentEntry.captures = {};
 			}
 		} else if (isCaptures && line.trim() !== "") {
-			const [key, value] = line.slice(2).split(":").map((s) => s.trim());
+			const [key, value] = line
+				.slice(2)
+				.split(":")
+				.map((s) => s.trim());
 			if (currentEntry?.captures && key && value) {
 				currentEntry.captures[key] = value;
 			}
