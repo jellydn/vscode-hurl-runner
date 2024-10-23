@@ -2,6 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as vscode from "vscode";
 
+import { config } from "./config";
 import type { HurlVariablesProvider } from "./hurl-variables-provider";
 import { logger } from "./utils";
 
@@ -359,5 +360,17 @@ async function removeInlineVariable(
 		vscode.window.showInformationMessage(
 			`Inline variable ${name} removed successfully`,
 		);
+	}
+}
+
+export async function saveCapturedValues(
+	hurlVariablesProvider: HurlVariablesProvider,
+	captures: Record<string, string>,
+): Promise<void> {
+	if (config.captureToGlobalVariable) {
+		for (const [key, value] of Object.entries(captures)) {
+			hurlVariablesProvider.setGlobalVariable(key, value);
+			logger.info(`Captured value set as global variable: ${key} = ${value}`);
+		}
 	}
 }

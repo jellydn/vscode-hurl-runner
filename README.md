@@ -49,6 +49,7 @@
 | `vscode-hurl-runner.rerunLastCommand`      | Hurl Runner: Rerun Last Command        |
 | `vscode-hurl-runner.runHurlFromBegin`      | Hurl Runner: Run from Begin to Current |
 | `vscode-hurl-runner.viewLastResponse`      | Hurl Runner: View Last Response        |
+| `vscode-hurl-runner.removeGlobalVariable`  | Remove Global Variable                 |
 
 <!-- commands -->
 
@@ -56,10 +57,11 @@
 
 <!-- configs -->
 
-| Key                              | Description                                                                                                                                                                         | Type     | Default     |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `vscode-hurl-runner.hurlPath`    | Path to the Hurl executable                                                                                                                                                         | `string` | `"hurl"`    |
-| `vscode-hurl-runner.verboseMode` | Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data. | `string` | `"verbose"` |
+| Key                                          | Description                                                                                                                                                                         | Type      | Default     |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| `vscode-hurl-runner.hurlPath`                | Path to the Hurl executable                                                                                                                                                         | `string`  | `"hurl"`    |
+| `vscode-hurl-runner.verboseMode`             | Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data. | `string`  | `"verbose"` |
+| `vscode-hurl-runner.captureToGlobalVariable` | When enabled, captured values will be set as global variables.                                                                                                                      | `boolean` | `false`     |
 
 <!-- configs -->
 

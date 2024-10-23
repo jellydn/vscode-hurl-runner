@@ -7,7 +7,11 @@ import { HurlCodeLensProvider } from "./hurl-code-lens-provider";
 import { parseHurlOutput } from "./hurl-parser";
 import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
-import { chooseEnvFile, manageEnvVariables } from "./manage-variables";
+import {
+	chooseEnvFile,
+	manageEnvVariables,
+	saveCapturedValues,
+} from "./manage-variables";
 import {
 	type LastResponseInfo,
 	executeHurl,
@@ -221,6 +225,19 @@ const { activate, deactivate } = defineExtension(() => {
 		resultPanel.reveal(vscode.ViewColumn.Two);
 	};
 
+	const saveCapturedValuesFromLastResponse = (
+		stderr: string,
+		stdout: string,
+	) => {
+		const parsedOutput = parseHurlOutput(stderr, stdout);
+		for (const entry of parsedOutput.entries) {
+			const captures = entry.captures ?? {};
+			if (Object.keys(captures).length > 0) {
+				saveCapturedValues(hurlVariablesProvider, captures);
+			}
+		}
+	};
+
 	// Run hurl at the current line
 	useCommand(commands.runHurl, async (lineNumber?: number) => {
 		const runHurlCommand = async (entryNumber?: number) => {
@@ -267,6 +284,7 @@ const { activate, deactivate } = defineExtension(() => {
 				});
 
 				showResultInWebView(result);
+				saveCapturedValuesFromLastResponse(result.stderr, result.stdout);
 			} catch (error) {
 				const errorMessage =
 					error instanceof Error ? error.message : "Unknown error";
@@ -321,6 +339,7 @@ const { activate, deactivate } = defineExtension(() => {
 				});
 
 				showResultInWebView(result);
+				saveCapturedValuesFromLastResponse(result.stderr, result.stdout);
 			} catch (error) {
 				const errorMessage =
 					error instanceof Error ? error.message : "Unknown error";
@@ -367,6 +386,7 @@ const { activate, deactivate } = defineExtension(() => {
 				});
 
 				showResultInWebView(result);
+				saveCapturedValuesFromLastResponse(result.stderr, result.stdout);
 			} catch (error) {
 				const errorMessage =
 					error instanceof Error ? error.message : "Unknown error";
@@ -505,6 +525,7 @@ const { activate, deactivate } = defineExtension(() => {
 				});
 
 				showResultInWebView(result);
+				saveCapturedValuesFromLastResponse(result.stderr, result.stdout);
 			} catch (error) {
 				const errorMessage =
 					error instanceof Error ? error.message : "Unknown error";
@@ -590,6 +611,16 @@ const { activate, deactivate } = defineExtension(() => {
 		} else {
 			vscode.window.showInformationMessage(
 				"No previous Hurl response to view.",
+			);
+		}
+	});
+
+	useCommand(commands.removeGlobalVariable, async (item) => {
+		if (item.contextValue === "globalVariable") {
+			hurlVariablesProvider.removeGlobalVariable(item.label);
+			hurlVariablesTreeProvider.refresh();
+			vscode.window.showInformationMessage(
+				`Removed global variable: ${item.label}`,
 			);
 		}
 	});

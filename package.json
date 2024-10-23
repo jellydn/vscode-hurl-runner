@@ -75,6 +75,10 @@
 			{
 				"command": "vscode-hurl-runner.viewLastResponse",
 				"title": "Hurl Runner: View Last Response"
+			},
+			{
+				"command": "vscode-hurl-runner.removeGlobalVariable",
+				"title": "Remove Global Variable"
 			}
 		],
 		"viewsContainers": {
@@ -108,6 +112,11 @@
 					"enum": ["verbose", "very-verbose"],
 					"default": "verbose",
 					"description": "Set the verbosity level for Hurl execution. 'verbose' provides basic information about requests and responses. 'very-verbose' includes detailed information, including timing data."
+				},
+				"vscode-hurl-runner.captureToGlobalVariable": {
+					"type": "boolean",
+					"default": false,
+					"description": "When enabled, captured values will be set as global variables."
 				}
 			}
 		},
@@ -181,14 +190,22 @@
 				"scopeName": "source.hurl",
 				"path": "./syntaxes/hurl.tmLanguage.json"
 			}
-		]
+		],
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "vscode-hurl-runner.removeGlobalVariable",
+					"when": "view == hurlVariables && viewItem == globalVariable"
+				}
+			]
+		}
 	},
 	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
 		"@antfu/ni": "0.23.0",
 		"@biomejs/biome": "1.9.4",
 		"@types/node": "22.7.9",
-		"@types/vscode": "1.94.0",
+		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "3.2.0",
 		"bumpp": "9.7.1",
 		"esno": "4.8.0",

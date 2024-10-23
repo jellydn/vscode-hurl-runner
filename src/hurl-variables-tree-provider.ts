@@ -57,6 +57,7 @@ export class HurlVariablesTreeProvider
 			const envVariables = this.hurlVariablesProvider.getVariablesBy(filePath);
 			const inlineVariables =
 				this.hurlVariablesProvider.getInlineVariablesBy(filePath);
+			const globalVariables = this.hurlVariablesProvider.getGlobalVariables();
 
 			if (this.envFile) {
 				const envFileVariables = await this.loadEnvFileVariables(this.envFile);
@@ -121,6 +122,27 @@ export class HurlVariablesTreeProvider
 						vscode.TreeItemCollapsibleState.Expanded,
 						"category",
 						inlineItems,
+					),
+				);
+			}
+
+			if (Object.keys(globalVariables).length > 0) {
+				const globalItems = Object.entries(globalVariables).map(
+					([key, value]) =>
+						new VariableItem(
+							key,
+							value,
+							vscode.TreeItemCollapsibleState.None,
+							"globalVariable",
+						),
+				);
+				rootItems.push(
+					new VariableItem(
+						"Captured Variables",
+						"",
+						vscode.TreeItemCollapsibleState.Expanded,
+						"category",
+						globalItems,
 					),
 				);
 			}

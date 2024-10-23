@@ -1,6 +1,7 @@
 export class HurlVariablesProvider {
 	private variables: Map<string, Map<string, string>> = new Map();
 	private inlineVariables: Map<string, Map<string, string>> = new Map();
+	private globalVariables: Map<string, string> = new Map();
 
 	public getVariablesBy(filePath: string): Record<string, string> {
 		return Object.fromEntries(this.variables.get(filePath) || new Map());
@@ -54,9 +55,22 @@ export class HurlVariablesProvider {
 		this.inlineVariables.set(filePath, new Map(Object.entries(variables)));
 	}
 
+	public getGlobalVariables(): Record<string, string> {
+		return Object.fromEntries(this.globalVariables);
+	}
+
+	public setGlobalVariable(name: string, value: string): void {
+		this.globalVariables.set(name, value);
+	}
+
+	public removeGlobalVariable(name: string): void {
+		this.globalVariables.delete(name);
+	}
+
 	public getAllVariablesBy(filePath: string): Record<string, string> {
 		const envVariables = this.getVariablesBy(filePath);
 		const inlineVariables = this.getInlineVariablesBy(filePath);
-		return { ...envVariables, ...inlineVariables };
+		const globalVariables = this.getGlobalVariables();
+		return { ...envVariables, ...globalVariables, ...inlineVariables };
 	}
 }
