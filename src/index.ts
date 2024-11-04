@@ -115,18 +115,34 @@ const { activate, deactivate } = defineExtension(() => {
 		// Create a formatted HTML output for each entry
 		const htmlOutput = parsedOutput.entries
 			.map((entry) => {
-				let bodyType = "text";
-				let formattedBody = entry.response.body || "No response body";
-				if (formattedBody.trim().startsWith("{")) {
-					bodyType = "json";
+				let bodyType = 'text';
+				let formattedBody = entry.response.body || 'No response body';
+
+				// Better content type detection
+				if (formattedBody.trim().startsWith('{') || formattedBody.trim().startsWith('[')) {
+					bodyType = 'json';
 					try {
-						formattedBody = JSON.stringify(JSON.parse(formattedBody), null, 2);
+						// Format JSON with proper indentation
+						const parsedJson = JSON.parse(formattedBody);
+						formattedBody = JSON.stringify(parsedJson, null, 2);
 					} catch {
 						// If parsing fails, leave it as is
 					}
-				} else if (formattedBody.trim().startsWith("<")) {
-					bodyType = formattedBody.trim().startsWith("<?xml") ? "xml" : "html";
+				} else if (formattedBody.trim().startsWith('<?xml')) {
+					bodyType = 'xml';
+				} else if (formattedBody.trim().startsWith('<')) {
+					bodyType = 'html';
+				} else if (formattedBody.includes('function') || formattedBody.includes('=>')) {
+					bodyType = 'javascript';
 				}
+
+				// Escape HTML characters to prevent rendering issues
+				formattedBody = formattedBody
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/"/g, '&quot;')
+					.replace(/'/g, '&#039;');
 
 				const timingsHtml =
 					result.isVeryVerbose && entry.timings
@@ -143,41 +159,42 @@ const { activate, deactivate } = defineExtension(() => {
 				return `
 				<div class="entry">
 					<h3>Request</h3>
-					<pre><code class="language-http">${entry.requestMethod} ${
-						entry.requestUrl
+					<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl
 					}</code></pre>
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-							entry.requestHeaders,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+						entry.requestHeaders,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
-					${
-						entry.curlCommand
-							? `
+					${entry.curlCommand
+						? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-							: ""
+						: ""
 					}
 
 					<h3>Response Body</h3>
-					<pre class="response-body"><code class="language-${bodyType}">${formattedBody}</code></pre>
+					<div class="response-body">
+						<button class="copy-button">Copy</button>
+						<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+					</div>
 
 					<details>
 						<summary>Response Details</summary>
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-							entry.response.headers,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
+						entry.response.headers,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 					</details>
 
 					${timingsHtml}
@@ -200,24 +217,172 @@ const { activate, deactivate } = defineExtension(() => {
 					<meta charset="UTF-8">
 					<meta name="viewport" content="width=device-width, initial-scale=1.0">
 					<title>${title}</title>
-					<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+					<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-http.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
 					<style>
-						body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
-						pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow: auto; }
-						details { margin-bottom: 20px; }
-						summary { cursor: pointer; }
-						hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
-						.response-body { max-height: 100vh; overflow: auto; }
+						body {
+							font-family: Arial, sans-serif;
+							line-height: 1.6;
+							padding: 20px;
+							margin: 0;
+						}
+						pre {
+							background-color: #f4f4f4;
+							padding: 10px;
+							border-radius: 5px;
+							overflow: auto;
+						}
+						details {
+							margin-bottom: 20px;
+						}
+						summary {
+							cursor: pointer;
+							user-select: none;
+							padding: 8px;
+							background-color: #f0f0f0;
+							border-radius: 4px;
+						}
+						summary:hover {
+							background-color: #e0e0e0;
+						}
+						hr {
+							margin: 30px 0;
+							border: 0;
+							border-top: 1px solid #ddd;
+						}
+						.response-body {
+							position: relative;
+							background: #1e1e1e;
+							border-radius: 6px;
+							margin: 1em 0;
+						}
+						.response-body pre {
+							margin: 0;
+							padding: 1.5em;
+							overflow-x: auto;
+							font-size: 14px;
+							line-height: 1.6;
+						}
+						.response-body code {
+							font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+							tab-size: 4;
+							white-space: pre;
+						}
+						.entry {
+							background: #fff;
+							border: 1px solid #e1e4e8;
+							border-radius: 6px;
+							padding: 20px;
+							margin-bottom: 20px;
+						}
+						h3 {
+							margin-top: 0;
+						}
+						/* Dark mode support */
+						@media (prefers-color-scheme: dark) {
+							body {
+								background-color: #1e1e1e;
+								color: #d4d4d4;
+							}
+							.entry {
+								background: #252526;
+								border-color: #404040;
+							}
+							pre {
+								background-color: #2d2d2d;
+							}
+							summary {
+								background-color: #333333;
+							}
+							summary:hover {
+								background-color: #404040;
+							}
+							.response-body pre {
+								background: #1e1e1e;
+								border: 1px solid #404040;
+							}
+						}
+						/* Copy button */
+						.copy-button {
+							position: absolute;
+							top: 8px;
+							right: 8px;
+							padding: 6px 12px;
+							background: #2d2d2d;
+							border: 1px solid #404040;
+							border-radius: 4px;
+							color: #fff;
+							font-size: 12px;
+							cursor: pointer;
+							opacity: 0;
+							transition: opacity 0.2s;
+							z-index: 10;
+						}
+
+						.response-body:hover .copy-button {
+							opacity: 1;
+						}
+
+						.copy-button:hover {
+							background: #404040;
+						}
+
+						.copy-button:active {
+							background: #505050;
+						}
+
+						/* Syntax highlighting customization */
+						.token.property { color: #7cdcfe; }
+						.token.string { color: #ce9178; }
+						.token.number { color: #b5cea8; }
+						.token.boolean { color: #569cd6; }
+						.token.null { color: #569cd6; }
+						.token.punctuation { color: #d4d4d4; }
+						.token.operator { color: #d4d4d4; }
 					</style>
 				</head>
 				<body>
-					${
-						isError
-							? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
-							: htmlOutput
-					}
-						<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-						<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+					${isError
+				? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
+				: htmlOutput
+			}
+					<script>
+						// Initialize Prism.js
+						Prism.highlightAll();
+
+						// Add copy functionality
+						document.querySelectorAll('.copy-button').forEach(button => {
+							button.addEventListener('click', () => {
+								const codeBlock = button.nextElementSibling.querySelector('code');
+								const text = codeBlock.textContent;
+
+								navigator.clipboard.writeText(text).then(() => {
+									const originalText = button.textContent;
+									button.textContent = 'Copied!';
+									button.style.backgroundColor = '#28a745';
+
+									setTimeout(() => {
+										button.textContent = originalText;
+										button.style.backgroundColor = '';
+									}, 2000);
+								}).catch(err => {
+									console.error('Failed to copy text:', err);
+									button.textContent = 'Failed to copy';
+									button.style.backgroundColor = '#dc3545';
+
+									setTimeout(() => {
+										button.textContent = originalText;
+										button.style.backgroundColor = '';
+									}, 2000);
+								});
+							});
+						});
+					</script>
 				</body>
 			</html>
 		`;
