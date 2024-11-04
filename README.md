@@ -85,27 +85,27 @@
 
 #### Running a Single Hurl Entry
 
-[![Run at entry](https://i.gyazo.com/cbad7080f4c93697439d54301faf2da2.gif)](https://gyazo.com/cbad7080f4c93697439d54301faf2da2)
+[![Run at entry](https://i.gyazo.com/3ceef5b45f68df5bcabe00e7bd39ed27.gif)](https://gyazo.com/3ceef5b45f68df5bcabe00e7bd39ed27)
 _Demonstrates running a single Hurl entry directly from VSCode._
 
 #### Running from Entry to the End of File
 
-[![Run to the end](https://i.gyazo.com/329844ae8a37e6d24a529e9d29edc146.gif)](https://gyazo.com/329844ae8a37e6d24a529e9d29edc146)
+[![Run to the end](https://i.gyazo.com/294af3f42fca76eb751e8bce2c432d10.gif)](https://gyazo.com/294af3f42fca76eb751e8bce2c432d10)
 _Shows how to run Hurl requests from a specific entry to the end of the file._
 
 #### Running an Entire Hurl File
 
-[![Run a file](https://i.gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef.gif)](https://gyazo.com/5228daf93d1d18be73d90ca6a9eda5ef)
+[![Run a file](https://i.gyazo.com/d9188c14d370748f9bc495d0071a130b.gif)](https://gyazo.com/d9188c14d370748f9bc495d0071a130b)
 _Illustrates running an entire Hurl file in one go._
 
 #### Managing Variables
 
-[![Manage variable](https://i.gyazo.com/1e8be3690eefef9c408277912561cf6f.gif)](https://gyazo.com/1e8be3690eefef9c408277912561cf6f)
+[![Manage variable](https://i.gyazo.com/49e3688ff47f5ba32a5094b428a89a60.gif)](https://gyazo.com/49e3688ff47f5ba32a5094b428a89a60)
 _Demonstrates how to manage inline variables for Hurl requests._
 
 #### Selecting Environment File
 
-[![Select env file](https://i.gyazo.com/83ca9f1514cb3c91a7b6305740c7957f.gif)](https://gyazo.com/83ca9f1514cb3c91a7b6305740c7957f)
+[![Select env file](https://i.gyazo.com/84e3e3ff85a4b6cc254af6398d33d6d2.gif)](https://gyazo.com/84e3e3ff85a4b6cc254af6398d33d6d2)
 _Shows the process of selecting an environment file for Hurl requests._
 
 ## Related Projects
