@@ -235,95 +235,81 @@ const { activate, deactivate } = defineExtension(() => {
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
 					<style>
 						body {
-							font-family: Arial, sans-serif;
+							font-family: var(--vscode-font-family);
 							line-height: 1.6;
-							padding: 20px;
+							padding: 16px;
 							margin: 0;
+							color: var(--vscode-editor-foreground);
+							background-color: var(--vscode-editor-background);
 						}
 						pre {
-							background-color: #f4f4f4;
-							padding: 10px;
-							border-radius: 5px;
+							background-color: var(--vscode-textCodeBlock-background);
+							padding: 8px;
+							border-radius: 4px;
 							overflow: auto;
 						}
 						details {
-							margin-bottom: 20px;
+							margin-bottom: 16px;
 						}
 						summary {
 							cursor: pointer;
 							user-select: none;
-							padding: 8px;
-							background-color: #f0f0f0;
+							padding: 6px;
+							background-color: var(--vscode-button-secondaryBackground);
+							color: var(--vscode-button-secondaryForeground);
 							border-radius: 4px;
 						}
 						summary:hover {
-							background-color: #e0e0e0;
+							background-color: var(--vscode-button-secondaryHoverBackground);
 						}
 						hr {
-							margin: 30px 0;
+							margin: 16px 0;
 							border: 0;
-							border-top: 1px solid #ddd;
+							border-top: 1px solid var(--vscode-editorIndentGuide-background);
 						}
 						.response-body {
 							position: relative;
-							background: #1e1e1e;
-							border-radius: 6px;
-							margin: 1em 0;
+							background: var(--vscode-textCodeBlock-background);
+							border-radius: 4px;
+							margin: 8px 0;
+							color: var(--vscode-editor-foreground);
+							border: 1px solid var(--vscode-panel-border);
+							border-color: rgba(128, 128, 128, 0.35);
 						}
 						.response-body pre {
 							margin: 0;
-							padding: 1.5em;
+							padding: 16px;
 							overflow-x: auto;
-							font-size: 14px;
-							line-height: 1.6;
+							font-size: var(--vscode-editor-font-size);
+							line-height: 1.5;
+							background: transparent;
 						}
 						.response-body code {
-							font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+							font-family: var(--vscode-editor-font-family);
 							tab-size: 4;
 							white-space: pre;
+							color: var(--vscode-textPreformat-foreground);
 						}
 						.entry {
-							background: #fff;
-							padding: 20px;
-							margin-bottom: 20px;
+							background: var(--vscode-editor-background);
+							padding: 8px 0;
+							margin-bottom: 24px;
 						}
 						h3 {
 							margin-top: 0;
-						}
-						/* Dark mode support */
-						@media (prefers-color-scheme: dark) {
-							body {
-								background-color: #1e1e1e;
-								color: #d4d4d4;
-							}
-							.entry {
-								background: #252526;
-								border-color: #404040;
-							}
-							pre {
-								background-color: #2d2d2d;
-							}
-							summary {
-								background-color: #333333;
-							}
-							summary:hover {
-								background-color: #404040;
-							}
-							.response-body pre {
-								background: #1e1e1e;
-								border: 1px solid #404040;
-							}
+							margin-bottom: 8px;
+							color: var(--vscode-foreground);
 						}
 						/* Copy button */
 						.copy-button {
 							position: absolute;
-							top: 8px;
-							right: 8px;
-							padding: 6px 12px;
-							background: #2d2d2d;
-							border: 1px solid #404040;
+							top: 6px;
+							right: 6px;
+							padding: 4px 8px;
+							background: var(--vscode-button-background);
+							color: var(--vscode-button-foreground);
+							border: none;
 							border-radius: 4px;
-							color: #fff;
 							font-size: 12px;
 							cursor: pointer;
 							opacity: 0;
@@ -336,21 +322,35 @@ const { activate, deactivate } = defineExtension(() => {
 						}
 
 						.copy-button:hover {
-							background: #404040;
+							background: var(--vscode-button-hoverBackground);
 						}
 
 						.copy-button:active {
-							background: #505050;
+							background: var(--vscode-button-activeBackground);
 						}
 
-						/* Syntax highlighting customization */
-						.token.property { color: #7cdcfe; }
-						.token.string { color: #ce9178; }
-						.token.number { color: #b5cea8; }
-						.token.boolean { color: #569cd6; }
-						.token.null { color: #569cd6; }
-						.token.punctuation { color: #d4d4d4; }
-						.token.operator { color: #d4d4d4; }
+						/* Syntax highlighting improvements */
+						.token.property {
+							color: var(--vscode-symbolIcon-variableForeground);
+						}
+						.token.string {
+							color: var(--vscode-debugConsole-stringForeground);
+						}
+						.token.number {
+							color: var(--vscode-debugConsole-numberForeground);
+						}
+						.token.boolean {
+							color: var(--vscode-debugConsole-booleanForeground);
+						}
+						.token.null {
+							color: var(--vscode-debugConsole-nullForeground);
+						}
+						.token.punctuation {
+							color: var(--vscode-editor-foreground);
+						}
+						.token.operator {
+							color: var(--vscode-editor-foreground);
+						}
 					</style>
 				</head>
 				<body>
