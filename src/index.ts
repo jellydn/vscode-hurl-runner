@@ -115,12 +115,15 @@ const { activate, deactivate } = defineExtension(() => {
 		// Create a formatted HTML output for each entry
 		const htmlOutput = parsedOutput.entries
 			.map((entry) => {
-				let bodyType = 'text';
-				let formattedBody = entry.response.body || 'No response body';
+				let bodyType = "text";
+				let formattedBody = entry.response.body || "No response body";
 
 				// Better content type detection
-				if (formattedBody.trim().startsWith('{') || formattedBody.trim().startsWith('[')) {
-					bodyType = 'json';
+				if (
+					formattedBody.trim().startsWith("{") ||
+					formattedBody.trim().startsWith("[")
+				) {
+					bodyType = "json";
 					try {
 						// Format JSON with proper indentation
 						const parsedJson = JSON.parse(formattedBody);
@@ -128,21 +131,24 @@ const { activate, deactivate } = defineExtension(() => {
 					} catch {
 						// If parsing fails, leave it as is
 					}
-				} else if (formattedBody.trim().startsWith('<?xml')) {
-					bodyType = 'xml';
-				} else if (formattedBody.trim().startsWith('<')) {
-					bodyType = 'html';
-				} else if (formattedBody.includes('function') || formattedBody.includes('=>')) {
-					bodyType = 'javascript';
+				} else if (formattedBody.trim().startsWith("<?xml")) {
+					bodyType = "xml";
+				} else if (formattedBody.trim().startsWith("<")) {
+					bodyType = "html";
+				} else if (
+					formattedBody.includes("function") ||
+					formattedBody.includes("=>")
+				) {
+					bodyType = "javascript";
 				}
 
 				// Escape HTML characters to prevent rendering issues
 				formattedBody = formattedBody
-					.replace(/&/g, '&amp;')
-					.replace(/</g, '&lt;')
-					.replace(/>/g, '&gt;')
-					.replace(/"/g, '&quot;')
-					.replace(/'/g, '&#039;');
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;")
+					.replace(/'/g, "&#039;");
 
 				const timingsHtml =
 					result.isVeryVerbose && entry.timings
@@ -159,25 +165,27 @@ const { activate, deactivate } = defineExtension(() => {
 				return `
 				<div class="entry">
 					<h3>Request</h3>
-					<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl
+					<pre><code class="language-http">${entry.requestMethod} ${
+						entry.requestUrl
 					}</code></pre>
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-						entry.requestHeaders,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.requestHeaders,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.curlCommand
-						? `
+					${
+						entry.curlCommand
+							? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-						: ""
+							: ""
 					}
 
 					<h3>Response Body</h3>
@@ -191,10 +199,10 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-						entry.response.headers,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.response.headers,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
 					${timingsHtml}
@@ -347,10 +355,11 @@ const { activate, deactivate } = defineExtension(() => {
 					</style>
 				</head>
 				<body>
-					${isError
-				? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
-				: htmlOutput
-			}
+					${
+						isError
+							? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
+							: htmlOutput
+					}
 					<script>
 						// Initialize Prism.js
 						Prism.highlightAll();
