@@ -860,7 +860,7 @@ const { activate, deactivate } = defineExtension(() => {
 		if (envFile) {
 			envFileMapping[filePath] = envFile;
 			updateStatusBarText(filePath);
-			hurlVariablesTreeProvider.setEnvFile(envFile);
+			hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
 		}
 	});
 
@@ -868,10 +868,12 @@ const { activate, deactivate } = defineExtension(() => {
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
 		if (editor && editor.document.languageId === "hurl") {
 			const filePath = editor.document.uri.fsPath;
+			const envFile = envFileMapping[filePath];
+			hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
 			updateStatusBarText(filePath);
-			statusBarItem.show();
+			statusBarItem?.show();
 		} else {
-			statusBarItem.hide();
+			statusBarItem?.hide();
 		}
 	});
 

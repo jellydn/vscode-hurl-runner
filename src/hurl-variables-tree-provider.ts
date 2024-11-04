@@ -28,12 +28,16 @@ export class HurlVariablesTreeProvider
 	readonly onDidChangeTreeData: vscode.Event<VariableItem | undefined | null> =
 		this._onDidChangeTreeData.event;
 
-	private envFile: string | undefined;
+	private envFileMapping: Record<string, string> = {};
 
 	constructor(private hurlVariablesProvider: HurlVariablesProvider) {}
 
-	setEnvFile(envFile: string | undefined) {
-		this.envFile = envFile;
+	setEnvFile(filePath: string, envFile: string | undefined) {
+		if (envFile) {
+			this.envFileMapping[filePath] = envFile;
+		} else {
+			delete this.envFileMapping[filePath];
+		}
 		this.refresh();
 	}
 
@@ -59,10 +63,12 @@ export class HurlVariablesTreeProvider
 				this.hurlVariablesProvider.getInlineVariablesBy(filePath);
 			const globalVariables = this.hurlVariablesProvider.getGlobalVariables();
 
-			if (this.envFile) {
-				const envFileVariables = await this.loadEnvFileVariables(this.envFile);
+			const currentEnvFile = this.envFileMapping[filePath];
+			if (currentEnvFile) {
+				const envFileVariables =
+					await this.loadEnvFileVariables(currentEnvFile);
 				if (Object.keys(envFileVariables).length > 0) {
-					const relativePath = vscode.workspace.asRelativePath(this.envFile);
+					const relativePath = vscode.workspace.asRelativePath(currentEnvFile);
 					const envFileItems = Object.entries(envFileVariables).map(
 						([key, value]) =>
 							new VariableItem(
