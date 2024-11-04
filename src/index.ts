@@ -166,25 +166,27 @@ const { activate, deactivate } = defineExtension(() => {
 				return `
 				<div class="entry">
 					<h3>Request</h3>
-					<pre><code class="language-http">${entry.requestMethod} ${entry.requestUrl
+					<pre><code class="language-http">${entry.requestMethod} ${
+						entry.requestUrl
 					}</code></pre>
 					<details>
 						<summary>Headers</summary>
 						<pre><code class="language-http">${Object.entries(
-						entry.requestHeaders,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.requestHeaders,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
-					${entry.curlCommand
-						? `
+					${
+						entry.curlCommand
+							? `
 					<details>
 						<summary>cURL Command</summary>
 						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
 					</details>
 					`
-						: ""
+							: ""
 					}
 
 					<h3>Response Body</h3>
@@ -198,10 +200,10 @@ const { activate, deactivate } = defineExtension(() => {
 						<p>Status: ${entry.response.status}</p>
 						<h4>Headers</h4>
 						<pre><code class="language-http">${Object.entries(
-						entry.response.headers,
-					)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							entry.response.headers,
+						)
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 					</details>
 
 					${timingsHtml}
@@ -354,10 +356,11 @@ const { activate, deactivate } = defineExtension(() => {
 					</style>
 				</head>
 				<body>
-					${isError
-				? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
-				: htmlOutput
-			}
+					${
+						isError
+							? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
+							: htmlOutput
+					}
 					<script>
 						// Initialize Prism.js
 						Prism.highlightAll();
