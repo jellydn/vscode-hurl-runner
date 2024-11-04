@@ -284,8 +284,6 @@ const { activate, deactivate } = defineExtension(() => {
 						}
 						.entry {
 							background: #fff;
-							border: 1px solid #e1e4e8;
-							border-radius: 6px;
 							padding: 20px;
 							margin-bottom: 20px;
 						}
