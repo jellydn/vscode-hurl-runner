@@ -154,61 +154,79 @@ const { activate, deactivate } = defineExtension(() => {
 				const timingsHtml =
 					result.isVeryVerbose && entry.timings
 						? `
-					<details>
-						<summary>Timings</summary>
-						<pre><code class="language-yaml">${Object.entries(entry.timings)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
-					</details>
-					`
+				<details>
+					<summary>Timings</summary>
+					<pre><code class="language-yaml">${Object.entries(entry.timings)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
+				</details>
+				`
+						: "";
+
+				const capturesHtml =
+					entry.captures && Object.keys(entry.captures).length > 0
+						? `
+				<details>
+					<summary>Captures</summary>
+					<pre><code class="language-yaml">${Object.entries(entry.captures)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
+				</details>
+				`
 						: "";
 
 				return `
-				<div class="entry">
-					<h3>Request</h3>
-					<pre><code class="language-http">${entry.requestMethod} ${
-						entry.requestUrl
-					}</code></pre>
-					<details>
-						<summary>Headers</summary>
-						<pre><code class="language-http">${Object.entries(
-							entry.requestHeaders,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
-					</details>
+					<div class="entry">
+						<div class="request-output">
+							<h3>Request ${
+								result.isVeryVerbose && entry.timings
+									? `<span class="status-code">Time: ${entry.timings.total}</span>`
+									: ""
+							}</h3>
+							<pre><code class="language-shell">${entry.requestMethod} ${entry.requestUrl}</code></pre>
 
-					${
-						entry.curlCommand
-							? `
+							<details>
+								<summary>Headers</summary>
+								<pre><code class="language-http">${Object.entries(
+									entry.requestHeaders,
+								)
+									.map(([key, value]) => `${key}: ${value}`)
+									.join("\n")}</code></pre>
+							</details>
+
+							${
+								entry.curlCommand
+									? `
 					<details>
-						<summary>cURL Command</summary>
-						<pre><code class="language-bash">${entry.curlCommand}</code></pre>
+						<summary>cURL Command <button class="copy-button">Copy</button></summary>
+						<pre><code class="language-shell">${entry.curlCommand}</code></pre>
 					</details>
 					`
-							: ""
-					}
+									: ""
+							}
+						</div>
 
-					<h3>Response Body</h3>
-					<div class="response-body">
-						<button class="copy-button">Copy</button>
-						<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+						<div class="response-output">
+							<h3>Response <span class="status-code">Status: ${entry.response.status}</span></h3>
+							<div class="response-body">
+								<button class="copy-button">Copy</button>
+								<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+							</div>
+
+							<details>
+								<summary>Response Headers</summary>
+								<pre><code class="language-http">${Object.entries(
+									entry.response.headers,
+								)
+									.map(([key, value]) => `${key}: ${value}`)
+									.join("\n")}</code></pre>
+							</details>
+
+							${timingsHtml}
+							${capturesHtml}
+						</div>
 					</div>
-
-					<details>
-						<summary>Response Details</summary>
-						<p>Status: ${entry.response.status}</p>
-						<h4>Headers</h4>
-						<pre><code class="language-http">${Object.entries(
-							entry.response.headers,
-						)
-							.map(([key, value]) => `${key}: ${value}`)
-							.join("\n")}</code></pre>
-					</details>
-
-					${timingsHtml}
-				</div>
-			`;
+				`;
 			})
 			.join("<hr>");
 
@@ -233,6 +251,7 @@ const { activate, deactivate } = defineExtension(() => {
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-http.min.js"></script>
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
 					<style>
 						body {
 							font-family: var(--vscode-font-family);
@@ -351,12 +370,220 @@ const { activate, deactivate } = defineExtension(() => {
 						.token.operator {
 							color: var(--vscode-editor-foreground);
 						}
-					</style>
+
+						.error-output {
+							background: var(--vscode-textCodeBlock-background);
+							border-radius: 4px;
+							margin: 8px 0;
+							color: var(--vscode-editor-foreground);
+							border: 1px solid var(--vscode-panel-border);
+							border-color: rgba(128, 128, 128, 0.35);
+						}
+
+						.error-output pre {
+							margin: 0;
+							padding: 16px;
+							overflow-x: auto;
+							font-size: var(--vscode-editor-font-size);
+							line-height: 1.5;
+							background: transparent;
+						}
+
+						.error-output code {
+							font-family: var(--vscode-editor-font-family);
+							tab-size: 4;
+							white-space: pre;
+							color: var(--vscode-editor-foreground);
+						}
+
+						.error-output h3 {
+							color: var(--vscode-errorForeground);
+							margin: 0;
+							padding: 8px 16px;
+							background: transparent;
+							border-bottom: 1px solid var(--vscode-panel-border);
+							border-color: rgba(128, 128, 128, 0.35);
+						}
+
+						/* Shell/bash syntax highlighting for errors */
+						.language-bash .token.function {
+							color: var(--vscode-debugConsole-errorForeground);
+						}
+						.language-bash .token.comment {
+							color: var(--vscode-descriptionForeground);
+						}
+						.language-bash .token.string {
+							color: var(--vscode-debugConsole-stringForeground);
+						}
+						.language-bash .token.operator {
+							color: var(--vscode-editor-foreground);
+						}
+						.language-bash .token.parameter {
+							color: var(--vscode-symbolIcon-variableForeground);
+						}
+
+						.request-output,
+						.response-output {
+							background: var(--vscode-textCodeBlock-background);
+							border-radius: 4px;
+							margin: 8px 0;
+							color: var(--vscode-editor-foreground);
+							border: 1px solid var(--vscode-panel-border);
+							border-color: rgba(128, 128, 128, 0.35);
+						}
+
+						.request-output h3,
+						.response-output h3 {
+							margin: 0;
+							padding: 8px 16px;
+							background: transparent;
+							border-bottom: 1px solid var(--vscode-panel-border);
+							border-color: rgba(128, 128, 128, 0.35);
+						}
+
+						.request-output pre,
+						.response-output pre {
+							margin: 0;
+							padding: 16px;
+							background: transparent;
+						}
+
+						.request-output code,
+						.response-output code {
+							font-family: var(--vscode-editor-font-family);
+							font-size: var(--vscode-editor-font-size);
+							line-height: 1.5;
+							tab-size: 4;
+							white-space: pre;
+						}
+
+						/* Remove border from response-body since it's inside response-output now */
+						.response-body {
+							border: none;
+							margin: 0;
+						}
+
+						.response-body pre {
+							padding: 16px;
+						}
+
+						/* Shell syntax highlighting for requests */
+						.language-shell .token.function {
+							color: var(--vscode-symbolIcon-methodForeground);
+						}
+						.language-shell .token.comment {
+							color: var(--vscode-descriptionForeground);
+						}
+						.language-shell .token.string {
+							color: var(--vscode-debugConsole-stringForeground);
+						}
+						.language-shell .token.operator {
+							color: var(--vscode-editor-foreground);
+						}
+						.language-shell .token.parameter {
+							color: var(--vscode-symbolIcon-variableForeground);
+						}
+
+						/* HTTP syntax highlighting */
+						.language-http .token.property {
+							color: var(--vscode-symbolIcon-variableForeground);
+						}
+						.language-http .token.string {
+							color: var(--vscode-debugConsole-stringForeground);
+						}
+						.language-http .token.punctuation {
+							color: var(--vscode-editor-foreground);
+						}
+						.language-http .token.attr-name {
+							color: var(--vscode-symbolIcon-variableForeground);
+						}
+						.language-http .token.attr-value {
+							color: var(--vscode-debugConsole-stringForeground);
+						}
+						.language-http .token.status {
+							color: var(--vscode-debugConsole-numberForeground);
+						}
+
+						details summary .copy-button {
+							float: right;
+							position: relative;
+							top: -2px;
+							opacity: 0;
+							padding: 2px 6px;
+							font-size: 11px;
+						}
+
+						details:hover summary .copy-button {
+							opacity: 1;
+						}
+
+						details summary {
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
+						}
+
+						.status-code {
+							float: right;
+							font-size: 13px;
+							opacity: 0.8;
+						}
+
+						details {
+							margin: 8px 0;
+						}
+
+						details summary {
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
+							padding: 6px;
+							background-color: var(--vscode-button-secondaryBackground);
+							color: var(--vscode-button-secondaryForeground);
+							border-radius: 4px;
+							user-select: none;
+							cursor: pointer;
+						}
+
+						details summary:hover {
+							background-color: var(--vscode-button-secondaryHoverBackground);
+						}
+
+						details[open] summary {
+							border-bottom-left-radius: 0;
+							border-bottom-right-radius: 0;
+							border-bottom: 1px solid var(--vscode-panel-border);
+							border-color: rgba(128, 128, 128, 0.35);
+						}
+
+						details pre {
+							margin: 0;
+							border-top-left-radius: 0;
+							border-top-right-radius: 0;
+						}
+
+						details summary .copy-button {
+							float: right;
+							position: relative;
+							top: -2px;
+							opacity: 0;
+							padding: 2px 6px;
+							font-size: 11px;
+						}
+
+						details:hover summary .copy-button {
+							opacity: 1;
+						}
+
+						</style>
 				</head>
 				<body>
 					${
 						isError
-							? `<pre class="language-bash"><code>${result.stderr}</code></pre>`
+							? `<div class="error-output">
+									<h3>Error</h3>
+									<pre><code class="language-bash">${result.stderr}</code></pre>
+								</div>`
 							: htmlOutput
 					}
 					<script>
@@ -365,8 +592,15 @@ const { activate, deactivate } = defineExtension(() => {
 
 						// Add copy functionality to each copy button
 						document.querySelectorAll('.copy-button').forEach(button => {
-							button.addEventListener('click', () => {
-								const codeBlock = button.nextElementSibling.querySelector('code');
+							button.addEventListener('click', (e) => {
+								// Prevent the details from toggling when clicking the copy button
+								e.stopPropagation();
+
+								// Find the closest code block
+								const codeBlock = button.closest('details')
+									? button.closest('details').querySelector('code')  // For cURL command
+									: button.nextElementSibling.querySelector('code'); // For response body
+
 								const text = codeBlock.textContent;
 
 								navigator.clipboard.writeText(text).then(() => {
