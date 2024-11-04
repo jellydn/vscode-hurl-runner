@@ -121,30 +121,33 @@ export function parseHurlOutput(
 			}
 		} else if (line.startsWith("* Timings:")) {
 			isTimings = true;
+			isCaptures = false;
 		} else if (isTimings && line.trim() !== "") {
 			// Remove the '* ' prefix if it exists
 			const cleanedLine = line.startsWith("* ") ? line.slice(2) : line;
 			const [key, value] = cleanedLine.split(":").map((s) => s.trim());
-			if (currentEntry && key && value && key !== "begin" && key !== "end") {
+			if (currentEntry && key && value) {
 				if (currentEntry.timings) {
 					currentEntry.timings[key] = value;
 				}
-			}
-		} else if (isTimings && line.trim() === "") {
-			isTimings = false;
-			if (currentEntry?.timings) {
-				currentEntry.timings = formatTimings(currentEntry.timings);
+				// Check if this is the total timing, which marks the end of timing section
+				if (key === "total") {
+					isTimings = false;
+					if (currentEntry.timings) {
+						currentEntry.timings = formatTimings(currentEntry.timings);
+					}
+				}
 			}
 		} else if (line.startsWith("* Captures:")) {
 			isCaptures = true;
+			isTimings = false;
 			if (currentEntry && !currentEntry.captures) {
 				currentEntry.captures = {};
 			}
 		} else if (isCaptures && line.trim() !== "") {
-			const [key, value] = line
-				.slice(2)
-				.split(":")
-				.map((s) => s.trim());
+			// Remove the '* ' prefix if it exists
+			const cleanedLine = line.startsWith("* ") ? line.slice(2) : line;
+			const [key, value] = cleanedLine.split(":").map((s) => s.trim());
 			if (currentEntry?.captures && key && value) {
 				currentEntry.captures[key] = value;
 			}
