@@ -256,7 +256,6 @@ const { activate, deactivate } = defineExtension(() => {
 						body {
 							font-family: var(--vscode-font-family);
 							line-height: 1.6;
-							padding: 16px;
 							margin: 0;
 							color: var(--vscode-editor-foreground);
 							background-color: var(--vscode-editor-background);
