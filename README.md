@@ -37,7 +37,7 @@
   - 📝 Inline variable management
   - 🌐 Global variable support (based on captured variables)
 - 📊 Capture values from responses and use them in subsequent requests
-- 👁️ View detailed HTTP responses in a formatted webview
+- 👁️ View detailed HTTP responses in a formatted webview ([PrismJs with Tomorrow Night Theme](https://prismjs.com/))
 - 🎨 Syntax highlighting for Hurl files
 - 📊 Integration with VSCode's status bar for execution feedback
 - 🔍 Code lens support for quick actions
