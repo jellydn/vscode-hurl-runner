@@ -17,7 +17,7 @@ interface HttpVerb {
 	method: string;
 }
 
-const HTTP_VERBS = [
+export const HTTP_VERBS = [
 	"GET",
 	"POST",
 	"PUT",
@@ -27,6 +27,24 @@ const HTTP_VERBS = [
 	"OPTIONS",
 	"TRACE",
 	"CONNECT",
+	"PROPFIND",
+	"PROPPATCH",
+	"MKCOL",
+	"COPY",
+	"MOVE",
+	"LOCK",
+	"UNLOCK",
+	"REPORT",
+	"CHECKOUT",
+	"CHECKIN",
+	"UNCHECKOUT",
+	"MKWORKSPACE",
+	"VERSION-CONTROL",
+	"UPDATE",
+	"LABEL",
+	"MERGE",
+	"BASELINE-CONTROL",
+	"MKACTIVITY"
 ];
 
 function findHttpVerbs(content: string): HttpVerb[] {
