@@ -21,7 +21,7 @@
 
 ## Prerequisites
 
-- vscode ^1.92.0
+- vscode ^1.93.0
 - [Hurl - Run and Test HTTP Requests](https://hurl.dev/)
 
 ## Features
