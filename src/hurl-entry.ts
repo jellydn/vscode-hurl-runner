@@ -44,7 +44,7 @@ export const HTTP_VERBS = [
 	"LABEL",
 	"MERGE",
 	"BASELINE-CONTROL",
-	"MKACTIVITY"
+	"MKACTIVITY",
 ];
 
 function findHttpVerbs(content: string): HttpVerb[] {
