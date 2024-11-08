@@ -1,17 +1,8 @@
 import * as vscode from "vscode";
+import { HTTP_VERBS } from "./hurl-entry";
 
 export class HurlCodeLensProvider implements vscode.CodeLensProvider {
-	private httpVerbs = [
-		"GET",
-		"POST",
-		"PUT",
-		"DELETE",
-		"PATCH",
-		"HEAD",
-		"OPTIONS",
-		"TRACE",
-		"CONNECT",
-	];
+	private httpVerbs = HTTP_VERBS;
 
 	async provideCodeLenses(
 		document: vscode.TextDocument,
