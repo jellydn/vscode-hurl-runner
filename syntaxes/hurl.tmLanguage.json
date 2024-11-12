@@ -1,7 +1,9 @@
 {
 	"name": "Hurl",
 	"scopeName": "source.hurl",
-	"fileTypes": ["hurl"],
+	"fileTypes": [
+		"hurl"
+	],
 	"patterns": [
 		{
 			"include": "#comments"
@@ -62,7 +64,7 @@
 			]
 		},
 		"http-methods": {
-			"match": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE)\\b",
+			"match": "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|CONNECT|TRACE|PROPFIND|MKCOL|COPY|MOVE|LOCK|UNLOCK|PROPPATCH)\\b",
 			"name": "keyword.other.http-method.hurl"
 		},
 		"url": {
