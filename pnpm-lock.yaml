@@ -33,8 +33,8 @@ importers:
         specifier: 9.14.2
         version: 9.14.2
       reactive-vscode:
-        specifier: 0.2.8
-        version: 0.2.8(@types/vscode@1.95.0)
+        specifier: 0.2.9
+        version: 0.2.9(@types/vscode@1.95.0)
       tsup:
         specifier: 8.3.5
         version: 8.3.5(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2)
@@ -610,8 +610,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@reactive-vscode/reactivity@0.2.8':
-    resolution: {integrity: sha512-AZYuPxUtFQ2Tygurj8y17yTsYQFuJX5JSbGQdRRVco4mdzKvN6EGoBL285BrjtINWDiX54ojBOiOCIcFKNB29A==}
+  '@reactive-vscode/reactivity@0.2.9':
+    resolution: {integrity: sha512-+6vJwnteCkCC3Ul68pxz3UoEB/M1RRcKUzyBLqNinPX+FOIbh029A+LYwgHzSBI3QQyq3ZXEoKmmlo85unGVNA==}
 
   '@rollup/rollup-android-arm-eabi@4.27.4':
     resolution: {integrity: sha512-2Y3JT6f5MrQkICUyRVCw4oa0sutfAsgaSsb0Lmmy1Wi2y7X5vT9Euqw4gOsCyy0YfKURBg35nhUKZS4mDcfULw==}
@@ -1662,8 +1662,8 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  reactive-vscode@0.2.8:
-    resolution: {integrity: sha512-x//CUHnWS7W6znrIdZ/NXimTmpvbX66GPmhX8TU89weLzd79uTYhbbpsAFLfTn+CPtUrmy7N1Wpx3faLd499Qg==}
+  reactive-vscode@0.2.9:
+    resolution: {integrity: sha512-qdQL2c0asn+BgT7jM9Y1Szrargz2B8TPgRyaxsE4Vg3A7lqh7t3q4BCg3WZRsKfXyWmveSUld5Nn7p4eapbtmQ==}
     peerDependencies:
       '@types/vscode': ^1.89.0
 
@@ -2436,7 +2436,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@reactive-vscode/reactivity@0.2.8': {}
+  '@reactive-vscode/reactivity@0.2.9': {}
 
   '@rollup/rollup-android-arm-eabi@4.27.4':
     optional: true
@@ -3565,9 +3565,9 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.8(@types/vscode@1.95.0):
+  reactive-vscode@0.2.9(@types/vscode@1.95.0):
     dependencies:
-      '@reactive-vscode/reactivity': 0.2.8
+      '@reactive-vscode/reactivity': 0.2.9
       '@types/vscode': 1.95.0
 
   read@1.0.7:
