@@ -209,7 +209,7 @@
 		"@vscode/vsce": "3.2.1",
 		"bumpp": "9.8.1",
 		"esno": "4.8.0",
-		"pnpm": "9.14.2",
+		"pnpm": "9.14.3",
 		"reactive-vscode": "0.2.9",
 		"tsup": "8.3.5",
 		"typescript": "5.7.2",
@@ -217,7 +217,7 @@
 		"vitest": "2.1.6",
 		"vscode-ext-gen": "0.5.0"
 	},
-	"packageManager": "pnpm@9.14.2",
+	"packageManager": "pnpm@9.14.3",
 	"engines": {
 		"vscode": "^1.93.0"
 	},
