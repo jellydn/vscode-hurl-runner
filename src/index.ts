@@ -208,10 +208,12 @@ const { activate, deactivate } = defineExtension(() => {
 
 						<div class="response-output">
 							<h3>Response <span class="status-code">Status: ${entry.response.status}</span></h3>
-							<div class="response-body">
-								<button class="copy-button">Copy</button>
-								<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
-							</div>
+							<details open>
+								<summary>Body <button class="copy-button">Copy</button></summary>
+								<div class="response-body">
+									<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+								</div>
+							</details>
 
 							<details>
 								<summary>Response Headers</summary>
@@ -289,10 +291,8 @@ const { activate, deactivate } = defineExtension(() => {
 							position: relative;
 							background: var(--vscode-textCodeBlock-background);
 							border-radius: 4px;
-							margin: 8px 0;
+							margin: 0;
 							color: var(--vscode-editor-foreground);
-							border: 1px solid var(--vscode-panel-border);
-							border-color: rgba(128, 128, 128, 0.35);
 						}
 						.response-body pre {
 							margin: 0;
@@ -596,10 +596,7 @@ const { activate, deactivate } = defineExtension(() => {
 								e.stopPropagation();
 
 								// Find the closest code block
-								const codeBlock = button.closest('details')
-									? button.closest('details').querySelector('code')  // For cURL command
-									: button.nextElementSibling.querySelector('code'); // For response body
-
+								const codeBlock = button.closest('details').querySelector('code');
 								const text = codeBlock.textContent;
 
 								navigator.clipboard.writeText(text).then(() => {
