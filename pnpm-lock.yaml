@@ -18,8 +18,8 @@ importers:
         specifier: 22.10.1
         version: 22.10.1
       '@types/vscode':
-        specifier: 1.93.0
-        version: 1.93.0
+        specifier: 1.95.0
+        version: 1.95.0
       '@vscode/vsce':
         specifier: 3.2.1
         version: 3.2.1
@@ -30,11 +30,11 @@ importers:
         specifier: 4.8.0
         version: 4.8.0
       pnpm:
-        specifier: 9.14.3
-        version: 9.14.3
+        specifier: 9.14.4
+        version: 9.14.4
       reactive-vscode:
         specifier: 0.2.9
-        version: 0.2.9(@types/vscode@1.93.0)
+        version: 0.2.9(@types/vscode@1.95.0)
       tsup:
         specifier: 8.3.5
         version: 8.3.5(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2)
@@ -571,8 +571,8 @@ packages:
   '@types/node@22.10.1':
     resolution: {integrity: sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==}
 
-  '@types/vscode@1.93.0':
-    resolution: {integrity: sha512-kUK6jAHSR5zY8ps42xuW89NLcBpw1kOabah7yv38J8MyiYuOHxLQBi0e7zeXbQgVefDy/mZZetqEFC+Fl5eIEQ==}
+  '@types/vscode@1.95.0':
+    resolution: {integrity: sha512-0LBD8TEiNbet3NvWsmn59zLzOFu/txSlGxnv5yAFHCrhG9WvAnR3IvfHzMOs2aeWqgvNjq9pO99IUw8d3n+unw==}
 
   '@vitest/expect@2.1.6':
     resolution: {integrity: sha512-9M1UR9CAmrhJOMoSwVnPh2rELPKhYo0m/CSgqw9PyStpxtkwhmdM6XYlXGKeYyERY1N6EIuzkQ7e3Lm1WKCoUg==}
@@ -1461,8 +1461,8 @@ packages:
   pkg-types@1.2.1:
     resolution: {integrity: sha512-sQoqa8alT3nHjGuTjuKgOnvjo4cljkufdtLMnO2LBP/wRwuDlo1tkaEdMxCRhyGRPacv/ztlZgDPm2b7FAmEvw==}
 
-  pnpm@9.14.3:
-    resolution: {integrity: sha512-wPU+6ZR37ZabgrKJrQEaXRa/FiPJV+fynqvo0MALV0wpuMf1T2xn7nEMc/KFyBVNB85EtG/iwO60dqkEQbrDcQ==}
+  pnpm@9.14.4:
+    resolution: {integrity: sha512-yBgLP75OS8oCyUI0cXiWtVKXQKbLrfGfp4JUJwQD6i8n1OHUagig9WyJtj3I6/0+5TMm2nICc3lOYgD88NGEqw==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -2295,7 +2295,7 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/vscode@1.93.0': {}
+  '@types/vscode@1.95.0': {}
 
   '@vitest/expect@2.1.6':
     dependencies:
@@ -3272,7 +3272,7 @@ snapshots:
       mlly: 1.7.3
       pathe: 1.1.2
 
-  pnpm@9.14.3: {}
+  pnpm@9.14.4: {}
 
   postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2):
     dependencies:
@@ -3336,10 +3336,10 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.9(@types/vscode@1.93.0):
+  reactive-vscode@0.2.9(@types/vscode@1.95.0):
     dependencies:
       '@reactive-vscode/reactivity': 0.2.9
-      '@types/vscode': 1.93.0
+      '@types/vscode': 1.95.0
 
   read@1.0.7:
     dependencies:
