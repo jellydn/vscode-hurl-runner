@@ -157,8 +157,8 @@ const { activate, deactivate } = defineExtension(() => {
 				<details>
 					<summary>Timings</summary>
 					<pre><code class="language-yaml">${Object.entries(entry.timings)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 				</details>
 				`
 						: "";
@@ -169,8 +169,8 @@ const { activate, deactivate } = defineExtension(() => {
 				<details>
 					<summary>Captures</summary>
 					<pre><code class="language-yaml">${Object.entries(entry.captures)
-						.map(([key, value]) => `${key}: ${value}`)
-						.join("\n")}</code></pre>
+							.map(([key, value]) => `${key}: ${value}`)
+							.join("\n")}</code></pre>
 				</details>
 				`
 						: "";
@@ -178,32 +178,30 @@ const { activate, deactivate } = defineExtension(() => {
 				return `
 					<div class="entry">
 						<div class="request-output">
-							<h3>Request ${
-								result.isVeryVerbose && entry.timings
-									? `<span class="status-code">Time: ${entry.timings.total}</span>`
-									: ""
-							}</h3>
+							<h3>Request ${result.isVeryVerbose && entry.timings
+						? `<span class="status-code">Time: ${entry.timings.total}</span>`
+						: ""
+					}</h3>
 							<pre><code class="language-shell">${entry.requestMethod} ${entry.requestUrl}</code></pre>
 
 							<details>
 								<summary>Headers</summary>
 								<pre><code class="language-http">${Object.entries(
-									entry.requestHeaders,
-								)
-									.map(([key, value]) => `${key}: ${value}`)
-									.join("\n")}</code></pre>
+						entry.requestHeaders,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 							</details>
 
-							${
-								entry.curlCommand
-									? `
+							${entry.curlCommand
+						? `
 					<details>
 						<summary>cURL Command <button class="copy-button">Copy</button></summary>
 						<pre><code class="language-shell">${entry.curlCommand}</code></pre>
 					</details>
 					`
-									: ""
-							}
+						: ""
+					}
 						</div>
 
 						<div class="response-output">
@@ -218,10 +216,10 @@ const { activate, deactivate } = defineExtension(() => {
 							<details>
 								<summary>Response Headers</summary>
 								<pre><code class="language-http">${Object.entries(
-									entry.response.headers,
-								)
-									.map(([key, value]) => `${key}: ${value}`)
-									.join("\n")}</code></pre>
+						entry.response.headers,
+					)
+						.map(([key, value]) => `${key}: ${value}`)
+						.join("\n")}</code></pre>
 							</details>
 
 							${timingsHtml}
@@ -525,7 +523,18 @@ const { activate, deactivate } = defineExtension(() => {
 						.status-code {
 							float: right;
 							font-size: 13px;
-							opacity: 0.8;
+							padding: 2px 8px;
+							border-radius: 4px;
+							font-weight: 500;
+							margin-left: 8px;
+							opacity: 1;
+							background-color: var(--vscode-button-secondaryBackground, #28a745);
+							color: var(--vscode-button-secondaryForeground);
+						}
+
+						.response-time {
+							background-color: var(--vscode-button-secondaryBackground, #28a745);
+							color: var(--vscode-button-secondaryForeground);
 						}
 
 						details {
@@ -577,14 +586,13 @@ const { activate, deactivate } = defineExtension(() => {
 						</style>
 				</head>
 				<body>
-					${
-						isError
-							? `<div class="error-output">
+					${isError
+				? `<div class="error-output">
 									<h3>Error</h3>
 									<pre><code class="language-bash">${result.stderr}</code></pre>
 								</div>`
-							: htmlOutput
-					}
+				: htmlOutput
+			}
 					<script>
 						// Initialize Prism.js
 						Prism.highlightAll();
