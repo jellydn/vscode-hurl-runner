@@ -205,7 +205,7 @@
 		"@antfu/ni": "0.23.1",
 		"@biomejs/biome": "1.9.4",
 		"@types/node": "22.10.1",
-		"@types/vscode": "1.93.0",
+		"@types/vscode": "1.95.0",
 		"@vscode/vsce": "3.2.1",
 		"bumpp": "9.8.1",
 		"esno": "4.8.0",
@@ -213,7 +213,7 @@
 		"reactive-vscode": "0.2.9",
 		"tsup": "8.3.5",
 		"typescript": "5.7.2",
-		"vite": "6.0.2",
+		"vite": "6.0.3",
 		"vitest": "2.1.8",
 		"vscode-ext-gen": "0.5.0"
 	},
