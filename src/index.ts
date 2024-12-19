@@ -110,50 +110,68 @@ const { activate, deactivate } = defineExtension(() => {
 
 		const title = isError ? "Hurl Runner: Error" : "Hurl Runner: Result";
 
-		// Parse the output
-		const parsedOutput = parseHurlOutput(result.stderr, result.stdout);
+		// Store the last response info before parsing to ensure we always have the raw output
+		lastResponseInfo = {
+			result,
+			isError,
+			parsedOutput: { entries: [] }, // Initialize with empty entries
+		};
 
-		// Create a formatted HTML output for each entry
-		const htmlOutput = parsedOutput.entries
-			.map((entry) => {
-				let bodyType = "text";
-				let formattedBody = entry.response.body || "No response body";
+		let htmlOutput = "";
 
-				// Better content type detection
-				if (
-					formattedBody.trim().startsWith("{") ||
-					formattedBody.trim().startsWith("[")
-				) {
-					bodyType = "json";
-					try {
-						// Format JSON with proper indentation
-						const parsedJson = JSON.parse(formattedBody);
-						formattedBody = JSON.stringify(parsedJson, null, 2);
-					} catch {
-						// If parsing fails, leave it as is
-					}
-				} else if (formattedBody.trim().startsWith("<?xml")) {
-					bodyType = "xml";
-				} else if (formattedBody.trim().startsWith("<")) {
-					bodyType = "html";
-				} else if (
-					formattedBody.includes("function") ||
-					formattedBody.includes("=>")
-				) {
-					bodyType = "javascript";
-				}
+		if (isError) {
+			// For error cases, show the error message directly
+			htmlOutput = `<div class="error-output">
+				<h3>Error</h3>
+				<pre><code class="language-bash">${result.stderr}</code></pre>
+			</div>`;
+		} else {
+			try {
+				// Parse the output only for non-error cases
+				const parsedOutput = parseHurlOutput(result.stderr, result.stdout);
+				lastResponseInfo.parsedOutput = parsedOutput; // Update the parsed output
 
-				// Escape HTML characters to prevent rendering issues
-				formattedBody = formattedBody
-					.replace(/&/g, "&amp;")
-					.replace(/</g, "&lt;")
-					.replace(/>/g, "&gt;")
-					.replace(/"/g, "&quot;")
-					.replace(/'/g, "&#039;");
+				// Create a formatted HTML output for each entry
+				htmlOutput = parsedOutput.entries
+					.map((entry) => {
+						let bodyType = "text";
+						let formattedBody = entry.response.body || "No response body";
 
-				const timingsHtml =
-					result.isVeryVerbose && entry.timings
-						? `
+						// Better content type detection
+						if (
+							formattedBody.trim().startsWith("{") ||
+							formattedBody.trim().startsWith("[")
+						) {
+							bodyType = "json";
+							try {
+								// Format JSON with proper indentation
+								const parsedJson = JSON.parse(formattedBody);
+								formattedBody = JSON.stringify(parsedJson, null, 2);
+							} catch {
+								// If parsing fails, leave it as is
+							}
+						} else if (formattedBody.trim().startsWith("<?xml")) {
+							bodyType = "xml";
+						} else if (formattedBody.trim().startsWith("<")) {
+							bodyType = "html";
+						} else if (
+							formattedBody.includes("function") ||
+							formattedBody.includes("=>")
+						) {
+							bodyType = "javascript";
+						}
+
+						// Escape HTML characters to prevent rendering issues
+						formattedBody = formattedBody
+							.replace(/&/g, "&amp;")
+							.replace(/</g, "&lt;")
+							.replace(/>/g, "&gt;")
+							.replace(/"/g, "&quot;")
+							.replace(/'/g, "&#039;");
+
+						const timingsHtml =
+							result.isVeryVerbose && entry.timings
+								? `
 				<details>
 					<summary>Timings</summary>
 					<pre><code class="language-yaml">${Object.entries(entry.timings)
@@ -161,11 +179,11 @@ const { activate, deactivate } = defineExtension(() => {
 						.join("\n")}</code></pre>
 				</details>
 				`
-						: "";
+								: "";
 
-				const capturesHtml =
-					entry.captures && Object.keys(entry.captures).length > 0
-						? `
+						const capturesHtml =
+							entry.captures && Object.keys(entry.captures).length > 0
+								? `
 				<details>
 					<summary>Captures</summary>
 					<pre><code class="language-yaml">${Object.entries(entry.captures)
@@ -173,71 +191,73 @@ const { activate, deactivate } = defineExtension(() => {
 						.join("\n")}</code></pre>
 				</details>
 				`
-						: "";
+								: "";
 
-				return `
-					<div class="entry">
-						<div class="request-output">
-							<h3>Request ${
-								result.isVeryVerbose && entry.timings
-									? `<span class="status-code">Time: ${entry.timings.total}</span>`
-									: ""
-							}</h3>
-							<pre><code class="language-shell">${entry.requestMethod} ${entry.requestUrl}</code></pre>
+						return `
+							<div class="entry">
+								<div class="request-output">
+									<h3>Request ${
+										result.isVeryVerbose && entry.timings
+											? `<span class="status-code">Time: ${entry.timings.total}</span>`
+											: ""
+									}</h3>
+									<pre><code class="language-shell">${entry.requestMethod} ${entry.requestUrl}</code></pre>
 
-							<details>
-								<summary>Headers</summary>
-								<pre><code class="language-http">${Object.entries(
-									entry.requestHeaders,
-								)
-									.map(([key, value]) => `${key}: ${value}`)
-									.join("\n")}</code></pre>
-							</details>
+									<details>
+										<summary>Headers</summary>
+										<pre><code class="language-http">${Object.entries(
+											entry.requestHeaders,
+										)
+											.map(([key, value]) => `${key}: ${value}`)
+											.join("\n")}</code></pre>
+									</details>
 
-							${
-								entry.curlCommand
-									? `
+									${
+										entry.curlCommand
+											? `
 					<details>
 						<summary>cURL Command <button class="copy-button">Copy</button></summary>
 						<pre><code class="language-shell">${entry.curlCommand}</code></pre>
 					</details>
 					`
-									: ""
-							}
-						</div>
-
-						<div class="response-output">
-							<h3>Response <span class="status-code">Status: ${entry.response.status}</span></h3>
-							<details open>
-								<summary>Body <button class="copy-button">Copy</button></summary>
-								<div class="response-body">
-									<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+											: ""
+									}
 								</div>
-							</details>
 
-							<details>
-								<summary>Response Headers</summary>
-								<pre><code class="language-http">${Object.entries(
-									entry.response.headers,
-								)
-									.map(([key, value]) => `${key}: ${value}`)
-									.join("\n")}</code></pre>
-							</details>
+								<div class="response-output">
+									<h3>Response <span class="status-code">Status: ${entry.response.status}</span></h3>
+									<details open>
+										<summary>Body <button class="copy-button">Copy</button></summary>
+										<div class="response-body">
+											<pre><code class="language-${bodyType}">${formattedBody}</code></pre>
+										</div>
+									</details>
 
-							${timingsHtml}
-							${capturesHtml}
-						</div>
-					</div>
-				`;
-			})
-			.join("<hr>");
+									<details>
+										<summary>Response Headers</summary>
+										<pre><code class="language-http">${Object.entries(
+											entry.response.headers,
+										)
+											.map(([key, value]) => `${key}: ${value}`)
+											.join("\n")}</code></pre>
+									</details>
 
-		// Store the last response info
-		lastResponseInfo = {
-			result,
-			isError,
-			parsedOutput,
-		};
+									${timingsHtml}
+									${capturesHtml}
+								</div>
+							</div>
+						`;
+					})
+					.join("<hr>");
+			} catch (error) {
+				logger.error(error);
+				// If parsing fails, show the raw output
+				htmlOutput = `<div class="error-output">
+					<h3>Error</h3>
+					<pre><code class="language-bash">${result.stderr}</code></pre>
+				</div>`;
+			}
+		}
 
 		resultPanel.webview.html = `
 			<!DOCTYPE html>
@@ -588,14 +608,7 @@ const { activate, deactivate } = defineExtension(() => {
 						</style>
 				</head>
 				<body>
-					${
-						isError
-							? `<div class="error-output">
-									<h3>Error</h3>
-									<pre><code class="language-bash">${result.stderr}</code></pre>
-								</div>`
-							: htmlOutput
-					}
+					${htmlOutput}
 					<script>
 						// Initialize Prism.js
 						Prism.highlightAll();
@@ -1028,6 +1041,108 @@ const { activate, deactivate } = defineExtension(() => {
 			vscode.window.showInformationMessage(
 				"No previous Hurl response to view.",
 			);
+			// Create a custom HTML output for usage information
+			if (!resultPanel) {
+				resultPanel = vscode.window.createWebviewPanel(
+					"hurl-runner",
+					"Hurl Runner",
+					vscode.ViewColumn.Two,
+					{ enableScripts: true },
+				);
+				resultPanel.onDidDispose(() => {
+					resultPanel = undefined;
+				});
+			}
+
+			resultPanel.webview.html = `
+				<!DOCTYPE html>
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+						<title>Hurl Runner: Usage</title>
+						<style>
+							body {
+								font-family: var(--vscode-font-family);
+								line-height: 1.6;
+								margin: 20px;
+								color: var(--vscode-editor-foreground);
+								background-color: var(--vscode-editor-background);
+							}
+							h1 {
+								color: var(--vscode-foreground);
+								font-size: 24px;
+								margin-bottom: 20px;
+							}
+							.command {
+								margin-bottom: 10px;
+								padding: 8px;
+								background-color: var(--vscode-textCodeBlock-background);
+								border-radius: 4px;
+							}
+							.command-name {
+								color: var(--vscode-symbolIcon-methodForeground);
+								font-weight: bold;
+							}
+							.description {
+								color: var(--vscode-foreground);
+								margin-left: 8px;
+							}
+							.note {
+								margin-top: 20px;
+								padding: 10px;
+								background-color: var(--vscode-textCodeBlock-background);
+								border-radius: 4px;
+								border-left: 4px solid var(--vscode-symbolIcon-methodForeground);
+							}
+						</style>
+					</head>
+					<body>
+						<h1>Hurl Runner Extension Usage</h1>
+						<div class="command">
+							<span class="command-name">Run at Entry</span>
+							<span class="description">Execute the Hurl entry at current cursor position</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Run File</span>
+							<span class="description">Execute all entries in the current file</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Run to End</span>
+							<span class="description">Execute from current entry to the end of file</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Run from Begin</span>
+							<span class="description">Execute from the beginning to current entry</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Run Selected Text</span>
+							<span class="description">Execute the selected Hurl content</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Rerun Last Command</span>
+							<span class="description">Execute the most recent Hurl command</span>
+						</div>
+						<div class="command">
+							<span class="command-name">View Last Response</span>
+							<span class="description">View the result of the last executed command</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Manage Variables</span>
+							<span class="shortcut">(⌘+Alt+Shift+V)</span>
+							<span class="description">Configure variables for Hurl requests</span>
+						</div>
+						<div class="command">
+							<span class="command-name">Select Environment File</span>
+							<span class="description">Choose a file containing environment variables</span>
+						</div>
+						<div class="note">
+							<strong>Note:</strong> Use the Command Palette (⌘+Shift+P / Ctrl+Shift+P) and type 'Hurl Runner' to see all available commands.
+						</div>
+					</body>
+				</html>
+			`;
+			resultPanel.reveal(vscode.ViewColumn.Two);
 		}
 	});
 
