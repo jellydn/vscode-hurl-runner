@@ -18,8 +18,8 @@ importers:
         specifier: 22.10.2
         version: 22.10.2
       '@types/vscode':
-        specifier: 1.93.0
-        version: 1.93.0
+        specifier: 1.96.0
+        version: 1.96.0
       '@vscode/vsce':
         specifier: 3.2.1
         version: 3.2.1
@@ -34,7 +34,7 @@ importers:
         version: 9.15.0
       reactive-vscode:
         specifier: 0.2.9
-        version: 0.2.9(@types/vscode@1.93.0)
+        version: 0.2.9(@types/vscode@1.96.0)
       tsup:
         specifier: 8.3.5
         version: 8.3.5(jiti@2.4.1)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2)
@@ -42,8 +42,8 @@ importers:
         specifier: 5.7.2
         version: 5.7.2
       vite:
-        specifier: 6.0.3
-        version: 6.0.3(@types/node@22.10.2)(jiti@2.4.1)(tsx@4.19.2)
+        specifier: 6.0.4
+        version: 6.0.4(@types/node@22.10.2)(jiti@2.4.1)(tsx@4.19.2)
       vitest:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.2)
@@ -710,8 +710,8 @@ packages:
   '@types/node@22.10.2':
     resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
 
-  '@types/vscode@1.93.0':
-    resolution: {integrity: sha512-kUK6jAHSR5zY8ps42xuW89NLcBpw1kOabah7yv38J8MyiYuOHxLQBi0e7zeXbQgVefDy/mZZetqEFC+Fl5eIEQ==}
+  '@types/vscode@1.96.0':
+    resolution: {integrity: sha512-qvZbSZo+K4ZYmmDuaodMbAa67Pl6VDQzLKFka6rq+3WUTY4Kro7Bwoi0CuZLO/wema0ygcmpwow7zZfPJTs5jg==}
 
   '@vitest/expect@2.1.8':
     resolution: {integrity: sha512-8ytZ/fFHq2g4PJVAtDX57mayemKgDR6X3Oa2Foro+EygiOJHUXhCqBAAKQYYajZpFoIfvBCF1j6R6IYRSIUFuw==}
@@ -1924,8 +1924,8 @@ packages:
       terser:
         optional: true
 
-  vite@6.0.3:
-    resolution: {integrity: sha512-Cmuo5P0ENTN6HxLSo6IHsjCLn/81Vgrp81oaiFFMRa8gGDj5xEjIcEpf2ZymZtZR8oU0P2JX5WuUp/rlXcHkAw==}
+  vite@6.0.4:
+    resolution: {integrity: sha512-zwlH6ar+6o6b4Wp+ydhtIKLrGM/LoqZzcdVmkGAFun0KHTzIzjh+h0kungEx7KJg/PYnC80I4TII9WkjciSR6Q==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -2482,7 +2482,7 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/vscode@1.93.0': {}
+  '@types/vscode@1.96.0': {}
 
   '@vitest/expect@2.1.8':
     dependencies:
@@ -3499,10 +3499,10 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.9(@types/vscode@1.93.0):
+  reactive-vscode@0.2.9(@types/vscode@1.96.0):
     dependencies:
       '@reactive-vscode/reactivity': 0.2.9
-      '@types/vscode': 1.93.0
+      '@types/vscode': 1.96.0
 
   read@1.0.7:
     dependencies:
@@ -3820,7 +3820,7 @@ snapshots:
       '@types/node': 22.10.2
       fsevents: 2.3.3
 
-  vite@6.0.3(@types/node@22.10.2)(jiti@2.4.1)(tsx@4.19.2):
+  vite@6.0.4(@types/node@22.10.2)(jiti@2.4.1)(tsx@4.19.2):
     dependencies:
       esbuild: 0.24.0
       postcss: 8.4.49
