@@ -14,8 +14,13 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 	}
 
 	const envFiles = await vscode.workspace.findFiles(
-		"**/.env*",
+		"**/*env*",
 		"**/node_modules/**",
+	);
+
+	// Filter files that contain .env in their name
+	const filteredEnvFiles = envFiles.filter(file =>
+		file.fsPath.toLowerCase().includes('.env')
 	);
 
 	const items = [
@@ -24,7 +29,7 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 			description: "Create a new .env file in the workspace",
 			isCreateNew: true,
 		},
-		...envFiles.map((file) => ({
+		...filteredEnvFiles.map((file) => ({
 			label: path.basename(file.fsPath),
 			description: vscode.workspace.asRelativePath(file.fsPath),
 			fsPath: file.fsPath,
