@@ -5,6 +5,7 @@
 		"group:allNonMajor",
 		":pinAllExceptPeerDependencies"
 	],
+	"ignoreDeps": ["@types/vscode"],
 	"lockFileMaintenance": {
 		"enabled": true
 	},
