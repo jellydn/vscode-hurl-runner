@@ -19,8 +19,8 @@ export async function chooseEnvFile(): Promise<string | undefined> {
 	);
 
 	// Filter files that contain .env in their name
-	const filteredEnvFiles = envFiles.filter(file =>
-		file.fsPath.toLowerCase().includes('.env')
+	const filteredEnvFiles = envFiles.filter((file) =>
+		file.fsPath.toLowerCase().includes(".env"),
 	);
 
 	const items = [
