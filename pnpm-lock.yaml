@@ -48,8 +48,8 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.7)
       vscode-ext-gen:
-        specifier: 0.5.5
-        version: 0.5.5
+        specifier: 1.0.0
+        version: 1.0.0
 
 packages:
 
@@ -2005,8 +2005,8 @@ packages:
       jsdom:
         optional: true
 
-  vscode-ext-gen@0.5.5:
-    resolution: {integrity: sha512-wTwcPvGF9xZ0fN7sPgdUPESH+Aw20Tk1vvgbYnKzWT4sFOqRP54qcpxjPUMdDoDGfiVIoXW87TNxn0yKXq3djw==}
+  vscode-ext-gen@1.0.0:
+    resolution: {integrity: sha512-aRdGnk92DX3iYTx1QU6GhXXwQuNOR/sWTQxpMZ9bLt6SNg2GS4RvcwuWzgugRjBcdU1l9dZCHPypy38rlOPqcw==}
     hasBin: true
 
   webidl-conversions@4.0.2:
@@ -3896,7 +3896,7 @@ snapshots:
       - supports-color
       - terser
 
-  vscode-ext-gen@0.5.5:
+  vscode-ext-gen@1.0.0:
     dependencies:
       cac: 6.7.14
       scule: 1.3.0
