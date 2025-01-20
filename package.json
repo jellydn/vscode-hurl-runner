@@ -215,7 +215,7 @@
 		"typescript": "5.7.3",
 		"vite": "6.0.9",
 		"vitest": "2.1.8",
-		"vscode-ext-gen": "0.5.5"
+		"vscode-ext-gen": "1.0.0"
 	},
 	"packageManager": "pnpm@9.15.4",
 	"engines": {
