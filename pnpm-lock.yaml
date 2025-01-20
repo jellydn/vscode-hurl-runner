@@ -42,8 +42,8 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
       vite:
-        specifier: 6.0.9
-        version: 6.0.9(@types/node@22.10.7)(jiti@2.4.2)(tsx@4.19.2)
+        specifier: 6.0.10
+        version: 6.0.10(@types/node@22.10.7)(jiti@2.4.2)(tsx@4.19.2)
       vitest:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.7)
@@ -1944,8 +1944,8 @@ packages:
       terser:
         optional: true
 
-  vite@6.0.9:
-    resolution: {integrity: sha512-MSgUxHcaXLtnBPktkbUSoQUANApKYuxZ6DrbVENlIorbhL2dZydTLaZ01tjUoE3szeFzlFk9ANOKk0xurh4MKA==}
+  vite@6.0.10:
+    resolution: {integrity: sha512-MEszunEcMo6pFsfXN1GhCFQqnE25tWRH0MA4f0Q7uanACi4y1Us+ZGpTMnITwCTnYzB2b9cpmnelTlxgTBmaBA==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -3856,7 +3856,7 @@ snapshots:
       '@types/node': 22.10.7
       fsevents: 2.3.3
 
-  vite@6.0.9(@types/node@22.10.7)(jiti@2.4.2)(tsx@4.19.2):
+  vite@6.0.10(@types/node@22.10.7)(jiti@2.4.2)(tsx@4.19.2):
     dependencies:
       esbuild: 0.24.2
       postcss: 8.5.1
