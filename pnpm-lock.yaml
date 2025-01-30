@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@antfu/ni':
-        specifier: 23.3.0
-        version: 23.3.0
+        specifier: 23.3.1
+        version: 23.3.1
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
@@ -53,8 +53,8 @@ importers:
 
 packages:
 
-  '@antfu/ni@23.3.0':
-    resolution: {integrity: sha512-H3avrIQMnmo8rJu9w62vE/c4WGgLCGemnBDg83pgdARIttKgyJpTOX5hQ4JFjeZ7fRfrzkRCCDg3vLxseH4Xtg==}
+  '@antfu/ni@23.3.1':
+    resolution: {integrity: sha512-C90iyzm/jLV7Lomv2UzwWUzRv9WZr1oRsFRKsX5HjQL4EXrbi9H/RtBkjCP+NF+ABZXUKpAa4F1dkoTaea4zHg==}
     hasBin: true
 
   '@azure/abort-controller@2.1.2':
@@ -1908,7 +1908,7 @@ packages:
 
 snapshots:
 
-  '@antfu/ni@23.3.0': {}
+  '@antfu/ni@23.3.1': {}
 
   '@azure/abort-controller@2.1.2':
     dependencies:
