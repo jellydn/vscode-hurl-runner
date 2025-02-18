@@ -214,8 +214,8 @@
 		"tsup": "8.3.6",
 		"typescript": "5.7.3",
 		"vite": "6.1.0",
-		"vitest": "3.0.5",
-		"vscode-ext-gen": "1.0.0"
+		"vitest": "3.0.6",
+		"vscode-ext-gen": "1.0.1"
 	},
 	"packageManager": "pnpm@10.4.1",
 	"engines": {
