@@ -213,7 +213,7 @@
 		"reactive-vscode": "0.2.10",
 		"tsup": "8.3.6",
 		"typescript": "5.7.3",
-		"vite": "6.1.0",
+		"vite": "6.1.1",
 		"vitest": "3.0.6",
 		"vscode-ext-gen": "1.0.1"
 	},
