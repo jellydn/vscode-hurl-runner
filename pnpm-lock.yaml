@@ -48,8 +48,8 @@ importers:
         specifier: 3.0.6
         version: 3.0.6(@types/node@22.13.4)(jiti@2.4.2)(tsx@4.19.2)
       vscode-ext-gen:
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.0.2
+        version: 1.0.2
 
 packages:
 
@@ -1792,8 +1792,8 @@ packages:
       jsdom:
         optional: true
 
-  vscode-ext-gen@1.0.1:
-    resolution: {integrity: sha512-lXWpuzcIKlJJCODDpPx8fjCtkN+PKXuIf9HP0GqowBDF4AyX9Sx3ID1Mv8pHZAPB2iPLM3eumg7eITT1JYbv0w==}
+  vscode-ext-gen@1.0.2:
+    resolution: {integrity: sha512-CgKGhGvO4Zpz87v3LRmDLtM1FaMVilJCy7fwKzxvrRnhUPTBgj9zkjlPM8lcVAq5vm87v9V8HzVer9COtU5bNA==}
     hasBin: true
 
   webidl-conversions@4.0.2:
@@ -3542,7 +3542,7 @@ snapshots:
       - tsx
       - yaml
 
-  vscode-ext-gen@1.0.1:
+  vscode-ext-gen@1.0.2:
     dependencies:
       cac: 6.7.14
 
