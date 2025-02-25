@@ -30,8 +30,8 @@ importers:
         specifier: 4.8.0
         version: 4.8.0
       pnpm:
-        specifier: 10.4.1
-        version: 10.4.1
+        specifier: 10.5.0
+        version: 10.5.0
       reactive-vscode:
         specifier: 0.2.13
         version: 0.2.13(@types/vscode@1.93.0)
@@ -1421,8 +1421,8 @@ packages:
   pkg-types@1.3.1:
     resolution: {integrity: sha512-/Jm5M4RvtBFVkKWRu2BLUTNP8/M2a+UwuAX+ae4770q1qVGtfjG+WTCupoZixokjmHiry8uI+dlY8KXYV5HVVQ==}
 
-  pnpm@10.4.1:
-    resolution: {integrity: sha512-x1O2w616+hOvOI+m2AgDWgCOMOqZk/WMZmPivF/yFnmqg02wlJhxKapNSIuG31f3tjSYGy+CfNysxpjMDPuIrw==}
+  pnpm@10.5.0:
+    resolution: {integrity: sha512-ERBqWRbHQG/kuMuOMGeXS4co9HMIpPWsXoUDBK+m9X4oR9eVDf54h32NNr+0AdOBxCFds6TDVH/6Y8FDM6b6UQ==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -3160,7 +3160,7 @@ snapshots:
       mlly: 1.7.4
       pathe: 2.0.3
 
-  pnpm@10.4.1: {}
+  pnpm@10.5.0: {}
 
   postcss-load-config@6.0.1(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.3):
     dependencies:
