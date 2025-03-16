@@ -206,7 +206,7 @@
 		"@biomejs/biome": "1.9.4",
 		"@types/node": "22.13.10",
 		"@types/vscode": "1.93.0",
-		"@vscode/vsce": "3.2.2",
+		"@vscode/vsce": "3.3.0",
 		"bumpp": "10.1.0",
 		"esno": "4.8.0",
 		"pnpm": "10.6.3",
