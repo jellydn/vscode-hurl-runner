@@ -59,9 +59,12 @@ export async function executeHurl(
 		args.push("--to-entry", toEntry.toString());
 	}
 
-	logger.info(`Executing command: hurl ${args.join(" ")}`);
+	// Get the hurlPath from the configuration
+	const hurlPath = config.hurlPath;
+
+	logger.info(`Executing command: ${hurlPath} ${args.join(" ")}`);
 	return new Promise((resolve, reject) => {
-		const hurlProcess = spawn("hurl", args);
+		const hurlProcess = spawn(hurlPath, args);
 		let stdout = "";
 		let stderr = "";
 
@@ -134,9 +137,12 @@ export async function executeHurlWithContent(
 		args.push("--variables-file", envFile);
 	}
 
-	logger.info(`Executing command: hurl ${args.join(" ")}`);
+	// Get the hurlPath from the configuration
+	const hurlPath = config.hurlPath;
+
+	logger.info(`Executing command: ${hurlPath} ${args.join(" ")}`);
 	return new Promise((resolve, reject) => {
-		const hurlProcess = spawn("hurl", args);
+		const hurlProcess = spawn(hurlPath, args);
 		let stdout = "";
 		let stderr = "";
 
