@@ -204,7 +204,7 @@
 	"devDependencies": {
 		"@antfu/ni": "24.3.0",
 		"@biomejs/biome": "1.9.4",
-		"@types/node": "22.13.11",
+		"@types/node": "22.13.13",
 		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "3.3.0",
 		"bumpp": "10.1.0",
@@ -213,7 +213,7 @@
 		"reactive-vscode": "0.2.13",
 		"tsup": "8.4.0",
 		"typescript": "5.8.2",
-		"vite": "6.2.2",
+		"vite": "6.2.3",
 		"vitest": "3.0.9",
 		"vscode-ext-gen": "1.0.2"
 	},
