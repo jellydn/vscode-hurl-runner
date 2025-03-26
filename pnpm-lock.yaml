@@ -21,8 +21,8 @@ importers:
         specifier: 1.93.0
         version: 1.93.0
       '@vscode/vsce':
-        specifier: 3.3.0
-        version: 3.3.0
+        specifier: 3.3.1
+        version: 3.3.1
       bumpp:
         specifier: 10.1.0
         version: 10.1.0
@@ -30,8 +30,8 @@ importers:
         specifier: 4.8.0
         version: 4.8.0
       pnpm:
-        specifier: 10.6.5
-        version: 10.6.5
+        specifier: 10.7.0
+        version: 10.7.0
       reactive-vscode:
         specifier: 0.2.14
         version: 0.2.14(@types/vscode@1.93.0)
@@ -519,8 +519,8 @@ packages:
   '@vscode/vsce-sign@2.0.5':
     resolution: {integrity: sha512-GfYWrsT/vypTMDMgWDm75iDmAOMe7F71sZECJ+Ws6/xyIfmB3ELVnVN+LwMFAvmXY+e6eWhR2EzNGF/zAhWY3Q==}
 
-  '@vscode/vsce@3.3.0':
-    resolution: {integrity: sha512-HA/pUyvh/TQWkc4wG7AudPIWUvsR8i4jiWZZgM/a69ncPi9Nm5FDogf/wVEk4EWJs4/UdxU7J6X18dfAwfPbxA==}
+  '@vscode/vsce@3.3.1':
+    resolution: {integrity: sha512-aZ+0UilLsSidWcY6qjQRmsNgJXfFvE3ihj0u9oNLMejFGBBYORTRua0KHx3kx+RW5pxvza2OepzTpct2OdhTUA==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -1243,8 +1243,8 @@ packages:
   pkg-types@2.1.0:
     resolution: {integrity: sha512-wmJwA+8ihJixSoHKxZJRBQG1oY8Yr9pGLzRmSsNms0iNWyHHAlZCa7mmKiFR10YPZuz/2k169JiS/inOjBCZ2A==}
 
-  pnpm@10.6.5:
-    resolution: {integrity: sha512-zfko/KIIMs1Z7FOCZJK33CXcUk1DcLa0rb9lgD0y76psHIgUfArk6NV5psnuxxV1e1DU+jXuoXnYaOraTtBDrw==}
+  pnpm@10.7.0:
+    resolution: {integrity: sha512-a4Za1LYqHZhCth1nSjk5A7hx2SRJVPZSuIQsK1U8chdrJ49kxGPlLUD/+KujhcI1yMns9cx95P14uLttSWM6tg==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -2063,7 +2063,7 @@ snapshots:
       '@vscode/vsce-sign-win32-arm64': 2.0.2
       '@vscode/vsce-sign-win32-x64': 2.0.2
 
-  '@vscode/vsce@3.3.0':
+  '@vscode/vsce@3.3.1':
     dependencies:
       '@azure/identity': 4.8.0
       '@vscode/vsce-sign': 2.0.5
@@ -2853,7 +2853,7 @@ snapshots:
       exsolve: 1.0.4
       pathe: 2.0.3
 
-  pnpm@10.6.5: {}
+  pnpm@10.7.0: {}
 
   postcss-load-config@6.0.1(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.3)(yaml@2.7.0):
     dependencies:
