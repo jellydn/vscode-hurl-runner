@@ -204,7 +204,7 @@
 	"devDependencies": {
 		"@antfu/ni": "24.3.0",
 		"@biomejs/biome": "1.9.4",
-		"@types/node": "22.14.0",
+		"@types/node": "22.14.1",
 		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "3.3.2",
 		"bumpp": "10.1.0",
