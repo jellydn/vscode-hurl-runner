@@ -85,4 +85,30 @@ describe("parseHurlOutput", () => {
 			name: "Example",
 		});
 	});
+	it("should not truncate capture values containing colons", () => {
+		const url =
+			"http://localhost:4566/s3-bucket/folder/2025/3/18/test-document.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&x-id=PutObject";
+		const stderr = `
+* ------------------------------------------------------------------------------
+* Executing entry 1
+* Request:
+* POST https://example.com/upload
+* Response:
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+* Response body:
+{"url": "${url}"}
+* Captures:
+* url: ${url}
+* ------------------------------------------------------------------------------
+`;
+		const stdout = `{"url": "${url}"}`;
+
+		const result = parseHurlOutput(stderr, stdout);
+
+		expect(result.entries).toHaveLength(1);
+		expect(result.entries[0].captures).toEqual({
+			url,
+		});
+	});
 });
