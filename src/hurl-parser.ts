@@ -138,7 +138,7 @@ export function parseHurlOutput(
 				// Check if this is the total timing, which marks the end of timing section
 				if (key === "total") {
 					isTimings = false;
-					if (currentEntry.timings) {
+					if (currentEntry?.timings) {
 						currentEntry.timings = formatTimings(currentEntry.timings);
 					}
 				}
