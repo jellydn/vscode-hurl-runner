@@ -47,7 +47,15 @@ function formatTimings(
 // Refer https://hurl.dev/docs/manual.html#verbose
 // A line starting with ‘>’ means data sent by Hurl.
 // A line staring with ‘<’ means data received by Hurl.
-// A line starting with ‘*’ means additional info provided by Hurl.
+/**
+ * Parses the output from the Hurl tool into structured HTTP request and response entries.
+ *
+ * Processes the provided `stderr` and `stdout` strings to extract request methods, URLs, headers, response statuses, headers, bodies, timings, captures, and optional curl commands for each executed entry.
+ *
+ * @param stderr - The standard error output from Hurl, containing structured log lines.
+ * @param stdout - The standard output from Hurl, typically containing the response body.
+ * @returns An object containing an array of parsed HTTP entries with associated metadata.
+ */
 export function parseHurlOutput(
 	stderr: string,
 	stdout: string,
@@ -125,15 +133,20 @@ export function parseHurlOutput(
 		} else if (isTimings && line.trim() !== "") {
 			// Remove the '* ' prefix if it exists
 			const cleanedLine = line.startsWith("* ") ? line.slice(2) : line;
-			const [key, value] = cleanedLine.split(":").map((s) => s.trim());
-			if (currentEntry && key && value) {
-				if (currentEntry.timings) {
-					currentEntry.timings[key] = value;
+			// Use the first ":" so values containing ":" remain intact
+			const separatorIndex = cleanedLine.indexOf(":");
+			if (separatorIndex !== -1) {
+				const key = cleanedLine.slice(0, separatorIndex).trim();
+				const value = cleanedLine.slice(separatorIndex + 1).trim();
+				if (currentEntry && key && value) {
+					if (currentEntry.timings) {
+						currentEntry.timings[key] = value;
+					}
 				}
 				// Check if this is the total timing, which marks the end of timing section
 				if (key === "total") {
 					isTimings = false;
-					if (currentEntry.timings) {
+					if (currentEntry?.timings) {
 						currentEntry.timings = formatTimings(currentEntry.timings);
 					}
 				}
@@ -147,9 +160,14 @@ export function parseHurlOutput(
 		} else if (isCaptures && line.trim() !== "") {
 			// Remove the '* ' prefix if it exists
 			const cleanedLine = line.startsWith("* ") ? line.slice(2) : line;
-			const [key, value] = cleanedLine.split(":").map((s) => s.trim());
-			if (currentEntry?.captures && key && value) {
-				currentEntry.captures[key] = value;
+			// Use the first ":" so values containing ":" remain intact
+			const separatorIndex = cleanedLine.indexOf(":");
+			if (separatorIndex !== -1) {
+				const key = cleanedLine.slice(0, separatorIndex).trim();
+				const value = cleanedLine.slice(separatorIndex + 1).trim();
+				if (currentEntry?.captures && key && value) {
+					currentEntry.captures[key] = value;
+				}
 			}
 		} else if (isCaptures && line.trim() === "") {
 			isCaptures = false;
