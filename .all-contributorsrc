@@ -8,15 +8,6 @@
   "commitConvention": "angular",
   "contributors": [
     {
-      "login": "xleshx",
-      "name": "Alexey",
-      "avatar_url": "https://avatars.githubusercontent.com/u/4798483?v=4",
-      "profile": "https://github.com/xleshx",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
       "login": "jellydn",
       "name": "Dung Duc Huynh (Kaka)",
       "avatar_url": "https://avatars.githubusercontent.com/u/870029?v=4",
@@ -25,7 +16,16 @@
         "code",
         "doc"
       ]
-    }
+    },
+    {
+      "login": "xleshx",
+      "name": "Alexey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4798483?v=4",
+      "profile": "https://github.com/xleshx",
+      "contributions": [
+        "code"
+      ]
+    },
   ],
   "contributorsPerLine": 7,
   "skipCi": true,
