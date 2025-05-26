@@ -47,7 +47,15 @@ function formatTimings(
 // Refer https://hurl.dev/docs/manual.html#verbose
 // A line starting with ‘>’ means data sent by Hurl.
 // A line staring with ‘<’ means data received by Hurl.
-// A line starting with ‘*’ means additional info provided by Hurl.
+/**
+ * Parses the output from the Hurl tool into structured HTTP request and response entries.
+ *
+ * Processes the provided `stderr` and `stdout` strings to extract request methods, URLs, headers, response statuses, headers, bodies, timings, captures, and optional curl commands for each executed entry.
+ *
+ * @param stderr - The standard error output from Hurl, containing structured log lines.
+ * @param stdout - The standard output from Hurl, typically containing the response body.
+ * @returns An object containing an array of parsed HTTP entries with associated metadata.
+ */
 export function parseHurlOutput(
 	stderr: string,
 	stdout: string,
