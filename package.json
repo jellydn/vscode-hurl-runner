@@ -204,9 +204,9 @@
 	"devDependencies": {
 		"@antfu/ni": "24.4.0",
 		"@biomejs/biome": "1.9.4",
-		"@types/node": "22.15.29",
+		"@types/node": "22.15.30",
 		"@types/vscode": "1.93.0",
-		"@vscode/vsce": "3.4.2",
+		"@vscode/vsce": "3.5.0",
 		"bumpp": "10.1.1",
 		"esno": "4.8.0",
 		"pnpm": "10.11.1",
@@ -214,7 +214,7 @@
 		"tsup": "8.5.0",
 		"typescript": "5.8.3",
 		"vite": "6.3.5",
-		"vitest": "3.2.1",
+		"vitest": "3.2.2",
 		"vscode-ext-gen": "1.0.2"
 	},
 	"packageManager": "pnpm@10.11.1",
