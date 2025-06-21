@@ -33,8 +33,8 @@ importers:
         specifier: 10.12.1
         version: 10.12.1
       reactive-vscode:
-        specifier: 0.2.22
-        version: 0.2.22(@types/vscode@1.93.0)
+        specifier: 0.3.0
+        version: 0.3.0(@types/vscode@1.93.0)
       tsup:
         specifier: 8.5.0
         version: 8.5.0(jiti@2.4.2)(postcss@8.5.5)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
@@ -364,8 +364,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@reactive-vscode/reactivity@0.2.22':
-    resolution: {integrity: sha512-+ltivl/R1c4vapZsRrejNQVyeQICayQ39wn0l/VjFqVcCs8ADVpNo4j53feMcM8oEbJv0StvVcODIyRFfqTGsg==}
+  '@reactive-vscode/reactivity@0.3.0':
+    resolution: {integrity: sha512-eV9JUTqOjNfYp/RjxBuZhjASxego+HiR0Ze2BxWmElTO4aVzlafrOpDF1gHelcypge8xMMzOl0oWM3015UJMcg==}
 
   '@rollup/rollup-android-arm-eabi@4.43.0':
     resolution: {integrity: sha512-Krjy9awJl6rKbruhQDgivNbD1WuLb8xAclM4IR4cN5pHGAs2oIMMQJEiC3IC/9TZJ+QZkmZhlMO/6MBGxPidpw==}
@@ -1603,10 +1603,10 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  reactive-vscode@0.2.22:
-    resolution: {integrity: sha512-bJq3AkoKt157CIw5Bz8Jp71dhSEG4M6O1Txjx5BLj97O+D1lQ7XghOGGngFWLTnWX4BwXxzYV7MvQmzNLqPuOg==}
+  reactive-vscode@0.3.0:
+    resolution: {integrity: sha512-wV39vjfWl6ezJNwN3ZisskVVjFecDyEa8cCQOmyj2NdczywwAEfXdzTyt8iVlLGKTjaFN8+E/MmPXc2Uva6cgw==}
     peerDependencies:
-      '@types/vscode': ^1.99.1
+      '@types/vscode': ^1.101.0
 
   read-pkg@8.1.0:
     resolution: {integrity: sha512-PORM8AgzXeskHO/WEv312k9U03B8K9JSiWF/8N9sUuFjBa+9SF2u6K7VClzXwDXab51jCd8Nd36CNM+zR97ScQ==}
@@ -2354,7 +2354,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@reactive-vscode/reactivity@0.2.22': {}
+  '@reactive-vscode/reactivity@0.3.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.43.0':
     optional: true
@@ -3674,9 +3674,9 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.22(@types/vscode@1.93.0):
+  reactive-vscode@0.3.0(@types/vscode@1.93.0):
     dependencies:
-      '@reactive-vscode/reactivity': 0.2.22
+      '@reactive-vscode/reactivity': 0.3.0
       '@types/vscode': 1.93.0
 
   read-pkg@8.1.0:
