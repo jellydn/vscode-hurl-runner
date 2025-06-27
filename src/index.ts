@@ -12,6 +12,7 @@ import {
 	manageEnvVariables,
 	saveCapturedValues,
 } from "./manage-variables";
+import { formatJsonString } from "./json-formatter";
 import {
 	type LastResponseInfo,
 	executeHurl,
@@ -25,6 +26,7 @@ interface LastCommandInfo {
 	filePath: string;
 	entryNumber?: number;
 }
+
 
 // TODO: Migrate to app to VueJs 3 later
 const { activate, deactivate } = defineExtension(() => {
@@ -144,11 +146,11 @@ const { activate, deactivate } = defineExtension(() => {
 						) {
 							bodyType = "json";
 							try {
-								// Format JSON with proper indentation
-								const parsedJson = JSON.parse(formattedBody);
-								formattedBody = JSON.stringify(parsedJson, null, 2);
+								// Format JSON with proper indentation while preserving number precision
+								// Use a simple formatter that doesn't parse numbers
+								formattedBody = formatJsonString(formattedBody);
 							} catch {
-								// If parsing fails, leave it as is
+								// If formatting fails, leave it as is
 							}
 						} else if (formattedBody.trim().startsWith("<?xml")) {
 							bodyType = "xml";
