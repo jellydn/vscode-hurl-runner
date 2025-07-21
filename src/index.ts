@@ -35,39 +35,39 @@ function formatJsonString(jsonStr: string): string {
 	let indentLevel = 0;
 	let inString = false;
 	let escaped = false;
-	
+
 	for (let i = 0; i < jsonStr.length; i++) {
 		const char = jsonStr[i];
 		const nextChar = jsonStr[i + 1];
-		
+
 		if (escaped) {
 			result += char;
 			escaped = false;
 			continue;
 		}
-		
+
 		if (char === "\\" && inString) {
 			result += char;
 			escaped = true;
 			continue;
 		}
-		
+
 		if (char === '"' && !escaped) {
 			inString = !inString;
 			result += char;
 			continue;
 		}
-		
+
 		if (inString) {
 			result += char;
 			continue;
 		}
-		
+
 		// Handle whitespace outside strings
 		if (/\s/.test(char)) {
 			continue;
 		}
-		
+
 		// Handle structural characters
 		if (char === "{" || char === "[") {
 			result += char;
@@ -78,7 +78,7 @@ function formatJsonString(jsonStr: string): string {
 		} else if (char === "}" || char === "]") {
 			// Check if this is closing an empty container
 			const isEmptyContainer = result.endsWith("{") || result.endsWith("[");
-			
+
 			if (!isEmptyContainer) {
 				if (result.trim().endsWith(",")) {
 					result = `${result.trimEnd().slice(0, -1)}\n`;
@@ -97,7 +97,7 @@ function formatJsonString(jsonStr: string): string {
 			result += char;
 		}
 	}
-	
+
 	return result;
 }
 
