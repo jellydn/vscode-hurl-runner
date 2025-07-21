@@ -198,7 +198,8 @@
 					"when": "view == hurlVariables && viewItem == globalVariable"
 				}
 			]
-		}
+		},
+		"snippets": []
 	},
 	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
@@ -215,7 +216,7 @@
 		"typescript": "5.8.3",
 		"vite": "7.0.0",
 		"vitest": "3.2.4",
-		"vscode-ext-gen": "1.1.0"
+		"vscode-ext-gen": "1.0.2"
 	},
 	"packageManager": "pnpm@10.12.4",
 	"engines": {
