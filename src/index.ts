@@ -27,6 +27,53 @@ interface LastCommandInfo {
 }
 
 /**
+ * Validate JSON structure without parsing large numbers to avoid precision loss.
+ * This performs basic syntax validation without converting numbers.
+ */
+function isValidJsonStructure(jsonStr: string): boolean {
+	let bracketCount = 0;
+	let braceCount = 0;
+	let inString = false;
+	let escaped = false;
+
+	for (let i = 0; i < jsonStr.length; i++) {
+		const char = jsonStr[i];
+
+		if (escaped) {
+			escaped = false;
+			continue;
+		}
+
+		if (char === "\\" && inString) {
+			escaped = true;
+			continue;
+		}
+
+		if (char === '"' && !escaped) {
+			inString = !inString;
+			continue;
+		}
+
+		if (inString) {
+			continue;
+		}
+
+		if (char === "{") braceCount++;
+		else if (char === "}") braceCount--;
+		else if (char === "[") bracketCount++;
+		else if (char === "]") bracketCount--;
+
+		// Basic validation: brackets/braces should never go negative
+		if (bracketCount < 0 || braceCount < 0) {
+			return false;
+		}
+	}
+
+	// All brackets/braces should be balanced
+	return bracketCount === 0 && braceCount === 0 && !inString;
+}
+
+/**
  * Format JSON string with proper indentation while preserving large number precision.
  * This avoids using JSON.parse/JSON.stringify which lose precision for large integers.
  */
@@ -220,12 +267,12 @@ const { activate, deactivate } = defineExtension(() => {
 							bodyType = "json";
 							try {
 								// Format JSON with proper indentation while preserving large number precision
-								// First validate it's valid JSON, but don't parse large numbers
-								JSON.parse(formattedBody);
-								// Then format manually to preserve precision
-								formattedBody = formatJsonString(formattedBody);
+								// Validate JSON structure without parsing to avoid losing precision for large integers
+								if (isValidJsonStructure(formattedBody)) {
+									formattedBody = formatJsonString(formattedBody);
+								}
 							} catch {
-								// If parsing fails, leave it as is
+								// If validation fails, leave it as is
 							}
 						} else if (formattedBody.trim().startsWith("<?xml")) {
 							bodyType = "xml";
