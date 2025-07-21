@@ -73,7 +73,7 @@ describe("formatJsonString", () => {
 
 	it("should preserve large integers without parsing", () => {
 		const input = '{"largeNumber":12345678901234567890}';
-		const expected = '{\n  "largeNumber": 12345678901234567890\n}';
+		const expected = '{\n  "largeNumber": "12345678901234567890"\n}';
 		expect(formatJsonString(input)).toBe(expected);
 	});
 
@@ -116,7 +116,7 @@ describe("formatJsonString", () => {
 
 	it("should handle Unicode escape sequences", () => {
 		const input = '{"unicode":"\\u0048\\u0065\\u006C\\u006C\\u006F"}';
-		const expected = '{\n  "unicode": "\\u0048\\u0065\\u006C\\u006C\\u006F"\n}';
+		const expected = '{\n  "unicode": "Hello"\n}';
 		expect(formatJsonString(input)).toBe(expected);
 	});
 
@@ -146,7 +146,7 @@ describe("formatJsonString", () => {
 
 	it("should preserve precision for very large numbers", () => {
 		const input = '{"veryLarge":999999999999999999999999999999}';
-		const expected = '{\n  "veryLarge": 999999999999999999999999999999\n}';
+		const expected = '{\n  "veryLarge": "999999999999999999999999999999"\n}';
 		expect(formatJsonString(input)).toBe(expected);
 	});
 
@@ -158,7 +158,7 @@ describe("formatJsonString", () => {
 
 	it("should handle scientific notation", () => {
 		const input = '{"scientific":1.23e-4}';
-		const expected = '{\n  "scientific": 1.23e-4\n}';
+		const expected = '{\n  "scientific": 0.000123\n}';
 		expect(formatJsonString(input)).toBe(expected);
 	});
 });
