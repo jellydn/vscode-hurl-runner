@@ -145,14 +145,10 @@ const { activate, deactivate } = defineExtension(() => {
 							formattedBody.trim().startsWith("[")
 						) {
 							bodyType = "json";
-							try {
-								// Format JSON with proper indentation while preserving large number precision
-								// Validate JSON structure without parsing to avoid losing precision for large integers
-								if (isValidJsonStructure(formattedBody)) {
-									formattedBody = formatJsonString(formattedBody);
-								}
-							} catch {
-								// If validation fails, leave it as is
+							// Format JSON with proper indentation while preserving large number precision
+							// Validate JSON structure without parsing to avoid losing precision for large integers
+							if (isValidJsonStructure(formattedBody)) {
+								formattedBody = formatJsonString(formattedBody);
 							}
 						} else if (formattedBody.trim().startsWith("<?xml")) {
 							bodyType = "xml";
