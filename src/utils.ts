@@ -43,9 +43,8 @@ export async function executeHurl(
 	const args = [filePath, verboseFlag];
 
 	for (const [key, value] of Object.entries(variables)) {
-		// Wrap value in quotes if it contains spaces
-		const formattedValue = value.includes(" ") ? `"${value}"` : value;
-		args.push("--variable", `${key}=${formattedValue}`);
+		// Don't add quotes - spawn handles escaping properly
+		args.push("--variable", `${key}=${value}`);
 	}
 
 	if (envFile) {
@@ -128,9 +127,8 @@ export async function executeHurlWithContent(
 	const args = [fsPath, verboseFlag];
 
 	for (const [key, value] of Object.entries(variables)) {
-		// Wrap value in quotes if it contains spaces
-		const formattedValue = value.includes(" ") ? `"${value}"` : value;
-		args.push("--variable", `${key}=${formattedValue}`);
+		// Don't add quotes - spawn handles escaping properly
+		args.push("--variable", `${key}=${value}`);
 	}
 
 	if (envFile) {
