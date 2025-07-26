@@ -872,12 +872,12 @@ Content-Type: application/json
 			await executeHurl(options);
 
 			// Verify that .env file was detected and passed to hurl
-			expect(mockSpawn).toHaveBeenCalledWith("hurl", [
-				"/path/to/project/api.hurl",
-				"--verbose",
-				"--variables-file",
-				"/path/to/project/.env",
-			]);
+			const args = mockSpawn.mock.calls[0][1];
+			expect(args[0]).toBe("/path/to/project/api.hurl");
+			expect(args[1]).toBe("--verbose");
+			expect(args[2]).toBe("--variables-file");
+			// Check the .env path ends correctly (platform-agnostic)
+			expect(args[3]).toMatch(/[\\/]path[\\/]to[\\/]project[\\/]\.env$/);
 		});
 
 		it("should not use .env file if it doesn't exist", async () => {
@@ -967,7 +967,9 @@ Content-Type: application/json
 			// Get the actual arguments passed to spawn
 			const args = mockSpawn.mock.calls[0][1];
 			expect(args).toContain("--variables-file");
-			expect(args).toContain("/path/to/project/.env");
+			// Find the .env file argument and check it ends correctly (platform-agnostic)
+			const envFileArg = args[args.indexOf("--variables-file") + 1];
+			expect(envFileArg).toMatch(/[\\/]path[\\/]to[\\/]project[\\/]\.env$/);
 		});
 
 		it("should fallback to workspace root .env for content execution", async () => {
@@ -1012,7 +1014,9 @@ Content-Type: application/json
 			// Verify workspace root .env was used
 			const args = mockSpawn.mock.calls[0][1];
 			expect(args).toContain("--variables-file");
-			expect(args).toContain("/workspace/root/.env");
+			// Find the .env file argument and check it ends correctly (platform-agnostic)
+			const envFileArg = args[args.indexOf("--variables-file") + 1];
+			expect(envFileArg).toMatch(/[\\/]workspace[\\/]root[\\/]\.env$/);
 		});
 
 		it("should work without .env when no context file path provided", async () => {
