@@ -887,6 +887,7 @@ const { activate, deactivate } = defineExtension(() => {
 					content: selectedText,
 					envFile,
 					variables,
+					contextFilePath: filePath,
 				});
 
 				showResultInWebView(result);

@@ -25,10 +25,18 @@ vi.mock("vscode", () => ({
 		fs: {
 			writeFile: vi.fn(),
 			delete: vi.fn(),
+			stat: vi.fn(),
 		},
+		workspaceFolders: undefined,
 	},
 	Uri: {
 		file: vi.fn((path) => ({ fsPath: path })),
+	},
+	FileType: {
+		Unknown: 0,
+		File: 1,
+		Directory: 2,
+		SymbolicLink: 64,
 	},
 }));
 
@@ -66,6 +74,9 @@ describe("Utils - Variable Expansion", () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
+		
+		// By default, mock fs.stat to fail (no .env file)
+		vi.mocked(vscode.workspace.fs.stat).mockRejectedValue(new Error("File not found"));
 
 		// Create mock process
 		mockProcess = {
@@ -828,6 +839,218 @@ Content-Type: application/json
 			// Code 1 without "error:" in stderr should succeed
 			const result = await executeHurl(options);
 			expect(result.stderr).toBe("warning: This is a warning\ninfo: Process completed");
+		});
+	});
+
+	describe(".env Auto-loading", () => {
+		beforeEach(() => {
+			// Reset mocks for fs operations
+			vi.mocked(vscode.workspace.fs.stat).mockReset();
+		});
+
+		it("should auto-detect .env file in the same directory as .hurl file", async () => {
+			// Mock successful .env file existence
+			vi.mocked(vscode.workspace.fs.stat).mockResolvedValueOnce({
+				type: vscode.FileType.File,
+				ctime: 0,
+				mtime: 0,
+				size: 100,
+			});
+
+			// Setup process to succeed
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(0);
+				}
+			});
+
+			const options = {
+				filePath: "/path/to/project/api.hurl",
+				variables: {},
+			};
+
+			await executeHurl(options);
+
+			// Verify that .env file was detected and passed to hurl
+			expect(mockSpawn).toHaveBeenCalledWith("hurl", [
+				"/path/to/project/api.hurl",
+				"--verbose",
+				"--variables-file",
+				"/path/to/project/.env",
+			]);
+		});
+
+		it("should not use .env file if it doesn't exist", async () => {
+			// Mock .env file not found
+			vi.mocked(vscode.workspace.fs.stat).mockRejectedValueOnce(
+				new Error("File not found"),
+			);
+
+			// Setup process to succeed
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(0);
+				}
+			});
+
+			const options = {
+				filePath: "/path/to/project/api.hurl",
+				variables: {},
+			};
+
+			await executeHurl(options);
+
+			// Verify that no .env file was passed to hurl
+			const args = mockSpawn.mock.calls[0][1];
+			expect(args).not.toContain("--variables-file");
+		});
+
+		it("should prefer manually specified envFile over auto-detected one", async () => {
+			// Mock successful .env file existence (but it should be ignored)
+			vi.mocked(vscode.workspace.fs.stat).mockResolvedValueOnce({
+				type: vscode.FileType.File,
+				ctime: 0,
+				mtime: 0,
+				size: 100,
+			});
+
+			// Setup process to succeed
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(0);
+				}
+			});
+
+			const options = {
+				filePath: "/path/to/project/api.hurl",
+				envFile: "/custom/path/custom.env",
+				variables: {},
+			};
+
+			await executeHurl(options);
+
+			// Verify that custom env file was used, not auto-detected one
+			expect(mockSpawn).toHaveBeenCalledWith("hurl", [
+				"/path/to/project/api.hurl",
+				"--verbose",
+				"--variables-file",
+				"/custom/path/custom.env",
+			]);
+			// Verify fs.stat was not called since we have manual envFile
+			expect(vscode.workspace.fs.stat).not.toHaveBeenCalled();
+		});
+
+		it("should auto-detect .env file for content execution in context directory", async () => {
+			// Mock successful .env file existence in context directory
+			vi.mocked(vscode.workspace.fs.stat).mockResolvedValueOnce({
+				type: vscode.FileType.File,
+				ctime: 0,
+				mtime: 0,
+				size: 100,
+			});
+
+			// Setup process to succeed
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(0);
+				}
+			});
+
+			const options = {
+				content: "GET https://example.com",
+				contextFilePath: "/path/to/project/api.hurl",
+				variables: {},
+			};
+
+			await executeHurlWithContent(options);
+
+			// Get the actual arguments passed to spawn
+			const args = mockSpawn.mock.calls[0][1];
+			expect(args).toContain("--variables-file");
+			expect(args).toContain("/path/to/project/.env");
+		});
+
+		it("should fallback to workspace root .env for content execution", async () => {
+			// Mock workspace folders
+			const mockWorkspaceFolders = [
+				{
+					uri: { fsPath: "/workspace/root" },
+					name: "root",
+					index: 0,
+				},
+			];
+			Object.defineProperty(vscode.workspace, "workspaceFolders", {
+				value: mockWorkspaceFolders,
+				configurable: true,
+			});
+
+			// First stat call fails (context directory), second succeeds (workspace root)
+			vi.mocked(vscode.workspace.fs.stat)
+				.mockRejectedValueOnce(new Error("File not found"))
+				.mockResolvedValueOnce({
+					type: vscode.FileType.File,
+					ctime: 0,
+					mtime: 0,
+					size: 100,
+				});
+
+			// Setup process to succeed
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(0);
+				}
+			});
+
+			const options = {
+				content: "GET https://example.com",
+				contextFilePath: "/path/to/project/api.hurl",
+				variables: {},
+			};
+
+			await executeHurlWithContent(options);
+
+			// Verify workspace root .env was used
+			const args = mockSpawn.mock.calls[0][1];
+			expect(args).toContain("--variables-file");
+			expect(args).toContain("/workspace/root/.env");
+		});
+
+		it("should work without .env when no context file path provided", async () => {
+			// Mock workspace folders
+			const mockWorkspaceFolders = [
+				{
+					uri: { fsPath: "/workspace/root" },
+					name: "root",
+					index: 0,
+				},
+			];
+			Object.defineProperty(vscode.workspace, "workspaceFolders", {
+				value: mockWorkspaceFolders,
+				configurable: true,
+			});
+
+			// Mock .env file not found in workspace
+			vi.mocked(vscode.workspace.fs.stat).mockRejectedValueOnce(
+				new Error("File not found"),
+			);
+
+			// Setup process to succeed
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(0);
+				}
+			});
+
+			const options = {
+				content: "GET https://example.com",
+				variables: {},
+			};
+
+			await executeHurlWithContent(options);
+
+			// Verify no .env file was used
+			const args = mockSpawn.mock.calls[0][1];
+			expect(args).not.toContain("--variables-file");
 		});
 	});
 });
