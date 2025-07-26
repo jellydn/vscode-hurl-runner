@@ -57,8 +57,12 @@ vi.mock("../src/config", () => ({
 }));
 
 describe("Utils - Variable Expansion", () => {
-	let mockSpawn: any;
-	let mockProcess: any;
+	let mockSpawn: ReturnType<typeof vi.fn>;
+	let mockProcess: {
+		stdout: { on: ReturnType<typeof vi.fn> };
+		stderr: { on: ReturnType<typeof vi.fn> };
+		on: ReturnType<typeof vi.fn>;
+	};
 
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -625,7 +629,7 @@ Content-Type: application/json
 			});
 
 			const options = {
-				content: `POST https://api.example.com/calculate`,
+				content: "POST https://api.example.com/calculate",
 				variables: {
 					expression: "2 + 2 = 4",
 					formula: "y = mx + b",
@@ -664,7 +668,7 @@ Content-Type: application/json
 			});
 
 			const options = {
-				content: `GET https://api.example.com/test`,
+				content: "GET https://api.example.com/test",
 				variables: {
 					"user.name": "John Doe",
 					"user-email": "john@example.com",
@@ -696,6 +700,134 @@ Content-Type: application/json
 			expect(args).toContain("USER_TOKEN=abc123");
 			expect(args).toContain("123variable=starts with number");
 			expect(args).toContain("variable-with-many-dashes=test value");
+		});
+	});
+
+	describe("Error Handling", () => {
+		it("should handle process spawn errors", async () => {
+			// Mock spawn to throw an error immediately
+			mockSpawn.mockImplementation(() => {
+				throw new Error("Command not found");
+			});
+
+			const options = {
+				filePath: "/path/to/file.hurl",
+				variables: { test: "value" },
+			};
+
+			await expect(executeHurl(options)).rejects.toThrow("Command not found");
+		});
+
+		it("should handle process error events", async () => {
+			// Setup process to emit error
+			mockProcess.on.mockImplementation((event: string, callback: (arg: unknown) => void) => {
+				if (event === "error") {
+					// Emit error synchronously
+					callback(new Error("Process failed"));
+				}
+			});
+
+			const options = {
+				filePath: "/path/to/file.hurl",
+				variables: { test: "value" },
+			};
+
+			await expect(executeHurl(options)).rejects.toThrow("Failed to start Hurl process: Process failed");
+		});
+
+		it("should handle non-zero exit codes", async () => {
+			// Setup process to exit with error code
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(2);
+				}
+			});
+
+			mockProcess.stderr.on.mockImplementation((event: string, callback: (data: Buffer) => void) => {
+				if (event === "data") {
+					callback(Buffer.from("error: Invalid syntax"));
+				}
+			});
+
+			const options = {
+				filePath: "/path/to/file.hurl",
+				variables: { test: "value" },
+			};
+
+			await expect(executeHurl(options)).rejects.toThrow(
+				"Hurl process exited with code 2\nerror: Invalid syntax",
+			);
+		});
+
+		it("should handle content execution errors", async () => {
+			// Setup process to exit with error code
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(3);
+				}
+			});
+
+			mockProcess.stderr.on.mockImplementation((event: string, callback: (data: Buffer) => void) => {
+				if (event === "data") {
+					callback(Buffer.from("error: Network timeout"));
+				}
+			});
+
+			const options = {
+				content: "GET https://example.com",
+				variables: { timeout: "5000" },
+			};
+
+			await expect(executeHurlWithContent(options)).rejects.toThrow(
+				"Hurl process exited with code 3\nerror: Network timeout",
+			);
+
+			// Verify cleanup was attempted
+			expect(vscode.workspace.fs.delete).toHaveBeenCalled();
+		});
+
+		it("should clean up temp file on spawn error for content execution", async () => {
+			// Mock spawn to throw an error immediately
+			mockSpawn.mockImplementation(() => {
+				throw new Error("Command not found");
+			});
+
+			const options = {
+				content: "GET https://example.com",
+				variables: { test: "value" },
+			};
+
+			await expect(executeHurlWithContent(options)).rejects.toThrow("Command not found");
+
+			// Verify cleanup was attempted - this won't be called since spawn throws immediately
+			expect(vscode.workspace.fs.delete).not.toHaveBeenCalled();
+		});
+
+		it("should handle partial stderr data correctly", async () => {
+			// Setup process to send partial data
+			mockProcess.on.mockImplementation((event: string, callback: (code: number) => void) => {
+				if (event === "close") {
+					callback(1);
+				}
+			});
+
+			mockProcess.stderr.on.mockImplementation((event: string, callback: (data: Buffer) => void) => {
+				if (event === "data") {
+					// Send data in chunks
+					callback(Buffer.from("warning: "));
+					callback(Buffer.from("This is a warning\n"));
+					callback(Buffer.from("info: Process completed"));
+				}
+			});
+
+			const options = {
+				filePath: "/path/to/file.hurl",
+				variables: {},
+			};
+
+			// Code 1 without "error:" in stderr should succeed
+			const result = await executeHurl(options);
+			expect(result.stderr).toBe("warning: This is a warning\ninfo: Process completed");
 		});
 	});
 });

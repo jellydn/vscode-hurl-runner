@@ -25,6 +25,18 @@ export interface HurlExecutionOptions {
 	toEntry?: number;
 }
 
+/**
+ * Adds variable arguments to the command args array
+ * @param args - The arguments array to append to
+ * @param variables - The variables to add
+ */
+function addVariableArgs(args: string[], variables: Record<string, string>): void {
+	for (const [key, value] of Object.entries(variables)) {
+		// Don't add quotes - spawn handles escaping properly
+		args.push("--variable", `${key}=${value}`);
+	}
+}
+
 export async function executeHurl(
 	options: HurlExecutionOptions,
 ): Promise<HurlExecutionResult> {
@@ -42,10 +54,7 @@ export async function executeHurl(
 	const verboseFlag = isVeryVerbose ? "--very-verbose" : "--verbose";
 	const args = [filePath, verboseFlag];
 
-	for (const [key, value] of Object.entries(variables)) {
-		// Don't add quotes - spawn handles escaping properly
-		args.push("--variable", `${key}=${value}`);
-	}
+	addVariableArgs(args, variables);
 
 	if (envFile) {
 		args.push("--variables-file", envFile);
@@ -126,10 +135,7 @@ export async function executeHurlWithContent(
 
 	const args = [fsPath, verboseFlag];
 
-	for (const [key, value] of Object.entries(variables)) {
-		// Don't add quotes - spawn handles escaping properly
-		args.push("--variable", `${key}=${value}`);
-	}
+	addVariableArgs(args, variables);
 
 	if (envFile) {
 		args.push("--variables-file", envFile);
