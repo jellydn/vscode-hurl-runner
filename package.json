@@ -208,7 +208,7 @@
 		"@types/node": "22.16.5",
 		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "3.6.0",
-		"bumpp": "10.2.0",
+		"bumpp": "10.2.1",
 		"esno": "4.8.0",
 		"pnpm": "10.13.1",
 		"reactive-vscode": "0.3.1",
