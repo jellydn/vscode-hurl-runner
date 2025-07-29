@@ -26,80 +26,7 @@ interface LastCommandInfo {
 	entryNumber?: number;
 }
 
-/**
- * Format JSON string with proper indentation while preserving large number precision.
- * This avoids using JSON.parse/JSON.stringify which lose precision for large integers.
- */
-function formatJsonString(jsonStr: string): string {
-	let result = "";
-	let indentLevel = 0;
-	let inString = false;
-	let escaped = false;
-
-	for (let i = 0; i < jsonStr.length; i++) {
-		const char = jsonStr[i];
-		const nextChar = jsonStr[i + 1];
-
-		if (escaped) {
-			result += char;
-			escaped = false;
-			continue;
-		}
-
-		if (char === "\\" && inString) {
-			result += char;
-			escaped = true;
-			continue;
-		}
-
-		if (char === '"' && !escaped) {
-			inString = !inString;
-			result += char;
-			continue;
-		}
-
-		if (inString) {
-			result += char;
-			continue;
-		}
-
-		// Handle whitespace outside strings
-		if (/\s/.test(char)) {
-			continue;
-		}
-
-		// Handle structural characters
-		if (char === "{" || char === "[") {
-			result += char;
-			if (nextChar !== "}" && nextChar !== "]") {
-				indentLevel++;
-				result += `\n${"  ".repeat(indentLevel)}`;
-			}
-		} else if (char === "}" || char === "]") {
-			// Check if this is closing an empty container
-			const isEmptyContainer = result.endsWith("{") || result.endsWith("[");
-
-			if (!isEmptyContainer) {
-				if (result.trim().endsWith(",")) {
-					result = `${result.trimEnd().slice(0, -1)}\n`;
-				} else if (!result.endsWith("\n")) {
-					result += "\n";
-				}
-				indentLevel--;
-				result += "  ".repeat(indentLevel);
-			}
-			result += char;
-		} else if (char === ",") {
-			result += `${char}\n${"  ".repeat(indentLevel)}`;
-		} else if (char === ":") {
-			result += `${char} `;
-		} else {
-			result += char;
-		}
-	}
-
-	return result;
-}
+import { isValidJsonStructure, formatJsonString } from "./json-utils.js";
 
 // TODO: Migrate to app to VueJs 3 later
 const { activate, deactivate } = defineExtension(() => {
@@ -218,14 +145,10 @@ const { activate, deactivate } = defineExtension(() => {
 							formattedBody.trim().startsWith("[")
 						) {
 							bodyType = "json";
-							try {
-								// Format JSON with proper indentation while preserving large number precision
-								// First validate it's valid JSON, but don't parse large numbers
-								JSON.parse(formattedBody);
-								// Then format manually to preserve precision
+							// Format JSON with proper indentation while preserving large number precision
+							// Validate JSON structure without parsing to avoid losing precision for large integers
+							if (isValidJsonStructure(formattedBody)) {
 								formattedBody = formatJsonString(formattedBody);
-							} catch {
-								// If parsing fails, leave it as is
 							}
 						} else if (formattedBody.trim().startsWith("<?xml")) {
 							bodyType = "xml";
