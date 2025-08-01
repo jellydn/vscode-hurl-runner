@@ -25,6 +25,18 @@ export interface HurlExecutionOptions {
 	toEntry?: number;
 }
 
+/**
+ * Adds variable arguments to the command args array
+ * @param args - The arguments array to append to
+ * @param variables - The variables to add
+ */
+function addVariableArgs(args: string[], variables: Record<string, string>): void {
+	for (const [key, value] of Object.entries(variables)) {
+		// Don't add quotes - spawn handles escaping properly
+		args.push("--variable", `${key}=${value}`);
+	}
+}
+
 export async function executeHurl(
 	options: HurlExecutionOptions,
 ): Promise<HurlExecutionResult> {
@@ -34,7 +46,20 @@ export async function executeHurl(
 	);
 	statusBarMessage.text = "Running Hurl...";
 	statusBarMessage.show();
-	const { filePath, envFile, variables, fromEntry, toEntry } = options;
+	let { filePath, envFile, variables, fromEntry, toEntry } = options;
+	
+	// Auto-detect .env file in the same directory if no envFile specified
+	if (!envFile) {
+		const hurlDir = path.dirname(filePath);
+		const autoEnvFile = path.join(hurlDir, ".env");
+		try {
+			await vscode.workspace.fs.stat(vscode.Uri.file(autoEnvFile));
+			envFile = autoEnvFile;
+			logger.info(`Auto-detected .env file: ${autoEnvFile}`);
+		} catch {
+			// .env file doesn't exist, continue without it
+		}
+	}
 
 	// Get the verbosity configuration
 	const verboseMode = config.verboseMode;
@@ -42,11 +67,7 @@ export async function executeHurl(
 	const verboseFlag = isVeryVerbose ? "--very-verbose" : "--verbose";
 	const args = [filePath, verboseFlag];
 
-	for (const [key, value] of Object.entries(variables)) {
-		// Wrap value in quotes if it contains spaces
-		const formattedValue = value.includes(" ") ? `"${value}"` : value;
-		args.push("--variable", `${key}=${formattedValue}`);
-	}
+	addVariableArgs(args, variables);
 
 	if (envFile) {
 		args.push("--variables-file", envFile);
@@ -98,6 +119,7 @@ interface HurlExecutionContentOptions {
 	content: string;
 	envFile?: string;
 	variables: Record<string, string>;
+	contextFilePath?: string; // Optional path to help locate .env file
 }
 
 export async function executeHurlWithContent(
@@ -110,7 +132,38 @@ export async function executeHurlWithContent(
 	statusBarMessage.text = "Running Hurl...";
 	statusBarMessage.show();
 
-	const { content, envFile, variables } = options;
+	let { content, envFile, variables, contextFilePath } = options;
+	
+	// Auto-detect .env file if no envFile specified
+	if (!envFile) {
+		// First, try to find .env in the same directory as the context file
+		if (contextFilePath) {
+			const contextDir = path.dirname(contextFilePath);
+			const autoEnvFile = path.join(contextDir, ".env");
+			try {
+				await vscode.workspace.fs.stat(vscode.Uri.file(autoEnvFile));
+				envFile = autoEnvFile;
+				logger.info(`Auto-detected .env file: ${autoEnvFile}`);
+			} catch {
+				// .env file doesn't exist in context directory, try workspace root
+			}
+		}
+		
+		// If still no .env file found, check workspace root
+		if (!envFile) {
+			const workspaceFolders = vscode.workspace.workspaceFolders;
+			if (workspaceFolders && workspaceFolders.length > 0) {
+				const autoEnvFile = path.join(workspaceFolders[0].uri.fsPath, ".env");
+				try {
+					await vscode.workspace.fs.stat(vscode.Uri.file(autoEnvFile));
+					envFile = autoEnvFile;
+					logger.info(`Auto-detected .env file: ${autoEnvFile}`);
+				} catch {
+					// .env file doesn't exist, continue without it
+				}
+			}
+		}
+	}
 
 	// Get the verbosity configuration
 	const verboseMode = config.verboseMode;
@@ -127,11 +180,7 @@ export async function executeHurlWithContent(
 
 	const args = [fsPath, verboseFlag];
 
-	for (const [key, value] of Object.entries(variables)) {
-		// Wrap value in quotes if it contains spaces
-		const formattedValue = value.includes(" ") ? `"${value}"` : value;
-		args.push("--variable", `${key}=${formattedValue}`);
-	}
+	addVariableArgs(args, variables);
 
 	if (envFile) {
 		args.push("--variables-file", envFile);
