@@ -1,11 +1,11 @@
-# Demo: Default .env File Auto-Detection
+# Example: Default .env File Auto-Detection
 
 This example demonstrates the new automatic .env file detection feature.
 
 ## Directory Structure
 
 ```
-demo/
+example/
 ├── users/
 │   ├── users.hurl     # Will auto-detect users.env
 │   └── users.env
@@ -24,7 +24,7 @@ demo/
 
 ## Test It
 
-1. Open any .hurl file in the demo directories
+1. Open any .hurl file in the example directories
 2. Check the status bar - it should show the auto-detected env file
 3. Run the Hurl request - variables from the env file will be automatically loaded
 4. Manual env file selection still works and takes precedence
