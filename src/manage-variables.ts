@@ -6,6 +6,51 @@ import { config } from "./config";
 import type { HurlVariablesProvider } from "./hurl-variables-provider";
 import { logger } from "./utils";
 
+/**
+ * Find default .env file in the same directory as the Hurl file
+ * Looks for .env or {filename}.env files
+ */
+export async function findDefaultEnvFile(hurlFilePath: string): Promise<string | undefined> {
+	const dir = path.dirname(hurlFilePath);
+	const baseName = path.basename(hurlFilePath, path.extname(hurlFilePath));
+	
+	// Check for .env file first
+	const defaultEnvPath = path.join(dir, ".env");
+	try {
+		await fs.access(defaultEnvPath);
+		return defaultEnvPath;
+	} catch {
+		// .env doesn't exist, continue
+	}
+	
+	// Check for {filename}.env file
+	const namedEnvPath = path.join(dir, `${baseName}.env`);
+	try {
+		await fs.access(namedEnvPath);
+		return namedEnvPath;
+	} catch {
+		// {filename}.env doesn't exist
+	}
+	
+	return undefined;
+}
+
+/**
+ * Get the effective env file: manual selection takes priority over auto-detection
+ */
+export async function getEffectiveEnvFile(
+	hurlFilePath: string,
+	manualEnvFile?: string,
+): Promise<string | undefined> {
+	// Manual selection has priority
+	if (manualEnvFile) {
+		return manualEnvFile;
+	}
+	
+	// Try to auto-detect default env file
+	return await findDefaultEnvFile(hurlFilePath);
+}
+
 export async function chooseEnvFile(): Promise<string | undefined> {
 	const workspaceFolders = vscode.workspace.workspaceFolders;
 	if (!workspaceFolders) {

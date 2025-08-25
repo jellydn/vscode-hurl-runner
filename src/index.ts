@@ -9,6 +9,7 @@ import { HurlVariablesProvider } from "./hurl-variables-provider";
 import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
 import {
 	chooseEnvFile,
+	getEffectiveEnvFile,
 	manageEnvVariables,
 	saveCapturedValues,
 } from "./manage-variables";
@@ -776,7 +777,7 @@ const { activate, deactivate } = defineExtension(() => {
 					entryNumber: entry.entryNumber,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = await getEffectiveEnvFile(filePath, envFileMapping[filePath]);
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -832,7 +833,7 @@ const { activate, deactivate } = defineExtension(() => {
 					entryNumber: entry.entryNumber,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = await getEffectiveEnvFile(filePath, envFileMapping[filePath]);
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -873,7 +874,7 @@ const { activate, deactivate } = defineExtension(() => {
 			showLoadingInWebView();
 
 			const filePath = editor.document.uri.fsPath;
-			const envFile = envFileMapping[filePath];
+			const envFile = await getEffectiveEnvFile(filePath, envFileMapping[filePath]);
 			const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 			// Store the last command info (without entry number for selections)
@@ -957,41 +958,48 @@ const { activate, deactivate } = defineExtension(() => {
 		const envFile = await chooseEnvFile();
 		if (envFile) {
 			envFileMapping[filePath] = envFile;
-			updateStatusBarText(filePath);
+			await updateStatusBarText(filePath);
 			hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
 		}
 	});
 
 	// Update status bar when active editor changes
-	vscode.window.onDidChangeActiveTextEditor((editor) => {
+	vscode.window.onDidChangeActiveTextEditor(async (editor) => {
 		if (editor && editor.document.languageId === "hurl") {
 			const filePath = editor.document.uri.fsPath;
-			const envFile = envFileMapping[filePath];
-			hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
-			updateStatusBarText(filePath);
+			const effectiveEnvFile = await getEffectiveEnvFile(filePath, envFileMapping[filePath]);
+			hurlVariablesTreeProvider.setEnvFile(filePath, effectiveEnvFile);
+			await updateStatusBarText(filePath);
 			statusBarItem?.show();
 		} else {
 			statusBarItem?.hide();
 		}
 	});
 
-	function updateStatusBarText(filePath: string) {
+	async function updateStatusBarText(filePath: string) {
 		if (!statusBarItem) {
 			return;
 		}
-		const envFile = envFileMapping[filePath];
+		const manualEnvFile = envFileMapping[filePath];
+		const effectiveEnvFile = await getEffectiveEnvFile(filePath, manualEnvFile);
 		const hasCustomVariables =
 			Object.keys(hurlVariablesProvider.getInlineVariablesBy(filePath)).length >
 			0;
 
-		if (envFile && hasCustomVariables) {
-			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
-				envFile,
-			)} + Custom`;
-		} else if (envFile) {
-			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
-				envFile,
-			)}`;
+		// Determine display text and whether to show auto-detected indicator
+		let envDisplayText = "None";
+		let isAutoDetected = false;
+		
+		if (effectiveEnvFile) {
+			const relativeEnvFile = vscode.workspace.asRelativePath(effectiveEnvFile);
+			envDisplayText = relativeEnvFile;
+			isAutoDetected = !manualEnvFile && effectiveEnvFile; // Auto-detected if no manual file but effective file exists
+		}
+
+		if (effectiveEnvFile && hasCustomVariables) {
+			statusBarItem.text = `$(file) Hurl Env: ${envDisplayText}${isAutoDetected ? ' (auto)' : ''} + Custom`;
+		} else if (effectiveEnvFile) {
+			statusBarItem.text = `$(file) Hurl Env: ${envDisplayText}${isAutoDetected ? ' (auto)' : ''}`;
 		} else if (hasCustomVariables) {
 			statusBarItem.text = "$(file) Hurl Env: Custom";
 		} else {
@@ -1019,7 +1027,7 @@ const { activate, deactivate } = defineExtension(() => {
 					filePath,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = await getEffectiveEnvFile(filePath, envFileMapping[filePath]);
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -1089,7 +1097,7 @@ const { activate, deactivate } = defineExtension(() => {
 					entryNumber: currentEntry.entryNumber,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = await getEffectiveEnvFile(filePath, envFileMapping[filePath]);
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
