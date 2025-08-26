@@ -24,7 +24,28 @@ example/
 
 ## Test It
 
-1. Open any .hurl file in the example directories
-2. Check the status bar - it should show the auto-detected env file
-3. Run the Hurl request - variables from the env file will be automatically loaded
-4. Manual env file selection still works and takes precedence
+### Testing Auto-Detection
+
+1. **Test Named Env File Detection:**
+   - Open `example/users/users.hurl`
+   - Check the status bar - it should show `users/users.env (auto)`
+   - Run the Hurl request - variables from `users.env` will be automatically loaded
+
+2. **Test .env Priority:**
+   - Open `example/posts/posts.hurl`
+   - Check the status bar - it should show `posts/.env (auto)` (not `posts.env`)
+   - Run the Hurl request - variables from `.env` will be loaded instead of `posts.env`
+
+3. **Test Manual Selection Override:**
+   - Open any .hurl file
+   - Use `Ctrl+Shift+P` → "Hurl: Choose Environment File"
+   - Select a different env file manually
+   - Check the status bar - it should show the manual selection without "(auto)"
+   - Manual selection takes precedence over auto-detection
+
+### Expected Behavior
+
+- **Auto-detected files** show "(auto)" indicator in status bar
+- **Manually selected files** show without "(auto)" indicator
+- **.env files** are prioritized over named env files (e.g., `scene1.env`)
+- **Manual selection** always overrides auto-detection
