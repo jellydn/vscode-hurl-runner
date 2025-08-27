@@ -1,11 +1,3 @@
-export interface HurlExecutionOptions {
-	filePath: string;
-	envFile?: string;
-	variables: Record<string, string>;
-	fromEntry?: number;
-	toEntry?: number;
-}
-
 export interface HurlEntry {
 	startLine: number;
 	endLine: number;

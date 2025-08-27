@@ -1,17 +1,13 @@
+// External dependencies
 import { defineExtension, useCommand } from "reactive-vscode";
 import * as vscode from "vscode";
-import { findEntryAtLine } from "./hurl-entry";
 
+// Generated metadata
 import { commands } from "./generated/meta";
-import { HurlCodeLensProvider } from "./hurl-code-lens-provider";
+
+// Core functionality
+import { findEntryAtLine } from "./hurl-entry";
 import { parseHurlOutput } from "./hurl-parser";
-import { HurlVariablesProvider } from "./hurl-variables-provider";
-import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
-import {
-	chooseEnvFile,
-	manageEnvVariables,
-	saveCapturedValues,
-} from "./manage-variables";
 import {
 	type LastResponseInfo,
 	executeHurl,
@@ -19,6 +15,18 @@ import {
 	logger,
 	responseLogger,
 } from "./utils";
+
+// Providers and UI components
+import { HurlCodeLensProvider } from "./hurl-code-lens-provider";
+import { HurlVariablesProvider } from "./hurl-variables-provider";
+import { HurlVariablesTreeProvider } from "./hurl-variables-tree-provider";
+
+// Variable management
+import {
+	chooseEnvFile,
+	manageEnvVariables,
+	saveCapturedValues,
+} from "./manage-variables";
 
 interface LastCommandInfo {
 	command: (entryNumber?: number) => Promise<void>;
