@@ -205,12 +205,12 @@
 	"devDependencies": {
 		"@antfu/ni": "25.0.0",
 		"@biomejs/biome": "1.9.4",
-		"@types/node": "22.18.1",
+		"@types/node": "22.18.3",
 		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "3.6.0",
 		"bumpp": "10.2.3",
 		"esno": "4.8.0",
-		"pnpm": "10.15.1",
+		"pnpm": "10.16.1",
 		"reactive-vscode": "0.3.2",
 		"tsup": "8.5.0",
 		"typescript": "5.9.2",
@@ -218,7 +218,7 @@
 		"vitest": "3.2.4",
 		"vscode-ext-gen": "1.1.0"
 	},
-	"packageManager": "pnpm@10.15.1",
+	"packageManager": "pnpm@10.16.1",
 	"engines": {
 		"vscode": "^1.93.0"
 	},
