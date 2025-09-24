@@ -12,6 +12,7 @@ import {
 	type LastResponseInfo,
 	executeHurl,
 	executeHurlWithContent,
+	findDefaultEnvFile,
 	logger,
 	responseLogger,
 } from "./utils";
@@ -895,6 +896,7 @@ const { activate, deactivate } = defineExtension(() => {
 					content: selectedText,
 					envFile,
 					variables,
+					contextFilePath: filePath,
 				});
 
 				showResultInWebView(result);
@@ -983,11 +985,22 @@ const { activate, deactivate } = defineExtension(() => {
 		}
 	});
 
+	// Initialize status bar for currently active editor if it's a hurl file
+	const currentEditor = vscode.window.activeTextEditor;
+	if (currentEditor && currentEditor.document.languageId === "hurl") {
+		const filePath = currentEditor.document.uri.fsPath;
+		const envFile = envFileMapping[filePath];
+		hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
+		updateStatusBarText(filePath);
+		statusBarItem?.show();
+	}
+
 	function updateStatusBarText(filePath: string) {
 		if (!statusBarItem) {
 			return;
 		}
 		const envFile = envFileMapping[filePath];
+		const defaultEnvFile = findDefaultEnvFile(filePath);
 		const hasCustomVariables =
 			Object.keys(hurlVariablesProvider.getInlineVariablesBy(filePath)).length >
 			0;
@@ -1000,6 +1013,14 @@ const { activate, deactivate } = defineExtension(() => {
 			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
 				envFile,
 			)}`;
+		} else if (defaultEnvFile && hasCustomVariables) {
+			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
+				defaultEnvFile,
+			)} (default) + Custom`;
+		} else if (defaultEnvFile) {
+			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
+				defaultEnvFile,
+			)} (default)`;
 		} else if (hasCustomVariables) {
 			statusBarItem.text = "$(file) Hurl Env: Custom";
 		} else {

@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { useLogger } from "reactive-vscode";
@@ -10,6 +11,39 @@ import type { ParsedHurlOutput } from "./hurl-parser";
 
 export const logger = useLogger(displayName);
 export const responseLogger = useLogger(`${displayName} Response`);
+
+/**
+ * Find default .env file in the same directory as the Hurl file
+ * Looks for common .env file patterns: .env, .env.local, [filename].env
+ */
+export function findDefaultEnvFile(hurlFilePath: string): string | undefined {
+	const dir = path.dirname(hurlFilePath);
+	const baseName = path.basename(hurlFilePath, path.extname(hurlFilePath));
+
+	// List of possible .env file names to check
+	const possibleEnvFiles = [
+		`${baseName}.env`,        // e.g., scene1.env for scene1.hurl
+		".env",                   // Standard .env file
+		".env.local",              // Local environment file
+		".env.development",        // Development environment file
+		".env.production",         // Production environment file
+		".env.test",               // Test environment file
+	];
+
+	for (const envFileName of possibleEnvFiles) {
+		const envFilePath = path.join(dir, envFileName);
+		try {
+			if (fs.existsSync(envFilePath)) {
+				logger.info(`Found default environment file: ${envFilePath}`);
+				return envFilePath;
+			}
+		} catch {
+			// Ignore errors and continue checking other files
+		}
+	}
+
+	return undefined;
+}
 
 interface HurlExecutionResult {
 	stdout: string;
@@ -34,7 +68,10 @@ export async function executeHurl(
 	);
 	statusBarMessage.text = "Running Hurl...";
 	statusBarMessage.show();
-	const { filePath, envFile, variables, fromEntry, toEntry } = options;
+	const { filePath, variables, fromEntry, toEntry } = options;
+
+	// Use provided envFile or find default .env file in the same directory
+	const envFile = options.envFile || findDefaultEnvFile(filePath);
 
 	// Get the verbosity configuration
 	const verboseMode = config.verboseMode;
@@ -98,6 +135,7 @@ interface HurlExecutionContentOptions {
 	content: string;
 	envFile?: string;
 	variables: Record<string, string>;
+	contextFilePath?: string; // Optional context file path to determine directory for default .env file
 }
 
 export async function executeHurlWithContent(
@@ -110,7 +148,13 @@ export async function executeHurlWithContent(
 	statusBarMessage.text = "Running Hurl...";
 	statusBarMessage.show();
 
-	const { content, envFile, variables } = options;
+	const { content, variables, contextFilePath } = options;
+
+	// Use provided envFile or find default .env file in the context directory
+	let envFile = options.envFile;
+	if (!envFile && contextFilePath) {
+		envFile = findDefaultEnvFile(contextFilePath);
+	}
 
 	// Get the verbosity configuration
 	const verboseMode = config.verboseMode;
