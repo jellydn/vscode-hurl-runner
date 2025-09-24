@@ -1,5 +1,11 @@
 packages:
   - playground
   - examples/*
+
 ignoredBuiltDependencies:
   - esbuild
+
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@vscode/vsce-sign'
+  - keytar
