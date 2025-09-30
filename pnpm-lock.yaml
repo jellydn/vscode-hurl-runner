@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@antfu/ni':
-        specifier: 26.0.1
-        version: 26.0.1
+        specifier: 26.1.0
+        version: 26.1.0
       '@biomejs/biome':
         specifier: 2.2.4
         version: 2.2.4
@@ -53,8 +53,8 @@ importers:
 
 packages:
 
-  '@antfu/ni@26.0.1':
-    resolution: {integrity: sha512-yGtjrmEVziDXW/7ggkzDtJkiJ8e8a9j+CtYBhT6gnvVoIXHtTc+iL+ZDMfUDe1wxRvYJrLpmHLJb5HjA5Hskyg==}
+  '@antfu/ni@26.1.0':
+    resolution: {integrity: sha512-QlkuYC2bkrT1xjnA66/mH68hrazYlxJoESws2wQRWsAbCtIDFeZ9O6Ji5sGmYjVVtbiDRwoX5hyfS3igW6IuXw==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -2087,7 +2087,7 @@ packages:
 
 snapshots:
 
-  '@antfu/ni@26.0.1':
+  '@antfu/ni@26.1.0':
     dependencies:
       ansis: 4.2.0
       fzf: 0.5.2
