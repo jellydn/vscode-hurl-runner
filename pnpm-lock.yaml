@@ -24,8 +24,8 @@ importers:
         specifier: 3.6.2
         version: 3.6.2
       bumpp:
-        specifier: 10.2.3
-        version: 10.2.3
+        specifier: 10.3.1
+        version: 10.3.1
       esno:
         specifier: 4.8.0
         version: 4.8.0
@@ -750,8 +750,8 @@ packages:
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
 
-  bumpp@10.2.3:
-    resolution: {integrity: sha512-nsFBZACxuBVu6yzDSaZZaWpX5hTQ+++9WtYkmO+0Bd3cpSq0Mzvqw5V83n+fOyRj3dYuZRFCQf5Z9NNfZj+Rnw==}
+  bumpp@10.3.1:
+    resolution: {integrity: sha512-cOKPRFCWvHcYPJQAHN6V7Jp/wAfnyqQRXQ+2fgWIL6Gao20rpu7xQ1cGGo1APOfmbQmmHngEPg9Fy7nJ3giRkQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2756,7 +2756,7 @@ snapshots:
       ieee754: 1.2.1
     optional: true
 
-  bumpp@10.2.3:
+  bumpp@10.3.1:
     dependencies:
       ansis: 4.2.0
       args-tokenizer: 0.3.0
