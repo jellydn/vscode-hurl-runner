@@ -12,12 +12,12 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.19.0
+          version: 10.20.0
 
       - name: Set node
         uses: actions/setup-node@v5
         with:
-          node-version: 22.21.0
+          node-version: 22.21.1
           cache: pnpm
 
       - name: Setup
