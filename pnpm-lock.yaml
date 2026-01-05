@@ -787,8 +787,8 @@ packages:
     resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
-  check-error@2.1.1:
-    resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
+  check-error@2.1.3:
+    resolution: {integrity: sha512-PAJdDJusoxnwm1VwW07VWwUN1sl7smmC3OKggvndJFadxxDRyFJBX/ggnu/KE4kQAB7a3Dp8f/YXC1FlUprWmA==}
     engines: {node: '>= 16'}
 
   cheerio-select@2.1.0:
@@ -1390,8 +1390,8 @@ packages:
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
 
-  node-sarif-builder@3.3.1:
-    resolution: {integrity: sha512-8z5dAbhpxmk/WRQHXlv4V0h+9Y4Ugk+w08lyhV/7E/CQX9yDdBc3025/EG+RSMJU2aPFh/IQ7XDV7Ti5TLt/TA==}
+  node-sarif-builder@3.4.0:
+    resolution: {integrity: sha512-tGnJW6OKRii9u/b2WiUViTJS+h7Apxx17qsMUjsUeNDiMMX5ZFf8F8Fcz7PAQ6omvOxHZtvDTmOYKJQwmfpjeg==}
     engines: {node: '>=20'}
 
   normalize-package-data@6.0.2:
@@ -1542,8 +1542,8 @@ packages:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
     engines: {node: '>=6'}
 
-  qs@6.14.0:
-    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+  qs@6.14.1:
+    resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
     engines: {node: '>=0.6'}
 
   queue-microtask@1.2.3:
@@ -2429,7 +2429,7 @@ snapshots:
 
   '@secretlint/secretlint-formatter-sarif@10.2.2':
     dependencies:
-      node-sarif-builder: 3.3.1
+      node-sarif-builder: 3.4.0
 
   '@secretlint/secretlint-rule-no-dotenv@10.2.2':
     dependencies:
@@ -2757,7 +2757,7 @@ snapshots:
   chai@5.3.3:
     dependencies:
       assertion-error: 2.0.1
-      check-error: 2.1.1
+      check-error: 2.1.3
       deep-eql: 5.0.2
       loupe: 3.2.1
       pathval: 2.0.1
@@ -2769,7 +2769,7 @@ snapshots:
 
   chalk@5.6.2: {}
 
-  check-error@2.1.1: {}
+  check-error@2.1.3: {}
 
   cheerio-select@2.1.0:
     dependencies:
@@ -3390,7 +3390,7 @@ snapshots:
 
   node-fetch-native@1.6.7: {}
 
-  node-sarif-builder@3.3.1:
+  node-sarif-builder@3.4.0:
     dependencies:
       '@types/sarif': 2.1.7
       fs-extra: 11.3.3
@@ -3542,7 +3542,7 @@ snapshots:
 
   punycode.js@2.3.1: {}
 
-  qs@6.14.0:
+  qs@6.14.1:
     dependencies:
       side-channel: 1.1.0
 
@@ -3914,7 +3914,7 @@ snapshots:
 
   typed-rest-client@1.8.11:
     dependencies:
-      qs: 6.14.0
+      qs: 6.14.1
       tunnel: 0.0.6
       underscore: 1.13.7
 
