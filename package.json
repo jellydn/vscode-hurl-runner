@@ -203,7 +203,7 @@
 	},
 	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
-		"@antfu/ni": "26.2.0",
+		"@antfu/ni": "28.1.0",
 		"@biomejs/biome": "2.3.11",
 		"@types/node": "22.19.5",
 		"@types/vscode": "1.93.0",
