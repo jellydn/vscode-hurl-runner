@@ -97,7 +97,7 @@
 		},
 		"query-params": {
 			"begin": "^\\[QueryStringParams\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.query-params.hurl",
 			"patterns": [
 				{
@@ -123,7 +123,7 @@
 		},
 		"form-params": {
 			"begin": "^\\[FormParams\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.form-params.hurl",
 			"patterns": [
 				{
@@ -149,7 +149,7 @@
 		},
 		"multipart-form-data": {
 			"begin": "^\\[MultipartFormData\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.multipart-form-data.hurl",
 			"patterns": [
 				{
@@ -181,7 +181,7 @@
 		},
 		"cookies": {
 			"begin": "^\\[Cookies\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.cookies.hurl",
 			"patterns": [
 				{
@@ -207,7 +207,7 @@
 		},
 		"basic-auth": {
 			"begin": "^\\[BasicAuth\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.basic-auth.hurl",
 			"patterns": [
 				{
@@ -233,7 +233,7 @@
 		},
 		"options": {
 			"begin": "^\\[Options\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.options.hurl",
 			"patterns": [
 				{
@@ -360,7 +360,7 @@
 		},
 		"captures": {
 			"begin": "^\\[Captures\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.captures.hurl",
 			"patterns": [
 				{
@@ -389,7 +389,7 @@
 		},
 		"asserts": {
 			"begin": "^\\[Asserts\\]",
-			"end": "^(?=\\[|[A-Z])",
+			"end": "^(?=\\[|[A-Z]|#)",
 			"name": "meta.asserts.hurl",
 			"patterns": [
 				{
