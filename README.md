@@ -1,9 +1,7 @@
 <h1 align="center">Welcome to vscode-hurl-runner 👋</h1>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <p>
@@ -168,6 +166,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://productsway.com/"><img src="https://avatars.githubusercontent.com/u/870029?v=4?s=100" width="100px;" alt="Dung Duc Huynh (Kaka)"/><br /><sub><b>Dung Duc Huynh (Kaka)</b></sub></a><br /><a href="https://github.com/jellydn/vscode-hurl-runner/commits?author=jellydn" title="Code">💻</a> <a href="https://github.com/jellydn/vscode-hurl-runner/commits?author=jellydn" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/xleshx"><img src="https://avatars.githubusercontent.com/u/4798483?v=4?s=100" width="100px;" alt="Alexey"/><br /><sub><b>Alexey</b></sub></a><br /><a href="https://github.com/jellydn/vscode-hurl-runner/commits?author=xleshx" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/cheapeone"><img src="https://avatars.githubusercontent.com/u/5008895?v=4?s=100" width="100px;" alt="cheapeone"/><br /><sub><b>cheapeone</b></sub></a><br /><a href="https://github.com/jellydn/vscode-hurl-runner/commits?author=cheapeone" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
