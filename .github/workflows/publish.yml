@@ -15,7 +15,7 @@ jobs:
           version: 10.30.3
 
       - name: Set node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 22.22.0
           cache: pnpm
