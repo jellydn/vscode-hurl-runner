@@ -114,8 +114,8 @@ function formatJsonString(jsonStr: string): string {
 const { activate, deactivate } = defineExtension(() => {
 	// Hurl variables provider
 	const hurlVariablesProvider = new HurlVariablesProvider();
-	// Mapping of file paths to environment files
-	const envFileMapping: Record<string, string> = {};
+	// Global environment file (applies to all Hurl files)
+	let globalEnvFile: string | undefined;
 
 	// Webview panel for showing the result
 	let resultPanel: vscode.WebviewPanel | undefined;
@@ -785,7 +785,7 @@ const { activate, deactivate } = defineExtension(() => {
 					entryNumber: entry.entryNumber,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = globalEnvFile;
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -841,7 +841,7 @@ const { activate, deactivate } = defineExtension(() => {
 					entryNumber: entry.entryNumber,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = globalEnvFile;
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -882,7 +882,7 @@ const { activate, deactivate } = defineExtension(() => {
 			showLoadingInWebView();
 
 			const filePath = editor.document.uri.fsPath;
-			const envFile = envFileMapping[filePath];
+			const envFile = globalEnvFile;
 			const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 			// Store the last command info (without entry number for selections)
@@ -936,6 +936,13 @@ const { activate, deactivate } = defineExtension(() => {
 		treeDataProvider: hurlVariablesTreeProvider,
 	});
 
+	// Code lens provider for Hurl files (run, run to end, manage variables, env selector)
+	const hurlCodeLensProvider = new HurlCodeLensProvider(() => globalEnvFile);
+	const codeLensDisposable = vscode.languages.registerCodeLensProvider(
+		{ language: "hurl", scheme: "file" },
+		hurlCodeLensProvider,
+	);
+
 	// Manage inline variables command
 	useCommand(commands.manageInlineVariables, async () => {
 		const editor = vscode.window.activeTextEditor;
@@ -955,30 +962,25 @@ const { activate, deactivate } = defineExtension(() => {
 		hurlVariablesTreeProvider.refresh();
 	});
 
-	// Select env file command
+	// Select env file command (sets a global environment for all Hurl files)
 	useCommand(commands.selectEnvFile, async () => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) {
-			vscode.window.showErrorMessage("No active editor");
-			return;
-		}
-
-		const filePath = editor.document.uri.fsPath;
 		const envFile = await chooseEnvFile();
 		if (envFile) {
-			envFileMapping[filePath] = envFile;
-			updateStatusBarText(filePath);
-			hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
+			globalEnvFile = envFile;
+			updateStatusBarText();
+			const editor = vscode.window.activeTextEditor;
+			if (editor) {
+				hurlVariablesTreeProvider.setEnvFile(envFile);
+			}
+			hurlCodeLensProvider.refresh();
 		}
 	});
 
 	// Update status bar when active editor changes
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
 		if (editor && editor.document.languageId === "hurl") {
-			const filePath = editor.document.uri.fsPath;
-			const envFile = envFileMapping[filePath];
-			hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
-			updateStatusBarText(filePath);
+			hurlVariablesTreeProvider.setEnvFile(globalEnvFile);
+			updateStatusBarText();
 			statusBarItem?.show();
 		} else {
 			statusBarItem?.hide();
@@ -988,30 +990,30 @@ const { activate, deactivate } = defineExtension(() => {
 	// Initialize status bar for currently active editor if it's a hurl file
 	const currentEditor = vscode.window.activeTextEditor;
 	if (currentEditor && currentEditor.document.languageId === "hurl") {
-		const filePath = currentEditor.document.uri.fsPath;
-		const envFile = envFileMapping[filePath];
-		hurlVariablesTreeProvider.setEnvFile(filePath, envFile);
-		updateStatusBarText(filePath);
+		hurlVariablesTreeProvider.setEnvFile(globalEnvFile);
+		updateStatusBarText();
 		statusBarItem?.show();
 	}
 
-	function updateStatusBarText(filePath: string) {
+	function updateStatusBarText() {
 		if (!statusBarItem) {
 			return;
 		}
-		const envFile = envFileMapping[filePath];
-		const defaultEnvFile = findDefaultEnvFile(filePath);
-		const hasCustomVariables =
-			Object.keys(hurlVariablesProvider.getInlineVariablesBy(filePath)).length >
-			0;
+		const editor = vscode.window.activeTextEditor;
+		const filePath = editor?.document.uri.fsPath;
+		const defaultEnvFile = filePath ? findDefaultEnvFile(filePath) : undefined;
+		const hasCustomVariables = filePath
+			? Object.keys(hurlVariablesProvider.getInlineVariablesBy(filePath))
+					.length > 0
+			: false;
 
-		if (envFile && hasCustomVariables) {
+		if (globalEnvFile && hasCustomVariables) {
 			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
-				envFile,
+				globalEnvFile,
 			)} + Custom`;
-		} else if (envFile) {
+		} else if (globalEnvFile) {
 			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
-				envFile,
+				globalEnvFile,
 			)}`;
 		} else if (defaultEnvFile && hasCustomVariables) {
 			statusBarItem.text = `$(file) Hurl Env: ${vscode.workspace.asRelativePath(
@@ -1048,7 +1050,7 @@ const { activate, deactivate } = defineExtension(() => {
 					filePath,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = globalEnvFile;
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -1071,13 +1073,6 @@ const { activate, deactivate } = defineExtension(() => {
 	});
 
 	logger.info("vscode-hurl-runner is now active!");
-
-	// Add code lens provider for Hurl files for the actions, e.g. run, run to end, manage variables
-	const hurlCodeLensProvider = new HurlCodeLensProvider();
-	const codeLensDisposable = vscode.languages.registerCodeLensProvider(
-		{ language: "hurl", scheme: "file" },
-		hurlCodeLensProvider,
-	);
 
 	// Refresh the variables tree view when the active editor changes
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
@@ -1118,7 +1113,7 @@ const { activate, deactivate } = defineExtension(() => {
 					entryNumber: currentEntry.entryNumber,
 				};
 
-				const envFile = envFileMapping[filePath];
+				const envFile = globalEnvFile;
 				const variables = hurlVariablesProvider.getAllVariablesBy(filePath);
 
 				const result = await executeHurl({
@@ -1268,6 +1263,7 @@ const { activate, deactivate } = defineExtension(() => {
 				resultPanel.dispose();
 			}
 			codeLensDisposable.dispose();
+			hurlCodeLensProvider.dispose();
 			statusBarItem.dispose();
 			treeView.dispose();
 		},
