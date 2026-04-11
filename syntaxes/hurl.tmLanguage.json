@@ -27,6 +27,25 @@
 			"match": "#.*$",
 			"name": "comment.line.number-sign.hurl"
 		},
+		"key-value-section-pattern": {
+			"match": "^(\\w+):\\s*(.*)$",
+			"captures": {
+				"1": {
+					"name": "variable.parameter.hurl"
+				},
+				"2": {
+					"patterns": [
+						{
+							"include": "#variables"
+						},
+						{
+							"match": ".*",
+							"name": "string.unquoted.hurl"
+						}
+					]
+				}
+			}
+		},
 		"request": {
 			"patterns": [
 				{
@@ -101,23 +120,7 @@
 			"name": "meta.query-params.hurl",
 			"patterns": [
 				{
-					"match": "^(\\w+):\\s*(.*)$",
-					"captures": {
-						"1": {
-							"name": "variable.parameter.hurl"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#variables"
-								},
-								{
-									"match": ".*",
-									"name": "string.unquoted.hurl"
-								}
-							]
-						}
-					}
+					"include": "#key-value-section-pattern"
 				}
 			]
 		},
@@ -127,23 +130,7 @@
 			"name": "meta.form-params.hurl",
 			"patterns": [
 				{
-					"match": "^(\\w+):\\s*(.*)$",
-					"captures": {
-						"1": {
-							"name": "variable.parameter.hurl"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#variables"
-								},
-								{
-									"match": ".*",
-									"name": "string.unquoted.hurl"
-								}
-							]
-						}
-					}
+					"include": "#key-value-section-pattern"
 				}
 			]
 		},
@@ -185,23 +172,7 @@
 			"name": "meta.cookies.hurl",
 			"patterns": [
 				{
-					"match": "^(\\w+):\\s*(.*)$",
-					"captures": {
-						"1": {
-							"name": "variable.parameter.hurl"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#variables"
-								},
-								{
-									"match": ".*",
-									"name": "string.unquoted.hurl"
-								}
-							]
-						}
-					}
+					"include": "#key-value-section-pattern"
 				}
 			]
 		},
@@ -211,23 +182,7 @@
 			"name": "meta.basic-auth.hurl",
 			"patterns": [
 				{
-					"match": "^(\\w+):\\s*(.*)$",
-					"captures": {
-						"1": {
-							"name": "variable.parameter.hurl"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#variables"
-								},
-								{
-									"match": ".*",
-									"name": "string.unquoted.hurl"
-								}
-							]
-						}
-					}
+					"include": "#key-value-section-pattern"
 				}
 			]
 		},
@@ -237,23 +192,7 @@
 			"name": "meta.options.hurl",
 			"patterns": [
 				{
-					"match": "^(\\w+):\\s*(.*)$",
-					"captures": {
-						"1": {
-							"name": "variable.parameter.hurl"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#variables"
-								},
-								{
-									"match": ".*",
-									"name": "string.unquoted.hurl"
-								}
-							]
-						}
-					}
+					"include": "#key-value-section-pattern"
 				}
 			]
 		},
