@@ -8,14 +8,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5.0.1
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v4.4.0
         with:
           version: 10.33.0
 
       - name: Set node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v5.0.0
         with:
           node-version: 22.22.2
           cache: pnpm
@@ -26,11 +26,11 @@ jobs:
       - name: Install
         run: nci
       - name: Publish to Open VSX Registry
-        uses: HaaLeo/publish-vscode-extension@v2
+        uses: HaaLeo/publish-vscode-extension@v2.0.0
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
       - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@v2
+        uses: HaaLeo/publish-vscode-extension@v2.0.0
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
