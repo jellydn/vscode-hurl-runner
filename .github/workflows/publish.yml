@@ -8,16 +8,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5.0.1
+      - uses: actions/checkout@v5.1.0
       - name: Install pnpm
         uses: pnpm/action-setup@v4.4.0
         with:
-          version: 10.34.4
+          version: 10.34.5
 
       - name: Set node
         uses: actions/setup-node@v5.0.0
         with:
-          node-version: 22.22.3
+          node-version: 22.23.2
           cache: pnpm
 
       - name: Setup
