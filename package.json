@@ -211,7 +211,7 @@
 		"bumpp": "10.4.1",
 		"esno": "4.8.0",
 		"pnpm": "10.34.5",
-		"reactive-vscode": "0.4.1",
+		"reactive-vscode": "1.0.2",
 		"tsup": "8.5.1",
 		"typescript": "5.9.3",
 		"vite": "7.3.5",
