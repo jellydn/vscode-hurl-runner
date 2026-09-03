@@ -13,7 +13,7 @@ jobs:
       # added or changed files to the repository.
       contents: write
     steps:
-      - uses: actions/checkout@v5.0.1
+      - uses: actions/checkout@v7.0.1
       - name: Set up Python
         uses: actions/setup-python@v6.2.0
         with:
