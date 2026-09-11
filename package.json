@@ -215,7 +215,7 @@
 		"tsup": "8.5.1",
 		"typescript": "5.9.3",
 		"vite": "7.3.5",
-		"vitest": "3.2.6",
+		"vitest": "4.1.11",
 		"vscode-ext-gen": "1.6.0"
 	},
 	"packageManager": "pnpm@10.34.5",
