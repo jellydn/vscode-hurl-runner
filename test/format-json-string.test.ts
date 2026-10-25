@@ -17,6 +17,16 @@ describe("formatJsonString", () => {
 		expect(formatJsonString(value)).toBe(value);
 	});
 
+	it("collapses whitespace-only containers without changing sibling indentation", () => {
+		expect(
+			formatJsonString('{ "a": { \n\t }, "b": [\r\n ], "c": [{ }, [ ], 2] }'),
+		).toBe(
+			'{\n  "a": {},\n  "b": [],\n  "c": [\n    {},\n    [],\n    2\n  ]\n}',
+		);
+		expect(formatJsonString(" \t{ \r\n } ")).toBe("{}");
+		expect(formatJsonString("[ \t ]")).toBe("[]");
+	});
+
 	it("indents nested containers and preserves number tokens", () => {
 		const input =
 			'{"id":900719925474099312345,"values":[{},[],{"n":-1.2300e+45}],"ok":true,"none":null}';
