@@ -46,7 +46,9 @@
 - 📊 Capture values from responses and use them in subsequent requests
 - 👁️ View detailed HTTP responses in a formatted webview ([PrismJs with Tomorrow Night Theme](https://prismjs.com/))
 - 🎨 Syntax highlighting for Hurl files
-- 📊 Integration with VSCode's status bar for execution feedback
+- 📊 Cancellable progress notifications for execution feedback
+  - Select **Cancel** in the **Running Hurl...** notification to stop a request, including retries and retry delays.
+  - Cancellation applies to file, entry, range, selection, and rerun commands. The response view shows **Hurl request cancelled.**
 - 🔍 Code lens support for quick actions
 - 🔁 Rerun last command functionality
 - 📜 View last response without re-running the request
