@@ -212,7 +212,7 @@
 		"esno": "4.8.0",
 		"pnpm": "10.34.8",
 		"reactive-vscode": "0.4.1",
-		"tsup": "8.5.1",
+		"tsup": "9.0.0",
 		"typescript": "5.9.3",
 		"vite": "7.3.7",
 		"vitest": "5.0.5",
