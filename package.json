@@ -213,7 +213,7 @@
 		"pnpm": "12.15.0",
 		"reactive-vscode": "0.4.1",
 		"tsup": "9.0.0",
-		"typescript": "5.9.3",
+		"typescript": "7.0.2",
 		"vite": "8.3.5",
 		"vitest": "5.0.5",
 		"vscode-ext-gen": "1.6.0"
