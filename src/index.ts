@@ -336,7 +336,7 @@ const { activate, deactivate } = defineExtension(() => {
 					})
 					.join("<hr>");
 			} catch (error) {
-				logger.error(error);
+				logger.error(error instanceof Error ? error : String(error));
 				// If parsing fails, show the raw output
 				htmlOutput = `<div class="error-output">
 					<h3>Error</h3>
