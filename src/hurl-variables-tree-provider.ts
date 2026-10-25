@@ -28,7 +28,7 @@ export class HurlVariablesTreeProvider
 	readonly onDidChangeTreeData: vscode.Event<VariableItem | undefined | null> =
 		this._onDidChangeTreeData.event;
 
-	private globalEnvFile: string | undefined = undefined;
+	private globalEnvFile: string | undefined;
 
 	constructor(private hurlVariablesProvider: HurlVariablesProvider) {}
 

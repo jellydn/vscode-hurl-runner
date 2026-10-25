@@ -968,10 +968,7 @@ const { activate, deactivate } = defineExtension(() => {
 		if (envFile) {
 			globalEnvFile = envFile;
 			updateStatusBarText();
-			const editor = vscode.window.activeTextEditor;
-			if (editor) {
-				hurlVariablesTreeProvider.setEnvFile(envFile);
-			}
+			hurlVariablesTreeProvider.setEnvFile(envFile);
 			hurlCodeLensProvider.refresh();
 		}
 	});
