@@ -2,10 +2,10 @@ packages:
   - playground
   - examples/*
 
-ignoredBuiltDependencies:
-  - esbuild
-
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - '@vscode/vsce-sign'
-  - keytar
+# pnpm 11+ ignores onlyBuiltDependencies. Record each install script here.
+allowBuilds:
+  '@biomejs/biome': true
+  '@vscode/vsce-sign': true
+  esbuild: false
+  keytar: true
+  pnpm: true
