@@ -2,15 +2,15 @@ import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { useLogger } from "reactive-vscode";
+import { defineLogger } from "reactive-vscode";
 import * as vscode from "vscode";
 
 import { config } from "./config";
 import { displayName } from "./generated/meta";
 import type { ParsedHurlOutput } from "./hurl-parser";
 
-export const logger = useLogger(displayName);
-export const responseLogger = useLogger(`${displayName} Response`);
+export const logger = defineLogger(displayName);
+export const responseLogger = defineLogger(`${displayName} Response`);
 
 /**
  * Find default .env file in the same directory as the Hurl file
