@@ -204,13 +204,13 @@
 	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
 		"@antfu/ni": "30.6.0",
-		"@biomejs/biome": "2.6.3",
+		"@biomejs/biome": "2.6.4",
 		"@types/node": "24.19.2",
 		"@types/vscode": "1.93.0",
-		"@vscode/vsce": "4.0.0",
+		"@vscode/vsce": "4.1.0",
 		"bumpp": "12.3.0",
 		"esno": "4.8.0",
-		"pnpm": "12.15.0",
+		"pnpm": "12.16.1",
 		"reactive-vscode": "1.0.2",
 		"tsup": "9.0.0",
 		"typescript": "7.0.2",
@@ -218,7 +218,7 @@
 		"vitest": "5.0.5",
 		"vscode-ext-gen": "1.6.0"
 	},
-	"packageManager": "pnpm@12.15.0",
+	"packageManager": "pnpm@12.16.1",
 	"engines": {
 		"vscode": "^1.93.0"
 	},
