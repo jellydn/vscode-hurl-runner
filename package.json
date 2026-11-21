@@ -204,7 +204,7 @@
 	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
 		"@antfu/ni": "30.6.0",
-		"@biomejs/biome": "2.6.7",
+		"@biomejs/biome": "2.6.8",
 		"@types/node": "24.19.2",
 		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "4.1.1",
@@ -215,7 +215,7 @@
 		"tsup": "9.0.0",
 		"typescript": "7.0.2",
 		"vite": "8.3.8",
-		"vitest": "5.1.0",
+		"vitest": "5.1.1",
 		"vscode-ext-gen": "1.6.0"
 	},
 	"packageManager": "pnpm@12.21.0",
