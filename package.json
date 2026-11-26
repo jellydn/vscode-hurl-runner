@@ -204,8 +204,8 @@
 	"activationEvents": ["onLanguage:hurl"],
 	"devDependencies": {
 		"@antfu/ni": "30.6.0",
-		"@biomejs/biome": "2.6.8",
-		"@types/node": "24.19.2",
+		"@biomejs/biome": "2.6.9",
+		"@types/node": "24.19.4",
 		"@types/vscode": "1.93.0",
 		"@vscode/vsce": "4.1.1",
 		"bumpp": "12.3.0",
@@ -214,8 +214,8 @@
 		"reactive-vscode": "1.0.2",
 		"tsup": "9.0.0",
 		"typescript": "7.0.2",
-		"vite": "8.3.8",
-		"vitest": "5.1.1",
+		"vite": "8.4.0",
+		"vitest": "5.1.2",
 		"vscode-ext-gen": "1.6.0"
 	},
 	"packageManager": "pnpm@12.23.0",
